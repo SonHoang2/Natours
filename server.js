@@ -30,7 +30,7 @@ process.on('unhandledRejection', err => {
 // test 
 // const fs = require('fs');
 // const Tour = require('./models/tourModel')
-// const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`, 'utf8'));
+// const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours.json`, 'utf8'));
 
 // const importData = async () => {
 //   try {
@@ -53,6 +53,7 @@ process.on('unhandledRejection', err => {
 // if (process.argv[2] === '--import') {
 //   importData();
 // }
+
 // if (process.argv[2] === '--delete') {
 //   deleteData();
 // }
