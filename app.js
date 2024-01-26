@@ -42,7 +42,7 @@ app.use(mongoSanitize());
 app.use(xss());
 
 // Prevent parameter pollution
-app.use(hpp(
+app.use(
   hpp({
     whitelist: [
       'duration',
@@ -53,7 +53,7 @@ app.use(hpp(
       'price',
     ]
   })
-));
+);
 
 // test middleware
 // app.use((req, res, next) => {

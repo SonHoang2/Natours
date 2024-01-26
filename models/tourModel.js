@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
+const User = require('./userModel');
 
 const tourSchema = new mongoose.Schema({
     name: {
@@ -96,7 +97,15 @@ const tourSchema = new mongoose.Schema({
             description: String,
             day: Number
         }
-    ]
+    ],
+    guides: Array
+    // guides: [
+    //     {
+    //         type: mongoose.Schema.ObjectId,
+    //         ref: 'User'
+    //     }
+    // ]
+    
 },
     {
         toJSON: { virtuals: true },
@@ -124,6 +133,13 @@ tourSchema.pre('aggregate', function(next) {
     console.log(this.pipeline());
     next()
 })
+
+tourSchema.pre('save', async function(next) {
+    const guidesPromises = this.guides.map(async id => await User.findById(id));
+    this.guides = await Promise.all(guidesPromises);
+    console.log(this.guides);
+    next();
+});
 
 const Tour = mongoose.model('Tour', tourSchema);
 
