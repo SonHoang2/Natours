@@ -17,10 +17,12 @@ const reviewRouter = require('./routes/reviewRoutes');
 const app = express();
 
 // allow client access
+console.log(process.env.BASEURL);
 app.use(cors(({credentials: true, origin: process.env.BASEURL})));
 
 // Set security HTTP headers
-app.use(helmet());
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
+
 
 // Development logging
 if (process.env.NODE_ENV === 'development') {

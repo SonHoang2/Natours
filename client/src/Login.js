@@ -1,0 +1,82 @@
+import Header from "./component/Header"
+import { USERS_URL } from "./customValue"
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { useState } from "react";
+
+export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [passwordType, setPasswordType] = useState("password");
+  const navigate = useNavigate();
+
+  const handleSubmit = async e => {
+    try {
+      e.preventDefault();
+      const res = await fetch(
+        USERS_URL + "/login", {
+          method: "POST",
+          body: JSON.stringify({email, password}),
+          credentials: 'include', 
+          headers: {'Content-Type': 'application/json'},
+        }
+      )
+      const data = await res.json();
+      
+      console.log(data);
+      if (data.status == "fail") {
+        setError(data.message)
+      } else if (data.status == "success") {
+        localStorage.setItem("user", JSON.stringify(data.data.user));
+        navigate("/");
+      }
+    } catch(err) {
+      console.log(err);
+    }
+  }
+
+  return (
+    <div className="h-100">
+      <Header />
+      <div className="d-flex justify-content-center align-items-center w-100 h-100 bg-body-secondary">
+        <form onSubmit={handleSubmit} className="shadow px-5 py-4 bg-white rounded">
+          <p className="text-success pb-4 fs-3 fw-bold">LOGIN TO YOUR ACCOUNT</p>
+          {
+            error && 
+            <div className="alert alert-danger fw-bold" role="alert">{error}. Try again.</div>
+          }
+          <div className="d-flex flex-column pb-3">
+            <label className="form-label fw-bold" htmlFor="email">Email address</label>
+            <input 
+              className="form-control border-0 bg-body-secondary shadow-none" 
+              id="email"
+              type="text" 
+              placeholder="you@example.com"
+              onChange={e => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="d-flex flex-column pb-3">
+            <label className="form-label fw-bold" htmlFor="password">Password</label>
+            <input 
+              className="form-control border-0 bg-body-secondary shadow-none" 
+              id="password"
+              type="password" 
+              placeholder="••••••••"
+              onChange={e => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <motion.input
+            whileHover={{ opacity: 0.8 }}
+            whileTap={{ scale: 0.95 }}
+            type="submit"
+            value="Login"
+            className="w-100 bg-success text-white border-0 rounded-pill py-2 mt-3"
+          />
+        </form>
+      </div>
+    </div>
+  )
+}
