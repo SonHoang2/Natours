@@ -1,11 +1,10 @@
-import {Link, useNavigate} from "react-router-dom";
-import {USER_IMAGE_URL} from "../customValue";
+import { Link, useNavigate } from "react-router-dom";
+import { USER_IMAGE_URL } from "../customValue";
 
 export default function Header() {
   const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
-
-  console.log(user);
+  
   return (
     <div className="bg-dark d-flex px-3 py-1 justify-content-between w-100 align-items-center z-3 position-fixed">
       <div>
@@ -18,7 +17,7 @@ export default function Header() {
         <div className="d-flex">
           <Link to="/user/login" className="text-decoration-none text-white me-2">
             <button className="btn btn-dark text-uppercase p-3 me-1 fs-5 fw-light">
-                LOG IN
+              LOG IN
             </button>
           </Link>
           <Link to="/user/signup" className="text-decoration-none text-white">

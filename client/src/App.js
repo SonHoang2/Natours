@@ -1,7 +1,7 @@
 import { Routes, Route} from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
-import {BASE_URL} from "./customValue"
+import { TOURS_URL } from "./customValue"
 import Home from './Home';
 import Tour from './Tour';
 import Login from './Login';
@@ -11,7 +11,7 @@ function App() {
   const [tours, setTours] = useState([]);
   const getTours = async () => {
     try {
-      const res = await fetch(BASE_URL + '/api/v1/tours/', {
+      const res = await fetch(TOURS_URL + "/", {
         method: "GET",
     })
       const {data} = await res.json();
@@ -56,6 +56,10 @@ function App() {
       <Route 
         path='/user/signup'
         element={<Signup />}
+      />
+      <Route 
+        path='/me'
+        element={<Me />}
       />
     </Routes>
   );
