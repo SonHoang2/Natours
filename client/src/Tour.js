@@ -4,6 +4,7 @@ import { TOUR_IMAGE_URL, USER_IMAGE_URL, TOURS_URL } from "./customValue"
 import { useNavigate } from "react-router-dom";
 
 export default function Tour({tour}) {
+  const user = JSON.parse(localStorage.getItem("user"));
   const [reviews, setReviews] = useState({
     data: [],
     length: "",
@@ -82,6 +83,8 @@ export default function Tour({tour}) {
   useEffect(() => {
     getReviews();
   }, [])
+
+  console.log(user);
 
   return (
     <div>
@@ -239,14 +242,26 @@ export default function Tour({tour}) {
         </div>
       </div>
       <div className="container-xl mt-4 d-flex justify-content-center pb-3">
-        <div className="shadow d-flex justify-content-between rounded p-5">
-          <div className="pe-5">
-            <p className="text-success pb-2 fw-bold text-uppercase">What are you waiting for?</p>
+        <div className="shadow d-flex justify-content-between rounded p-5 flex-md-row flex-column">
+          <div className="pb-3 pe-md-3">
+            <p className="text-success pb-2 fw-bold text-uppercase fs-5">What are you waiting for?</p>
             <p className="text-secondary">{tour.duration} days. 1 adventure. Infinite memories. Make it yours today!</p>
           </div>
-          <div className="d-flex">
-            <button type="button" className="btn btn-success py-2 rounded-pill">LOGIN TO BOOK TOUR</button>
-          </div>
+          {
+            user ?
+            <div className="d-flex align-items-start justify-content-center">
+              <button type="button" className="btn btn-success py-2 px-4 rounded-pill">BOOK TOUR</button>
+            </div> :
+            <div className="d-flex align-items-start justify-content-center">
+              <button 
+                type="button" 
+                className="btn btn-success py-2 px-4 rounded-pill" 
+                onClick={() => navigate("/user/login")}
+                >
+                  LOGIN TO BOOK TOUR
+              </button>
+            </div>
+          }
         </div>
       </div>
     </div>

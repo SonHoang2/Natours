@@ -51,6 +51,10 @@ html, body, #root {
   height: 100%;
 }
 
+.btn {
+  white-space: nowrap;
+}
+
 .h-300 {
   height: 300px;
 }
