@@ -36,7 +36,7 @@ export default function Header() {
           >
             LOG OUT
           </button>
-          <Link to="/me" className="text-decoration-none text-white">
+          <Link to="/user/me" className="text-decoration-none text-white">
             <div className="d-flex align-items-center h-100">
               <div className="d-flex align-items-center h-100">
                 <img 

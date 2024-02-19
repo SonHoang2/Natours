@@ -4,19 +4,32 @@ import { TOUR_IMAGE_URL, USER_IMAGE_URL, TOURS_URL } from "./customValue"
 import { useNavigate } from "react-router-dom";
 
 export default function Tour({tour}) {
-  const [reviews, setReviews] = useState([]);
+  const [reviews, setReviews] = useState({
+    data: [],
+    length: "",
+  });
+
+  const [queryParams, setQueryParams] = useState({
+    page: 1,
+    limit: 3,
+  });
+
   const navigate = useNavigate();
 
   const getReviews = async () => {
     try {
-      const res = await fetch(TOURS_URL + `/${tour.id}/reviews` , {
+      const url = TOURS_URL + `/${tour.id}/reviews/?page=${queryParams.page}&limit=${queryParams.limit}`; 
+      const res = await fetch(url, {
         method: "GET",
         credentials: 'include',
-    })
+      })
       const data = await res.json();
 
       if (data.status === "success") {
-        setReviews(data.data.doc)
+        setReviews({
+          data: data.data.doc,
+          length: data.total
+        })
       } else if (data.status === "fail") {
         window.alert(data.message);
         navigate("/user/login")
@@ -44,11 +57,32 @@ export default function Tour({tour}) {
     return arr
 }
 
+  const navigateBefore = () => 
+    setQueryParams(prev => {
+      console.log(prev);
+      let obj = {...prev};
+      if (prev.page > 1) {
+        getReviews();
+        obj = {...prev, page: prev.page - 1}
+      }
+      return obj;
+    })
+  
+  const navigateAfter = () => 
+    setQueryParams(prev => {
+      let obj = {...prev};
+      if (prev.page < Math.floor(reviews.length / prev.limit)) {
+        getReviews();
+        obj = {...prev, page: prev.page + 1 };
+      }
+      return obj;
+    })
+  
+
   useEffect(() => {
     getReviews();
   }, [])
 
-  console.log(reviews);
   return (
     <div>
       <Header />
@@ -132,28 +166,34 @@ export default function Tour({tour}) {
           </div>
         </div>
       </div>
-      <div className="d-flex h-500 pb-5">
-        {
-          tour.images.map(image => (
-            <div className="col-4 h-100">
-              <img src={TOUR_IMAGE_URL + image} className="w-100 h-100 object-fit-cover"/>
-            </div>
-          ))
-        }
+      <div className="container-xl p-0">
+        <div className="d-flex pb-5 flex-column">
+          {
+            tour.images.map(image => (
+              <div className="h-500">
+                <img src={TOUR_IMAGE_URL + image} className="w-100 h-100 object-fit-cover"/>
+              </div>
+            ))
+          }
+        </div>
       </div>
-      <div className="container-xl p-5">
-        <p className="text-uppercase fw-bold pb-3 fs-4">Product Ratings</p>
-        <div className="pb-4">
-          <p className="fs-5"> 
+      <div className="container-xl p-5 bg-success">
+        <div className="pb-3">
+          <span className="text-uppercase fw-bold fs-4 text-white">Product Ratings</span>
+        </div>
+        <div className="pb-4 d-flex bg-white rounded shadow mb-3">
+          <p className="fs-5 p-2 rounded me-3"> 
             <span className="fs-4 fw-bold">{tour.ratingsAverage} </span> out of 5
           </p>
-
+          <div>
+            <p className="fs-5 p-2 rounded"> All ({reviews.length}) </p>
+          </div>
         </div>
         <div>
           {
-            reviews.map(review => (
-              <div>
-                <div className="d-flex pb-4">
+            reviews.data.map(review => (
+              <div className="bg-white rounded">
+                <div className="d-flex mb-4 p-4">
                   <img 
                     className="user-avatar rounded-circle"
                     src={USER_IMAGE_URL + review.user.photo}
@@ -180,6 +220,33 @@ export default function Tour({tour}) {
               </div>
             ))
           }
+        </div>
+        <div className="d-flex justify-content-center align-items-center">
+          <span 
+            type="button" 
+            class="material-symbols-outlined text-white fs-1"
+            onClick={navigateBefore}
+          >
+            navigate_before
+          </span>
+          <span type="button" class="bg-white p-2 fs-5">{queryParams.page}</span>
+          <span type="button" 
+            class="material-symbols-outlined text-white fs-1"
+            onClick={navigateAfter}
+          >
+            navigate_next
+          </span>
+        </div>
+      </div>
+      <div className="container-xl mt-4 d-flex justify-content-center pb-3">
+        <div className="shadow d-flex justify-content-between rounded p-5">
+          <div className="pe-5">
+            <p className="text-success pb-2 fw-bold text-uppercase">What are you waiting for?</p>
+            <p className="text-secondary">{tour.duration} days. 1 adventure. Infinite memories. Make it yours today!</p>
+          </div>
+          <div className="d-flex">
+            <button type="button" className="btn btn-success py-2 rounded-pill">LOGIN TO BOOK TOUR</button>
+          </div>
         </div>
       </div>
     </div>

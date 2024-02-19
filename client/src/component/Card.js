@@ -4,10 +4,10 @@ import { TOUR_IMAGE_URL } from "../customValue"
 
 export default function Card(props) {
   return (
-    <div className="mt-4 col-12 col-md-6 col-lg-3">
+    <div className="mt-4 card border-0">
       <div className="d-flex flex-column shadow">
         <div className="h-300 w-100 position-relative">
-          <div className="position-absolute bg-success w-100 h-100 opacity-50 rounded-top clip-path z-3"></div>
+          <div className="position-absolute bg-success w-100 h-100 opacity-50 rounded-top clip-path z-2"></div>
           <div className="clip-path w-100 h-100">
             <img
               className="w-100 h-100 object-fit-cover rounded-top"
@@ -15,7 +15,7 @@ export default function Card(props) {
               alt="tour image" 
             />
           </div>
-          <h3 className="position-absolute end-0 bottom-0 w-50 d-flex flex-row-reverse pe-3 z-3">
+          <h3 className="position-absolute end-0 bottom-0 w-50 d-flex flex-row-reverse pe-3 z-2">
             <span className="text-white bg-success text-end p-3 text-uppercase fs-4 lh-sm">{props.name}</span>
           </h3>
         </div>
@@ -55,9 +55,9 @@ export default function Card(props) {
                 <span> rating ({props.ratingsQuantity})</span>
               </div>
             </div>
-            <div className="col-6">
+            <div className="col-6 d-flex justify-content-end">
               <Link to={'/tour/' + props.slug}>
-                <button className="btn btn-success w-100 h-100">DETAIL</button>
+                <button className="btn btn-success px-5 py-2 rounded-pill">DETAIL</button>
               </Link>
             </div>
           </div>

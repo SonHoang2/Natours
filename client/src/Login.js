@@ -1,6 +1,6 @@
 import Header from "./component/Header"
 import { USERS_URL } from "./customValue"
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useState } from "react";
 
@@ -40,8 +40,8 @@ export default function Login() {
     <div className="h-100">
       <Header />
       <div className="d-flex justify-content-center align-items-center w-100 h-100 bg-body-secondary">
-        <form onSubmit={handleSubmit} className="shadow px-5 py-4 bg-white rounded">
-          <p className="text-success pb-4 fs-3 fw-bold">LOGIN TO YOUR ACCOUNT</p>
+        <form onSubmit={handleSubmit} className="shadow border px-5 py-4 bg-white rounded w-400">
+          <p className="text-success pb-4 fs-3 fw-bold text-center">LOGIN TO YOUR ACCOUNT</p>
           {
             error && 
             <div className="alert alert-danger fw-bold" role="alert">{error}. Try again.</div>
@@ -68,13 +68,18 @@ export default function Login() {
               required
             />
           </div>
-          <motion.input
-            whileHover={{ opacity: 0.8 }}
-            whileTap={{ scale: 0.95 }}
-            type="submit"
-            value="Login"
-            className="w-100 bg-success text-white border-0 rounded-pill py-2 mt-3"
-          />
+          <div className="d-flex justify-content-end">
+              <Link to='/user/forgotPassword' className='mx-2'>Forgot password?</Link>
+          </div>
+          <div className="d-flex justify-content-center mt-3">
+            <motion.input
+              whileHover={{ opacity: 0.8 }}
+              whileTap={{ scale: 0.95 }}
+              type="submit"
+              value="Login"
+              className="bg-success text-white border-0 rounded-pill px-5 py-2"
+            />
+          </div>
         </form>
       </div>
     </div>

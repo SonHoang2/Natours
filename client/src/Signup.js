@@ -31,7 +31,7 @@ export default function Signup() {
       if (data.status == "fail") {
         setError(data.message)
       } else if (data.status == "success") {
-        // navigate("/");
+        navigate("/");
       }
     } catch(err) {
       console.log(err);
@@ -42,8 +42,8 @@ export default function Signup() {
     <div className="h-100">
       <Header />
       <div className="d-flex justify-content-center align-items-center w-100 h-100 bg-body-secondary">
-        <form onSubmit={handleSubmit} className="shadow px-5 py-4 bg-white rounded">
-          <h1 className="text-success pb-4 fs-3 fw-bold">CREATE YOUR ACCOUNT!</h1>
+        <form onSubmit={handleSubmit} className="shadow border px-5 py-4 bg-white rounded w-400">
+          <h1 className="text-success pb-4 fs-3 fw-bold text-center">CREATE YOUR ACCOUNT!</h1>
           {
             error && 
             <div className="alert alert-danger fw-bold" role="alert">{error}. Try again.</div>
@@ -91,13 +91,15 @@ export default function Signup() {
               required
             />
           </div>
-          <motion.input
-            whileHover={{ opacity: 0.8 }}
-            whileTap={{ scale: 0.95 }}
-            type="submit"
-            value="SIGN UP"
-            className="w-100 bg-success text-white border-0 rounded-pill py-2 mt-3"
-          />
+          <div className="d-flex justify-content-center mt-3">
+            <motion.input
+              whileHover={{ opacity: 0.8 }}
+              whileTap={{ scale: 0.95 }}
+              type="submit"
+              value="Sign up"
+              className="bg-success text-white border-0 rounded-pill px-5 py-2"
+            />
+          </div>
         </form>
       </div>
     </div>

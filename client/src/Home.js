@@ -17,7 +17,7 @@ export default function Home({tours}) {
       <div className="pb-5"></div>
       <div className="pb-3"></div>
       <div className="container-fluid">
-        <div className="row">
+        <div className="row justify-content-center">
           {cards()}
         </div>
       </div>
