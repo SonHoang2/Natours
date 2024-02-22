@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Header from "./component/Header"
-import { TOUR_IMAGE_URL, USER_IMAGE_URL, TOURS_URL } from "./customValue"
+import { TOUR_IMAGE_URL, USER_IMAGE_URL, TOURS_URL, BOOKINGS_URL } from "./customValue"
 import { useNavigate } from "react-router-dom";
 
 export default function Tour({tour}) {
@@ -25,7 +25,7 @@ export default function Tour({tour}) {
         credentials: 'include',
       })
       const data = await res.json();
-
+  
       if (data.status === "success") {
         setReviews({
           data: data.data.doc,
@@ -35,11 +35,29 @@ export default function Tour({tour}) {
         window.alert(data.message);
         navigate("/user/login")
       }
-
+  
     } catch(err) {
       console.log(err);
     }
+
   }
+
+  const getCheckout = async () => {
+    try {
+      const url = BOOKINGS_URL + `/checkout-session/${tour.id}`; 
+      const res = await fetch(url, {
+        method: "GET",
+        credentials: 'include',
+      })
+      const data = await res.json();
+      console.log(data);
+      if (data.status === "success") {
+        window.location.href = data.session.url
+      }
+    } catch(err) {
+      console.log(err);
+    }
+  } 
 
   const stars = ratingStar => {
     const arr = []
@@ -47,12 +65,12 @@ export default function Tour({tour}) {
 
     for (let i = 0; i < ratingStar; i++) {
         arr.push((
-              <span class="material-symbols-outlined fill">star</span>
+              <span className="material-symbols-outlined fill text-warning">star</span>
         ))
     }
     for (let i = 0; i < remainStar; i++) {
         arr.push((
-              <span className="material-symbols-outlined">star</span>
+              <span className="material-symbols-outlined text-warning">star</span>
         ))
     }
     return arr
@@ -60,10 +78,8 @@ export default function Tour({tour}) {
 
   const navigateBefore = () => 
     setQueryParams(prev => {
-      console.log(prev);
       let obj = {...prev};
       if (prev.page > 1) {
-        getReviews();
         obj = {...prev, page: prev.page - 1}
       }
       return obj;
@@ -72,19 +88,15 @@ export default function Tour({tour}) {
   const navigateAfter = () => 
     setQueryParams(prev => {
       let obj = {...prev};
-      if (prev.page < Math.floor(reviews.length / prev.limit)) {
-        getReviews();
+      if (prev.page < Math.ceil(reviews.length / prev.limit)) {
         obj = {...prev, page: prev.page + 1 };
       }
       return obj;
     })
-  
 
   useEffect(() => {
     getReviews();
-  }, [])
-
-  console.log(user);
+  }, [queryParams.page])
 
   return (
     <div>
@@ -227,14 +239,14 @@ export default function Tour({tour}) {
         <div className="d-flex justify-content-center align-items-center">
           <span 
             type="button" 
-            class="material-symbols-outlined text-white fs-1"
+            className="material-symbols-outlined text-white fs-1"
             onClick={navigateBefore}
           >
             navigate_before
           </span>
-          <span type="button" class="bg-white p-2 fs-5">{queryParams.page}</span>
+          <span type="button" className="bg-white p-2 fs-5">{queryParams.page}</span>
           <span type="button" 
-            class="material-symbols-outlined text-white fs-1"
+            className="material-symbols-outlined text-white fs-1"
             onClick={navigateAfter}
           >
             navigate_next
@@ -250,12 +262,18 @@ export default function Tour({tour}) {
           {
             user ?
             <div className="d-flex align-items-start justify-content-center">
-              <button type="button" className="btn btn-success py-2 px-4 rounded-pill">BOOK TOUR</button>
+              <button 
+                type="button" 
+                className="btn btn-warning py-2 px-4 rounded-pill text-white"
+                onClick={getCheckout}
+              >
+                BOOK TOUR
+              </button>
             </div> :
             <div className="d-flex align-items-start justify-content-center">
               <button 
                 type="button" 
-                className="btn btn-success py-2 px-4 rounded-pill" 
+                className="btn btn-warning py-2 px-4 rounded-pill text-white" 
                 onClick={() => navigate("/user/login")}
                 >
                   LOGIN TO BOOK TOUR

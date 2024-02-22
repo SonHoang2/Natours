@@ -4,3 +4,4 @@ export const TOUR_IMAGE_URL = BASE_URL + "/images/tours/";
 export const USERS_URL = BASE_URL + "/api/v1/users";
 export const TOURS_URL = BASE_URL + "/api/v1/tours";
 export const REVIEWS_URL = BASE_URL + "/api/v1/reviews";
+export const BOOKINGS_URL = BASE_URL + "/api/v1/bookings";

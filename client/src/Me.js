@@ -1,7 +1,7 @@
 import Header from "./component/Header"
 import { useState } from "react"
 import { USER_IMAGE_URL, USERS_URL } from "./customValue"
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from "framer-motion";
 
 
@@ -95,10 +95,12 @@ export default function Me() {
               <span className="material-symbols-outlined pe-3 text-white">settings</span>
               <p className="text-white">SETTINGS</p>
             </div>
-            <div className="d-flex align-items-center pb-4">
-              <span className="material-symbols-outlined pe-3 text-white">work</span>
-              <p className="text-white">MY BOOKINGS</p>
-            </div>
+            <Link to="/user/my-tours" className="text-decoration-none">
+              <div className="d-flex align-items-center pb-4">
+                <span className="material-symbols-outlined pe-3 text-white">work</span>
+                <p className="text-white">MY BOOKINGS</p>
+              </div>
+            </Link>
             <div className="d-flex align-items-center pb-4">
               <span className="material-symbols-outlined pe-3 text-white">star</span>
               <p className="text-white">MY REVIEWS</p>
@@ -171,7 +173,7 @@ export default function Me() {
               <div className="d-flex justify-content-end">
                 <button 
                   type="submit" 
-                  className="btn btn-success h-100 rounded-pill text-uppercase mt-4" 
+                  className="btn btn-success h-100 rounded-pill text-uppercase mt-4 text-white" 
                   disabled={!dataChange}
                 >
                   Save settings
@@ -214,7 +216,7 @@ export default function Me() {
                 />
               </div>
               <div className="d-flex justify-content-end">
-                <button type="submit" className="btn btn-success h-100 rounded-pill text-uppercase mt-4">Save password</button>
+                <button type="submit" className="btn btn-success h-100 rounded-pill text-uppercase mt-4 text-white">Save password</button>
               </div>
             </form>
           </div>

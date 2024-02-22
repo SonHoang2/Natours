@@ -9,6 +9,7 @@ import Signup from './Signup';
 import Me from './Me';
 import ForgotPassword from './ForgotPassword'
 import ResetPassword from './ResetPassword';
+import MyTours from './MyTours';
 
 function App() {
   const [tours, setTours] = useState([]);
@@ -71,6 +72,10 @@ function App() {
       <Route 
         path='/user/resetPassword/:token'
         element={<ResetPassword />}
+      />
+      <Route
+        path='/user/my-tours'
+        element={<MyTours />}
       />
     </Routes>
   );

@@ -75,9 +75,9 @@ html, body, #root {
   width: 500px;
 }
 
-.card {
+/* .card {
   width: 380px;
-}
+} */
 
 input.form-control::placeholder {
   opacity: 50%
