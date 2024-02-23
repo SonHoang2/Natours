@@ -1,7 +1,6 @@
 import { Routes, Route} from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-import { TOURS_URL } from "./customValue"
 import Home from './Home';
 import Tour from './Tour';
 import Login from './Login';
@@ -10,26 +9,13 @@ import Me from './Me';
 import ForgotPassword from './ForgotPassword'
 import ResetPassword from './ResetPassword';
 import MyTours from './MyTours';
+import Admin from './Admin';
 
 function App() {
-  const [tours, setTours] = useState([]);
-  const getTours = async () => {
-    try {
-      const res = await fetch(TOURS_URL + "/", {
-        method: "GET",
-    })
-      const {data} = await res.json();
-      if (data) {
-        setTours(data.doc)
-      }
-    } catch(err) {
-      console.log(err);
-    }
-  }
-
-  useEffect(() => {
-    getTours();
-  }, [])
+  const [tours, setTours] = useState({
+    data: [],
+    length: ""
+  });
 
   return (
     <Routes>
@@ -38,10 +24,11 @@ function App() {
         element={
           <Home 
             tours={tours}
+            setTours={setTours}
           />}
       />
       {
-        tours.map(tour => (
+        tours.data.map(tour => (
           <Route
             path={'/tour/' + tour.slug}
             element={
@@ -76,6 +63,10 @@ function App() {
       <Route
         path='/user/my-tours'
         element={<MyTours />}
+      />
+      <Route
+        path='/user/admin'
+        element={<Admin />}
       />
     </Routes>
   );

@@ -1,11 +1,11 @@
 import Header from "./component/Header"
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
 import { USER_IMAGE_URL, USERS_URL } from "./customValue"
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from "framer-motion";
 
 
-export default function Me() {
+export default function Admin() {
   const user = JSON.parse(localStorage.getItem("user"));
 
   const [dataChange, setDataChange] = useState(false);
@@ -84,10 +84,10 @@ export default function Me() {
   }
 
   useEffect(() => {
-    if (user.role !== "user") {
-      alert("You don't have permission to access this page")
+    if (user.role !== "admin") {
+      alert("You don't have permission to access this page");
+      navigate("/");
     }
-    navigate("/");
   }, [])
 
   return (
@@ -101,20 +101,6 @@ export default function Me() {
             <div className="d-flex align-items-center pb-4">
               <span className="material-symbols-outlined pe-3 text-white">settings</span>
               <p className="text-white">SETTINGS</p>
-            </div>
-            <Link to="/user/my-tours" className="text-decoration-none">
-              <div className="d-flex align-items-center pb-4">
-                <span className="material-symbols-outlined pe-3 text-white">work</span>
-                <p className="text-white">MY BOOKINGS</p>
-              </div>
-            </Link>
-            <div className="d-flex align-items-center pb-4">
-              <span className="material-symbols-outlined pe-3 text-white">star</span>
-              <p className="text-white">MY REVIEWS</p>
-            </div>
-            <div className="d-flex align-items-center pb-4">
-              <span className="material-symbols-outlined pe-3 text-white">credit_card</span>
-              <p className="text-white">MY BILING</p>
             </div>
           </div>
           <div className="bg-white w-500 rounded-end">

@@ -99,7 +99,7 @@ export default function Tour({tour}) {
   }, [queryParams.page])
 
   return (
-    <div>
+    <div className="tour">
       <Header />
       <div className="d-flex justify-content-center h-900 position-relative">
         <img
@@ -107,7 +107,7 @@ export default function Tour({tour}) {
             src={TOUR_IMAGE_URL + tour.imageCover} 
             alt="tour image" 
         />
-        <div className="position-absolute bg-success w-100 h-100 opacity-50">
+        <div className="position-absolute bg-success-gradient w-100 h-100 opacity-50">
         </div>
         <div className="position-absolute w-100 h-100 d-flex justify-content-center align-items-center flex-column">
           <div>
@@ -124,11 +124,10 @@ export default function Tour({tour}) {
             </div>
           </div>
         </div>
-
       </div>
-      <div className="container-xl pt-5">
-        <div className="row">
-          <div className="pe-4 ps-5 col-lg-6">
+      <div className="shadow container-xl px-0">
+        <div className="row m-0">
+          <div className="col-lg-6 bg-light p-5">
             <div className="pb-5">
               <h3 className="text-uppercase text-success fw-bold pb-5 fs-3">quick facts</h3>
               <div className="d-flex align-items-center pb-4 fs-5">
@@ -175,111 +174,111 @@ export default function Tour({tour}) {
               </div>
             </div>
           </div>
-          <div className="col-lg-6 pb-5 ps-5 pe-5">
+          <div className="col-lg-6 p-5  bg-light">
             <h3 className="text-uppercase text-success fw-bold pb-5 fs-4">about the park camper tour</h3>      
             <p className="lh-base fs-5">{tour.description}</p> 
           </div>
         </div>
-      </div>
-      <div className="container-xl p-0">
-        <div className="d-flex pb-5 flex-column">
-          {
-            tour.images.map(image => (
-              <div className="h-500">
-                <img src={TOUR_IMAGE_URL + image} className="w-100 h-100 object-fit-cover"/>
-              </div>
-            ))
-          }
-        </div>
-      </div>
-      <div className="container-xl p-5 bg-success">
-        <div className="pb-3">
-          <span className="text-uppercase fw-bold fs-4 text-white">Product Ratings</span>
-        </div>
-        <div className="pb-4 d-flex bg-white rounded shadow mb-3">
-          <p className="fs-5 p-2 rounded me-3"> 
-            <span className="fs-4 fw-bold">{tour.ratingsAverage} </span> out of 5
-          </p>
-          <div>
-            <p className="fs-5 p-2 rounded"> All ({reviews.length}) </p>
+        <div className="p-0">
+          <div className="d-flex">
+            {
+              tour.images.map(image => (
+                <div className="h-500">
+                  <img src={TOUR_IMAGE_URL + image} className="w-100 h-100 object-fit-cover"/>
+                </div>
+              ))
+            }
           </div>
         </div>
-        <div>
-          {
-            reviews.data.map(review => (
-              <div className="bg-white rounded">
-                <div className="d-flex mb-4 p-4">
-                  <img 
-                    className="user-avatar rounded-circle"
-                    src={USER_IMAGE_URL + review.user.photo}
-                  />
-                  <div className="ps-3">
-                    <p className="pb-2">{review.user.name}</p>
-                    <div className="d-flex pb-2">
-                      {stars(review.rating)}
+        <div className="p-5 pt-0 bg-success">
+          <div className="pb-3 pt-5">
+            <span className="text-uppercase fw-bold fs-4 text-white">Product Ratings</span>
+          </div>
+          <div className="pb-4 d-flex bg-white rounded shadow mb-3">
+            <p className="fs-5 p-2 rounded me-3"> 
+              <span className="fs-4 fw-bold">{tour.ratingsAverage} </span> out of 5
+            </p>
+            <div>
+              <p className="fs-5 p-2 rounded"> All ({reviews.length}) </p>
+            </div>
+          </div>
+          <div>
+            {
+              reviews.data.map(review => (
+                <div className="bg-white rounded">
+                  <div className="d-flex mb-4 p-4">
+                    <img 
+                      className="user-avatar rounded-circle"
+                      src={USER_IMAGE_URL + review.user.photo}
+                    />
+                    <div className="ps-3">
+                      <p className="pb-2">{review.user.name}</p>
+                      <div className="d-flex pb-2">
+                        {stars(review.rating)}
+                      </div>
+                      <p className="pb-4">{new Date(review.createAt).toLocaleString('en-US', {
+                          year: '2-digit',
+                          month: '2-digit',
+                          day: '2-digit',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          hourCycle: "h24"
+                        })}
+                      </p>
+                      <p>
+                        {review.review}
+                      </p>
                     </div>
-                    <p className="pb-4">{new Date(review.createAt).toLocaleString('en-US', {
-                        year: '2-digit',
-                        month: '2-digit',
-                        day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hourCycle: "h24"
-                      })}
-                    </p>
-                    <p>
-                      {review.review}
-                    </p>
                   </div>
                 </div>
-              </div>
-            ))
-          }
-        </div>
-        <div className="d-flex justify-content-center align-items-center">
-          <span 
-            type="button" 
-            className="material-symbols-outlined text-white fs-1"
-            onClick={navigateBefore}
-          >
-            navigate_before
-          </span>
-          <span type="button" className="bg-white p-2 fs-5">{queryParams.page}</span>
-          <span type="button" 
-            className="material-symbols-outlined text-white fs-1"
-            onClick={navigateAfter}
-          >
-            navigate_next
-          </span>
-        </div>
-      </div>
-      <div className="container-xl mt-4 d-flex justify-content-center pb-3">
-        <div className="shadow d-flex justify-content-between rounded p-5 flex-md-row flex-column">
-          <div className="pb-3 pe-md-3">
-            <p className="text-success pb-2 fw-bold text-uppercase fs-5">What are you waiting for?</p>
-            <p className="text-secondary">{tour.duration} days. 1 adventure. Infinite memories. Make it yours today!</p>
+              ))
+            }
           </div>
-          {
-            user ?
-            <div className="d-flex align-items-start justify-content-center">
-              <button 
-                type="button" 
-                className="btn btn-warning py-2 px-4 rounded-pill text-white"
-                onClick={getCheckout}
-              >
-                BOOK TOUR
-              </button>
-            </div> :
-            <div className="d-flex align-items-start justify-content-center">
-              <button 
-                type="button" 
-                className="btn btn-warning py-2 px-4 rounded-pill text-white" 
-                onClick={() => navigate("/user/login")}
-                >
-                  LOGIN TO BOOK TOUR
-              </button>
+          <div className="d-flex justify-content-center align-items-center">
+            <span 
+              type="button" 
+              className="material-symbols-outlined text-white fs-1"
+              onClick={navigateBefore}
+            >
+              navigate_before
+            </span>
+            <span type="button" className="bg-white p-2 fs-5">{queryParams.page}</span>
+            <span type="button" 
+              className="material-symbols-outlined text-white fs-1"
+              onClick={navigateAfter}
+            >
+              navigate_next
+            </span>
+          </div>
+        </div>
+        <div className="mt-4 d-flex justify-content-center pb-3">
+          <div className="shadow d-flex justify-content-between rounded p-5 flex-md-row flex-column">
+            <div className="pb-3 pe-md-3">
+              <p className="text-success pb-2 fw-bold text-uppercase fs-5">What are you waiting for?</p>
+              <p className="text-secondary">{tour.duration} days. 1 adventure. Infinite memories. Make it yours today!</p>
             </div>
-          }
+            {
+              user ?
+              <div className="d-flex align-items-start justify-content-center">
+                <button 
+                  type="button" 
+                  className="btn btn-warning py-2 px-4 rounded-pill text-white"
+                  onClick={getCheckout}
+                >
+                  BOOK TOUR
+                </button>
+              </div> :
+              <div className="d-flex align-items-start justify-content-center">
+                <button 
+                  type="button" 
+                  className="btn btn-warning py-2 px-4 rounded-pill text-white" 
+                  onClick={() => navigate("/user/login")}
+                  >
+                    LOGIN TO BOOK TOUR
+                </button>
+              </div>
+            }
+          </div>
         </div>
       </div>
     </div>

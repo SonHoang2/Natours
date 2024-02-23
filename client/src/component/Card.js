@@ -1,25 +1,26 @@
 import { Link } from "react-router-dom";
 import { TOUR_IMAGE_URL } from "../customValue"
 
-// col-12 col-md-6 col-lg-4 col-xl-3
 export default function Card(props) {
   return (
-    <div className="mt-4 border-0 card">
-      <div className="d-flex flex-column shadow">
+    <div className="col">
+      <div className="shadow card h-100">
         <div className="h-300 w-100 position-relative">
-          <div className="position-absolute bg-success w-100 h-100 opacity-50 rounded-top clip-path z-2"></div>
-          <div className="clip-path w-100 h-100">
+          <div className="position-absolute bg-success-gradient w-100 h-100 opacity-50 rounded-top z-2 "></div>
+          <div className="w-100 h-100">
             <img
-              className="w-100 h-100 object-fit-cover rounded-top"
+              className="w-100 h-100 object-fit-cover card-img-top"
               src={TOUR_IMAGE_URL + props.imageCover} 
-              alt="tour image" 
+              alt="tour image"
             />
           </div>
-          <h3 className="position-absolute end-0 bottom-0 w-50 d-flex flex-row-reverse pe-3 z-2">
-            <span className="text-white bg-success text-end p-3 text-uppercase fs-4 lh-sm">{props.name}</span>
-          </h3>
+          <div className="position-absolute end-0 bottom-0 w-75 pe-3 pb-2 z-2 d-flex flex-column-reverse">
+            <p className="text-end">
+              <span className="text-white text-end text-uppercase fs-3 lh-base text-shadow bg-success-gradient p-2 box-decoration-break">{props.name}</span>
+            </p>
+          </div>
         </div>
-        <div className="w-100 p-3">
+        <div className="w-100 card-body">
           <p className="text-uppercase fw-bold pb-2 fs-5 text-info">{`${props.difficulty} ${props.duration} days tours`}</p>
           <p className="pb-3 lh-base">{props.summary}</p>
           <div className="row">

@@ -5,6 +5,14 @@ export default function Header() {
   const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
   
+  const profileLink = () => {
+    let url = '/user';
+    if (user.role === "admin") url = url + '/admin'
+    if (user.role === "user") url = url + '/me'
+
+    return url
+  }
+
   return (
     <div className="bg-white d-flex px-3 py-1 justify-content-between w-100 align-items-center z-3 position-fixed shadow">
       <div>
@@ -36,7 +44,10 @@ export default function Header() {
           >
             LOG OUT
           </button>
-          <Link to="/user/me" className="text-decoration-none text-black">
+          <Link 
+            to={profileLink()} 
+            className="text-decoration-none text-black"
+          >
             <div className="d-flex align-items-center h-100">
               <div className="d-flex align-items-center h-100">
                 <img 

@@ -75,9 +75,18 @@ html, body, #root {
   width: 500px;
 }
 
-/* .card {
-  width: 380px;
-} */
+.bg-success-gradient {
+  background-image: linear-gradient(to bottom right, #92f3ff, rgb(13 133 149));
+}
+
+.text-shadow {
+  text-shadow: 0px 2px 4px #26647d;
+}
+
+.box-decoration-break {
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
 
 input.form-control::placeholder {
   opacity: 50%
