@@ -58,16 +58,11 @@ exports.createBookingCheckout = catchAsync(async (req, res, next) => {
 exports.getMyTours = catchAsync(async (req, res, next) => {
   const bookings = await Booking.find({user: req.user.id});
 
-  const tourIDs = bookings.map(booking => booking.tour);
-  const tours = await Tour.find({ _id: { $in: tourIDs }});
-  
-  console.log(tours);
   res.status(200).json({
     status: 'success',
-    tours
+    bookings
   })
 })
-
 
 exports.getAllBookings = factory.getAll(Booking);
 exports.getBooking = factory.getOne(Booking);

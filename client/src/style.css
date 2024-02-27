@@ -112,3 +112,34 @@ input.form-control::placeholder {
   'GRAD' 0,
   'opsz' 24
 }
+
+.timeline {
+  .outer {
+    border-left: 2px solid #333;
+  }
+  
+  .title {
+    position: relative;
+  }
+
+  .title::before {
+    content: "";
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    border-radius: 100%;
+    left: -33px;
+    background-color: black;
+  }
+}
+
+.tour-image--sm {
+  width: 100px;
+  height: 100px;
+}
+
+.review-card {
+  .review-card--body {
+    width: 314px;
+  }
+}

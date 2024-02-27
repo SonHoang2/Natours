@@ -8,8 +8,7 @@ export default function Header() {
   const profileLink = () => {
     let url = '/user';
     if (user.role === "admin") url = url + '/admin'
-    if (user.role === "user") url = url + '/me'
-
+    else if (user.role === "user") url = url + '/me'
     return url
   }
 
@@ -34,9 +33,9 @@ export default function Header() {
             </button>
           </Link>
         </div> :
-        <div className="d-flex fw-light">
+        <div className="d-flex">
           <button 
-            className="btn text-uppercase p-3 me-2 fs-5 fw-light text-black"
+            className="btn text-uppercase p-3 me-2 fs-5 text-black"
             onClick={() => {
               localStorage.removeItem("user")
               navigate("/")

@@ -86,36 +86,41 @@ export default function Me() {
   useEffect(() => {
     if (user.role !== "user") {
       alert("You don't have permission to access this page")
+      navigate("/");
     }
-    navigate("/");
   }, [])
 
   return (
     <div className="h-100">
       <Header />
-      <div className="bg-body-secondary h-100">
+      <motion.div 
+        className="bg-body-secondary h-100"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{opacity: 0}}
+      >
         <div className="pb-5"></div>
         <div className="pb-5"></div>
         <div className="d-flex justify-content-center bg-body-secondary pb-5">
           <div className="bg-success p-5 w-400 rounded-start">
-            <div className="d-flex align-items-center pb-4">
-              <span className="material-symbols-outlined pe-3 text-white">settings</span>
-              <p className="text-white">SETTINGS</p>
-            </div>
-            <Link to="/user/my-tours" className="text-decoration-none">
+            <Link to="/user/me" className="text-decoration-none">
+              <div className="d-flex align-items-center pb-4">
+                <span className="material-symbols-outlined pe-3 text-white">settings</span>
+                <p className="text-white">SETTINGS</p>
+              </div>
+            </Link>
+            <Link to="/user/my-bookings" className="text-decoration-none">
               <div className="d-flex align-items-center pb-4">
                 <span className="material-symbols-outlined pe-3 text-white">work</span>
                 <p className="text-white">MY BOOKINGS</p>
               </div>
             </Link>
-            <div className="d-flex align-items-center pb-4">
-              <span className="material-symbols-outlined pe-3 text-white">star</span>
-              <p className="text-white">MY REVIEWS</p>
-            </div>
-            <div className="d-flex align-items-center pb-4">
-              <span className="material-symbols-outlined pe-3 text-white">credit_card</span>
-              <p className="text-white">MY BILING</p>
-            </div>
+            <Link to="/user/my-reviews" className="text-decoration-none">
+              <div className="d-flex align-items-center pb-4">
+                <span className="material-symbols-outlined pe-3 text-white">star</span>
+                <p className="text-white">MY REVIEWS</p>
+              </div>
+            </Link>
           </div>
           <div className="bg-white w-500 rounded-end">
             <form onSubmit={handleSubmitInfo} className="p-5 pb-3 border-bottom">
@@ -228,7 +233,7 @@ export default function Me() {
             </form>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   )
 }

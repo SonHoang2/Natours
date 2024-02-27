@@ -3,8 +3,8 @@ import Card from "./component/Card"
 import { useSearchParams  } from "react-router-dom";
 import { BOOKINGS_URL } from "./customValue"
 import { useEffect, useState } from "react";
-import { TOURS_URL } from "./customValue"
-
+import { TOURS_URL } from "./customValue";
+import { motion } from "framer-motion";
 
 export default function Home({tours, setTours}) {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -24,12 +24,15 @@ export default function Home({tours, setTours}) {
     })
       const data = await res.json();
       if (data.data) {
-        console.log(data);
-        setTours(prev => ({
-          ...prev,
-          data: data.data.doc,
-          length: data.total
-        }));
+        setTours(prev => {
+          const obj = {
+            ...prev,
+            data: data.data.doc,
+            length: data.total
+          };
+          localStorage.setItem("tour",  JSON.stringify(obj));
+          return obj
+        });
       }
     } catch(err) {
       console.log(err);
@@ -104,7 +107,12 @@ export default function Home({tours, setTours}) {
       <Header />
       <div className="pb-5"></div>
       <div className="pb-5"></div>
-      <div className="container-fluid">
+      <motion.div 
+        className="container-fluid"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{opacity: 0}}
+      >
         <div className="bg-secondary-subtle shadow p-3 mb-4 rounded d-flex justify-content-between">
           <div className="d-flex align-items-center">
             <p className="p-2 pe-4">Sort by</p>
@@ -154,7 +162,7 @@ export default function Home({tours, setTours}) {
         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
           {cards()}
         </div>
-      </div>
+      </motion.div>
     </div>
   )
 }

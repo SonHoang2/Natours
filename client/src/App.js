@@ -1,5 +1,5 @@
 import { Routes, Route} from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Home from './Home';
 import Tour from './Tour';
@@ -8,7 +8,8 @@ import Signup from './Signup';
 import Me from './Me';
 import ForgotPassword from './ForgotPassword'
 import ResetPassword from './ResetPassword';
-import MyTours from './MyTours';
+import MyBookings from './MyBookings';
+import MyReviews from './MyReviews';
 import Admin from './Admin';
 
 function App() {
@@ -16,6 +17,10 @@ function App() {
     data: [],
     length: ""
   });
+
+  useEffect(() => {
+    setTours(JSON.parse(localStorage.getItem("tour")))
+  }, [])
 
   return (
     <Routes>
@@ -31,9 +36,9 @@ function App() {
         tours.data.map(tour => (
           <Route
             path={'/tour/' + tour.slug}
+            key={tour.id}
             element={
               <Tour 
-                key={tour.id}
                 tour={tour}
               />
             }
@@ -61,8 +66,12 @@ function App() {
         element={<ResetPassword />}
       />
       <Route
-        path='/user/my-tours'
-        element={<MyTours />}
+        path='/user/my-bookings'
+        element={<MyBookings />}
+      />
+      <Route
+        path='/user/my-reviews'
+        element={<MyReviews />}
       />
       <Route
         path='/user/admin'

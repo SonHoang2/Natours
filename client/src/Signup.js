@@ -41,7 +41,12 @@ export default function Signup() {
   return (
     <div className="h-100">
       <Header />
-      <div className="d-flex justify-content-center align-items-center w-100 h-100 bg-body-secondary">
+      <motion.div 
+        className="d-flex justify-content-center align-items-center w-100 h-100 bg-body-secondary"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{opacity: 0}}
+      >
         <form onSubmit={handleSubmit} className="shadow border px-5 py-4 bg-white rounded w-400">
           <h1 className="text-success pb-4 fs-3 fw-bold text-center">CREATE YOUR ACCOUNT!</h1>
           {
@@ -101,7 +106,7 @@ export default function Signup() {
             />
           </div>
         </form>
-      </div>
+      </motion.div>
     </div>
   )
 }

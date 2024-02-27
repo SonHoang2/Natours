@@ -93,7 +93,12 @@ export default function Admin() {
   return (
     <div className="h-100">
       <Header />
-      <div className="bg-body-secondary h-100">
+      <motion.div 
+        className="bg-body-secondary h-100"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{opacity: 0}}
+      >
         <div className="pb-5"></div>
         <div className="pb-5"></div>
         <div className="d-flex justify-content-center bg-body-secondary pb-5">
@@ -214,7 +219,7 @@ export default function Admin() {
             </form>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   )
 }
