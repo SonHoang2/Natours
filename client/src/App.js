@@ -18,8 +18,13 @@ function App() {
     length: ""
   });
 
+  console.log(tours);
+
   useEffect(() => {
-    setTours(JSON.parse(localStorage.getItem("tour")))
+    const tourLocalStorage = localStorage.getItem("tour");
+    if (tourLocalStorage) {
+      setTours(JSON.parse(tourLocalStorage))
+    }
   }, [])
 
   return (
@@ -33,7 +38,7 @@ function App() {
           />}
       />
       {
-        tours.data.map(tour => (
+        tours.data != null && tours.data.map(tour => (
           <Route
             path={'/tour/' + tour.slug}
             key={tour.id}
