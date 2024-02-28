@@ -18,8 +18,6 @@ function App() {
     length: ""
   });
 
-  console.log(tours);
-
   useEffect(() => {
     const tourLocalStorage = localStorage.getItem("tour");
     if (tourLocalStorage) {

@@ -6,6 +6,8 @@ import { motion } from "framer-motion";
 
 export default function Tour({tour}) {
   const user = JSON.parse(localStorage.getItem("user"));
+  const token = JSON.parse(localStorage.getItem("token"));
+
   const [reviews, setReviews] = useState({
     data: [],
     length: "",
@@ -23,7 +25,9 @@ export default function Tour({tour}) {
       const url = TOURS_URL + `/${tour.id}/reviews/?page=${queryParams.page}&limit=${queryParams.limit}`; 
       const res = await fetch(url, {
         method: "GET",
-        credentials: 'include',
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       })
       const data = await res.json();
   
@@ -48,7 +52,9 @@ export default function Tour({tour}) {
       const url = BOOKINGS_URL + `/checkout-session/${tour.id}`; 
       const res = await fetch(url, {
         method: "GET",
-        credentials: 'include',
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       })
       const data = await res.json();
       if (data.status === "success") {

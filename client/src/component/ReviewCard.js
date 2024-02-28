@@ -1,8 +1,6 @@
 import { TOUR_IMAGE_URL } from "../customValue"
-import { Link } from "react-router-dom";
 
 export default function ReviewCard ({review}) {
-  console.log(review);
 
   const stars = ratingStar => {
     const arr = []

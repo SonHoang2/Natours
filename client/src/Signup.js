@@ -16,21 +16,20 @@ export default function Signup() {
   const handleSubmit = async e => {
     try {
       e.preventDefault();
-      console.log(name, email, password, passwordConfirm);
       const res = await fetch(
         USERS_URL + "/signup", {
           method: "POST",
           body: JSON.stringify({name, email, password, passwordConfirm}),
-          credentials: 'include', 
           headers: {'Content-Type': 'application/json'},
         }
       )
       const data = await res.json();
       
-      console.log(data);
       if (data.status == "fail") {
         setError(data.message)
       } else if (data.status == "success") {
+        localStorage.setItem("user", JSON.stringify(data.data.user));
+        localStorage.setItem("token", JSON.stringify(data.token));
         navigate("/");
       }
     } catch(err) {

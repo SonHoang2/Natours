@@ -7,8 +7,9 @@ import { TOURS_URL } from "./customValue";
 import { motion } from "framer-motion";
 
 export default function Home({tours, setTours}) {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const token = JSON.parse(localStorage.getItem("token"));
 
+  const [searchParams, setSearchParams] = useSearchParams();
   const [queryParams, setQueryParams] = useState({
     sort: "",
     limit: "8",
@@ -58,14 +59,12 @@ export default function Home({tours, setTours}) {
       const res = await fetch(url, {
         method: "POST",
         body: JSON.stringify({tour, user, price}),
-        credentials: 'include', 
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
       })
       const data = await res.json();
-      console.log(data);
-      if (data.status === "success") {
-
-      }
     } catch(err) {
       console.log(err);
     }

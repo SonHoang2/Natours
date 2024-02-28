@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 
 export default function Admin() {
   const user = JSON.parse(localStorage.getItem("user"));
+  const token = JSON.parse(localStorage.getItem("token"));
 
   const [dataChange, setDataChange] = useState(false);
   const [image, setImage] = useState({ preview: '', data: '' });
@@ -40,7 +41,9 @@ export default function Admin() {
         USERS_URL + "/updateMe", {
           method: "PATCH",
           body: formData,
-          credentials: 'include', 
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
       )
       const data = await res.json();
@@ -65,8 +68,10 @@ export default function Admin() {
         USERS_URL + "/updateMyPassword", {
           method: "PATCH",
           body: JSON.stringify({passwordCurrent, password, passwordConfirm}),
-          credentials: 'include', 
-          headers: {'Content-Type': 'application/json'},
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          }
         }
       )
       const data = await res.json();

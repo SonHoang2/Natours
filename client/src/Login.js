@@ -18,17 +18,18 @@ export default function Login() {
         USERS_URL + "/login", {
           method: "POST",
           body: JSON.stringify({email, password}),
-          credentials: 'include', 
-          headers: {'Content-Type': 'application/json'},
+          headers: {
+            'Content-Type': 'application/json',
+          },
         }
       )
       const data = await res.json();
       
-      console.log(data);
       if (data.status == "fail") {
         setError(data.message)
       } else if (data.status == "success") {
         localStorage.setItem("user", JSON.stringify(data.data.user));
+        localStorage.setItem("token", JSON.stringify(data.token));
         navigate("/");
       }
     } catch(err) {
@@ -59,6 +60,7 @@ export default function Login() {
               type="text" 
               placeholder="you@example.com"
               onChange={e => setEmail(e.target.value)}
+              autoComplete="on"
               required
             />
           </div>
@@ -70,6 +72,7 @@ export default function Login() {
               type="password" 
               placeholder="••••••••"
               onChange={e => setPassword(e.target.value)}
+              autoComplete="on"
               required
             />
           </div>

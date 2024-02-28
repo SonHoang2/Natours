@@ -6,6 +6,7 @@ import { BOOKINGS_URL } from "./customValue"
 import BookingCard from "./component/BookingCard";
 
 export default function MyBookings () {
+  const token = JSON.parse(localStorage.getItem("token"));
   const [bookings, setBookings] = useState([]);
 
   const getBookings = async () => {
@@ -13,7 +14,9 @@ export default function MyBookings () {
       const url = BOOKINGS_URL + `/my-tours`; 
       const res = await fetch(url, {
         method: "GET",
-        credentials: 'include',
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       })
       const data = await res.json();
       if (data.status === "success") {

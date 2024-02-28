@@ -7,13 +7,16 @@ import ReviewCard from "./component/ReviewCard";
 
 export default function MyReviews () {
   const [reviews, setReviews] = useState([]);
+  const token = JSON.parse(localStorage.getItem("token"));
 
   const getReviews = async () => {
     try {
       const url = REVIEWS_URL + `/me`; 
       const res = await fetch(url, {
         method: "GET",
-        credentials: 'include',
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       })
       const data = await res.json();
       if (data.status === "success") {
