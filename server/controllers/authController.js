@@ -4,6 +4,14 @@ const jwt = require('jsonwebtoken');
 const AppError = require('../utils/AppError');
 const sendEmail = require('../utils/email');
 const crypto = require('crypto');
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+const oAuth2Client = new OAuth2Client(
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET,
+  'postmessage',
+);
 
 const signToken = id => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -59,6 +67,26 @@ exports.login = catchAsync(async (req, res, next) => {
     }
 
     createSendToken(user, 200, res)
+})
+
+exports.GoogleLogin = catchAsync(async (req, res, next) => {
+  // verify google code
+  const { tokens } = await oAuth2Client.getToken(req.body.code); 
+
+  const ticket = await client.verifyIdToken({
+    idToken: tokens.id_token,
+    audience: process.env.GOOGLE_CLIENT_ID,
+  });
+  const payload = ticket.getPayload();
+  // check if user email have in database
+  const {email, name} = payload;
+
+  let user = await User.findOne({email});
+  if (!user) {
+    user = await User.create({name,email})
+  }
+ 
+  createSendToken(user, 201, res)
 })
 
 exports.protect = catchAsync(async(req, res, next) => {

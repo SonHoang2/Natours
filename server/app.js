@@ -69,6 +69,7 @@ app.use(
 //   next();
 // })
 
+
 // allow client use images store in backend
 app.use('/images/tours', express.static(path.join(__dirname + '/images/tours/')));
 app.use('/images/users', express.static(path.join(__dirname + '/images/users/')));
