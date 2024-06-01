@@ -7,7 +7,6 @@ import Header from "./component/Header"
 export default function ForgotPassword () {
     const [email, setEmail] = useState("");
     const [error, setError] = useState("");
-    const navigate = useNavigate();
 
     async function handleSubmit (e) {
         try {
@@ -22,7 +21,8 @@ export default function ForgotPassword () {
             if (data.status === "fail") {
               setError(data.message)
             } else if (data.status === "success") {
-              alert(data.message)
+              setEmail("");
+              alert(data.message);
             } else {
               alert(data.message)
             }
