@@ -101,13 +101,6 @@ export default function Home({ tours, setTours }) {
         getTours();
     }, [queryParams.sort, queryParams.page])
 
-    useEffect(() => {
-        const script = document.createElement('script');
-        script.src = "https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1";
-        script.async = true;
-        document.body.appendChild(script);
-    }, []);
-    
     return (
         <div>
             <Header />
@@ -168,12 +161,6 @@ export default function Home({ tours, setTours }) {
                 <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
                     {cards()}
                 </div>
-                <df-messenger
-                    intent="WELCOME"
-                    chat-title="ChatboxforWebservice"
-                    agent-id="485df303-8e41-4067-8169-f7175f187cf5"
-                    language-code="en"
-                ></df-messenger>
             </motion.div>
         </div>
     )
