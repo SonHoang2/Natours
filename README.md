@@ -4,10 +4,11 @@
 - Front End: React, HTML, CSS, Bootstrap, JavaScript
 - Back End: NodeJS, Express
 - Database: MongoDB
-- Architectural Pattern : MVC
+- Architectural Pattern: MVC
 
 ## Key Features 
-- Authentication and Authorization: 
+- Authentication and Authorization:
+    - Using RBAC for authorization
     - Users can sign up, log in, log out, update, and reset passwords
     - Users can utilize Google accounts for booking tours.
 
@@ -17,7 +18,7 @@
 
 - Tour Management
     - Allows users to manage bookings, check tour maps, and view users' reviews and ratings.
-    - Tours can be created by either an admin user or a lead guide.
+    - Tours can be created by an admin user or a lead guide.
     - Every user has access to view tours.
     - Admin users or lead guides can update, and delete tours.
 
