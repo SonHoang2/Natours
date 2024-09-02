@@ -15,6 +15,11 @@ export default function Signup() {
     const handleSubmit = async e => {
         try {
             e.preventDefault();
+
+            if (password !== passwordConfirm) {
+                return setError("Password and confirm password are not the same");
+            }
+
             const res = await fetch(
                 USERS_URL + "/signup", {
                 method: "POST",
