@@ -11,7 +11,6 @@ import ResetPassword from './ResetPassword';
 import MyBookings from './MyBookings';
 import MyReviews from './MyReviews';
 import Admin from './Admin';
-import ChatApp from './ChatApp';
 
 function App() {
     const [tours, setTours] = useState({
@@ -80,10 +79,6 @@ function App() {
             <Route
                 path='/user/admin'
                 element={<Admin />}
-            />
-            <Route
-                path='/chat/app'
-                element={<ChatApp />}
             />
         </Routes>
     );
