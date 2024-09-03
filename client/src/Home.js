@@ -7,7 +7,8 @@ import { TOURS_URL } from "./customValue";
 import { motion } from "framer-motion";
 
 export default function Home({ tours, setTours }) {
-    const token = JSON.parse(localStorage.getItem("token"));
+    const tokenJSON = localStorage.getItem("token");
+    const token = tokenJSON ? JSON.parse(localStorage.getItem("token")) : null;
 
     const [searchParams, setSearchParams] = useSearchParams();
     const [queryParams, setQueryParams] = useState({

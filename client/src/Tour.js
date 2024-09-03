@@ -38,7 +38,7 @@ export default function Tour({tour}) {
         })
       } else if (data.status === "fail") {
         window.alert(data.message);
-        navigate("/user/login")
+        navigate("/auth/login")
       }
   
     } catch(err) {
@@ -303,7 +303,7 @@ export default function Tour({tour}) {
                   <button 
                     type="button" 
                     className="btn btn-warning py-2 px-4 rounded-pill text-white" 
-                    onClick={() => navigate("/user/login")}
+                    onClick={() => navigate("/auth/login")}
                     >
                       LOGIN TO BOOK TOUR
                   </button>
