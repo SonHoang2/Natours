@@ -29,7 +29,7 @@ const createSendToken = (user, statusCode, res) => {
     user.passwordResetToken = undefined;
 
     console.log(user);
-    
+
 
     res.status(statusCode).json({
         status: 'success',

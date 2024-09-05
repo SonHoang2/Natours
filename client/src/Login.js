@@ -3,6 +3,7 @@ import { USERS_URL, CLIENT_URL } from "./customValue"
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
+import axios from 'axios';
 import queryString from "query-string";
 
 
@@ -28,7 +29,7 @@ export default function Login() {
             )
             const data = await res.json();
             console.log(data);
-            
+
             if (data.status == "success") {
                 localStorage.setItem("user", JSON.stringify(data.data.user));
                 localStorage.setItem("token", JSON.stringify(data.token));
@@ -41,36 +42,13 @@ export default function Login() {
         }
     }
 
-    // const googleLogin = useGoogleLogin({
-    //     onSuccess: async ({ code }) => {
-    //         const res = await fetch(USERS_URL + "/login/google", {
-    //             method: "POST",
-    //             body: JSON.stringify({ code }),
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //             },
-    //         })
-    //         const data = await res.json();
-    //         console.log(data);
-    //         if (data.status == "fail") {
-    //             setError(data.message)
-    //         } else if (data.status == "success") {
-    //             localStorage.setItem("user", JSON.stringify(data.data.user));
-    //             localStorage.setItem("token", JSON.stringify(data.token));
-    //             navigate("/");
-    //         }
-    //     },
-    //     flow: 'auth-code',
-    //     onError: () => {
-    //         console.log('Login Failed');
-    //     },
-    // })
     // google login
     const handleAuthRedirect = async () => {
-        if (location.pathname === "/auth/google") {
-            try {
-                const { code } = queryString.parse(location.search);
+        try {
+            console.log(location.pathname);
+            const { code } = queryString.parse(location.search);
 
+            if (location.pathname === "/auth/google") {
                 const URL = USERS_URL + `/login/google`;
                 const response = await fetch(URL, {
                     method: 'POST',
@@ -84,16 +62,15 @@ export default function Login() {
                 localStorage.setItem("user", JSON.stringify(data.data.user));
                 localStorage.setItem("token", JSON.stringify(data.token));
                 navigate("/");
-
-            } catch (error) {
-                console.error('Error fetching auth data:', error);
             }
+
+
+        } catch (error) {
+            console.error('Error fetching auth data:', error);
         }
     };
 
     const googleLogin = async () => {
-        console.log(CLIENT_URL);
-        
         const queryParams = queryString.stringify({
             client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID, // It must correspond to what we declared earlier in the backend
             scope: "email profile", // This is the user data you have access to, in our case its just the mail.
@@ -108,9 +85,35 @@ export default function Login() {
         window.location.href = url;
     }
 
+    const twitterLogin = async () => {
+        try {
+            const queryParams = queryString.stringify({
+                oauth_consumer_key: "QtPuEuQ4rwTjb41Vjv1MD2xNq",
+                oauth_callback: encodeURIComponent(CLIENT_URL + "/auth/twitter")
+            });
+
+            const URL = `https://api.x.com/oauth/request_token?${queryParams}`;
+            console.log(URL);
+
+            const response = await axios.post(URL, {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+        } catch (error) {
+            console.error('Error fetching auth data:', error);
+        }
+    }
+
     useEffect(() => {
-        if (location.pathname === "/auth/google") {
-            handleAuthRedirect()
+        // login with social account
+        handleAuthRedirect()
+
+        // check if user is login
+        const userJSON = localStorage.getItem("user");
+        if (userJSON) {
+            navigate("/");
         }
 
     }, [location.pathname]);
@@ -165,15 +168,22 @@ export default function Login() {
                                 whileTap={{ scale: 0.95 }}
                                 type="submit"
                                 value="Login"
-                                className="bg-success text-white border-0 rounded-pill px-5 py-2"
+                                className="bg-success text-white border py-3 w-100 rounded"
                             />
                         </div>
                     </form>
-                    <div className="d-flex justify-content-center my-3">
-                        <button className="btn btn-light border shadow-sm  w-100 d-flex align-items-center justify-content-center" onClick={googleLogin}>
-                            <img className="user-avatar" src="/img/google-logo.png" />
+                    <div className="d-flex justify-content-center mt-3">
+                        <p className="text-center text-secondary">Or login with social accout</p>
+                    </div>
+                    <div className="d-flex my-3 flex-column">
+                        <div className="btn border shadow-sm  w-100 d-flex align-items-center mb-3" onClick={googleLogin}>
+                            <img src="/img/google-icon.png" alt="google" />
                             <span className="ps-2">Sign in with google</span>
-                        </button>
+                        </div>
+                        <div className="btn border shadow-sm  w-100 d-flex align-items-center" onClick={twitterLogin}>
+                            <img src="/img/twitter-icon.png" alt="twitter" />
+                            <span className="ps-2">Sign in with twitter</span>
+                        </div>
                     </div>
                 </div>
             </motion.div>
