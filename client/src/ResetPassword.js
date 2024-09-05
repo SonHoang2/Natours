@@ -21,7 +21,7 @@ export default function ResetPassword () {
       const data = await res.json();
       if (data.status === "success") {
         alert("change password success")
-        navigate("/user/login")
+        navigate("/auth/login")
       } else {
         alert(data.message)
       }

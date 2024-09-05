@@ -81,7 +81,7 @@ export default function Admin() {
         alert(data.message);
       } else if (data.status == "success") {
         localStorage.removeItem("user")
-        navigate("/user/login")
+        navigate("/auth/login")
       }
     } catch(err) {
       console.log(err);

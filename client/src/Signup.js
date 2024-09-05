@@ -2,7 +2,7 @@ import Header from "./component/Header"
 import { USERS_URL } from "./customValue"
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Signup() {
     const [name, setName] = useState("");
@@ -40,6 +40,14 @@ export default function Signup() {
             console.log(err);
         }
     }
+
+    useEffect(() => {
+        // check if user is login
+        const userJSON = localStorage.getItem("user");
+        if (userJSON) {
+            navigate("/");
+        }
+    }, []);
 
     return (
         <div className="h-100">
@@ -105,7 +113,7 @@ export default function Signup() {
                             whileTap={{ scale: 0.95 }}
                             type="submit"
                             value="Sign up"
-                            className="bg-success text-white border-0 rounded-pill px-5 py-2"
+                            className="bg-success text-white border py-3 w-100 rounded"
                         />
                     </div>
                 </form>

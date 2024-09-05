@@ -49,11 +49,19 @@ function App() {
                 ))
             }
             <Route
-                path='/user/login'
+                path='/auth/login'
                 element={<Login />}
             />
             <Route
-                path='/user/signup'
+                path='/auth/google'
+                element={<Login />}
+            />
+            <Route
+                path='/auth/twitter'
+                element={<Login />}
+            />
+            <Route
+                path='/auth/signup'
                 element={<Signup />}
             />
             <Route

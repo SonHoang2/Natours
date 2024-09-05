@@ -4,19 +4,12 @@ const jwt = require('jsonwebtoken');
 const AppError = require('../utils/AppError');
 const sendEmail = require('../utils/email');
 const crypto = require('crypto');
-const { OAuth2Client } = require('google-auth-library');
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-
-const oAuth2Client = new OAuth2Client(
-  process.env.GOOGLE_CLIENT_ID,
-  process.env.GOOGLE_CLIENT_SECRET,
-  'postmessage',
-);
 
 const signToken = id => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRES_IN
-})}
+    })
+}
 
 const createSendToken = (user, statusCode, res) => {
     const token = signToken(user._id);
@@ -31,6 +24,12 @@ const createSendToken = (user, statusCode, res) => {
     // res.cookie('jwt', token, cookieOptions);
     // remove password from output
     user.password = undefined;
+    user.passwordChangedAt = undefined;
+    user.passwordResetExpires = undefined;
+    user.passwordResetToken = undefined;
+
+    console.log(user);
+
 
     res.status(statusCode).json({
         status: 'success',
@@ -41,7 +40,7 @@ const createSendToken = (user, statusCode, res) => {
     })
 }
 
-exports.signup = catchAsync( 
+exports.signup = catchAsync(
     async (req, res, next) => {
         // fix security risk in admin
         const newUser = await User.create({
@@ -52,7 +51,7 @@ exports.signup = catchAsync(
         });
 
         createSendToken(newUser, 201, res)
-})
+    })
 
 exports.login = catchAsync(async (req, res, next) => {
     const { email, password } = req.body;
@@ -61,7 +60,9 @@ exports.login = catchAsync(async (req, res, next) => {
         next(new AppError('Please provide email and password!', 400));
     }
     // check if user exists && password is correct
-    const user = await User.findOne({email}).select('+password');
+    const user = await User.findOne({ email }).select('+password');
+    console.log(user);
+
     if (!user || !(await user.correctPassword(password, user.password))) {
         return next(new AppError('Incorrect email or password', 401));
     }
@@ -70,33 +71,63 @@ exports.login = catchAsync(async (req, res, next) => {
 })
 
 exports.GoogleLogin = catchAsync(async (req, res, next) => {
-  // verify google code
-  const { tokens } = await oAuth2Client.getToken(req.body.code); 
+    let { code, redirectUri } = req.body; // code from service provider which is appended to the frontend's URL
 
-  const ticket = await client.verifyIdToken({
-    idToken: tokens.id_token,
-    audience: process.env.GOOGLE_CLIENT_ID,
-  });
-  const payload = ticket.getPayload();
-  // check if user email have in database
-  const {email, name} = payload;
+    const clientId = process.env.GOOGLE_CLIENT_ID; // CLIENT_ID_FROM_APP_CREATED
+    const clientSecret = process.env.GOOGLE_CLIENT_SECRET; // CLIENT_SECRET_FROM_APP_CREATED
+    const grantType = 'authorization_code'; // this tells the service provider to return a code which will be used to get a token for making requests to the service provider
+    const url = 'https://oauth2.googleapis.com/token'; // link to api to exchange code for token.
 
-  let user = await User.findOne({email});
-  if (!user) {
-    user = await User.create({name,email})
-  }
- 
-  createSendToken(user, 201, res)
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            clientId,
+            clientSecret,
+            redirectUri,
+            code,
+            grantType,
+        }),
+    });
+    const data = await response.json();
+
+    console.log({ data });
+    const { email, given_name, family_name } = jwt.decode(data.id_token);
+
+    // use if i want to get more info about the user
+    // const tokenFromGoogle = data.access_token;
+    // const urlForGettingUserInfo = 'https://www.googleapis.com/oauth2/v2/userinfo';
+
+    // const response1 = await fetch(urlForGettingUserInfo, {
+    //     method: 'GET',
+    //     headers: {
+    //         Authorization: `Bearer ${tokenFromGoogle}`,
+    //     },
+    // });
+
+    // const userData = await response1.json();
+
+
+    let user = await User.findOne({ email });
+    if (!user) {
+        user = await User.create({ name: given_name + " " + family_name, email })
+    }
+
+    console.log(user);
+
+    createSendToken(user, 201, res)
 })
 
-exports.protect = catchAsync(async(req, res, next) => {
+exports.protect = catchAsync(async (req, res, next) => {
     let token;
     // if (req.headers.cookie) {
     //     token = req.headers.cookie.slice(4);
     // }
-    if ( req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-      token = req.headers.authorization.split(' ')[1];
-      console.log(token);
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+        token = req.headers.authorization.split(' ')[1];
+        console.log(token);
     }
 
     if (!token) {
@@ -112,15 +143,15 @@ exports.protect = catchAsync(async(req, res, next) => {
     if (!currentUser) {
         return next(
             new AppError(
-                'The user belonging to this token does no longer exits.', 
+                'The user belonging to this token does no longer exits.',
                 401
-        ));
+            ));
     }
     // check if user changed password after the token was issued
     if (currentUser.changedPasswordAfter(decoded.iat)) {
         return next(new AppError('User recently changed password! Please log in again.', 401));
     }
-    
+
     req.user = currentUser;
     next();
 })
@@ -138,14 +169,14 @@ exports.restrictTo = (...roles) => {
 }
 
 exports.forgotPassword = catchAsync(async (req, res, next) => {
-    const {email} = req.body
-    const user = await User.findOne({email});
+    const { email } = req.body
+    const user = await User.findOne({ email });
     if (!user) {
         return next(new AppError('There is no user with email address.', 404));
     }
 
     const resetToken = user.createPasswordResetToken();
-    await user.save({ validateBeforeSave: false});
+    await user.save({ validateBeforeSave: false });
 
     const resetURL = `${process.env.BASEURL}/user/resetPassword/${resetToken}`;
 
@@ -161,10 +192,10 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
             status: 'success',
             message: 'Token sent to email!'
         })
-    } catch(err) {
+    } catch (err) {
         user.passwordResetToken = undefined;
         user.passwordResetExpires = undefined;
-        await user.save({ validateBeforeSave: false});
+        await user.save({ validateBeforeSave: false });
         console.log(err);
         return next(
             new AppError('There was an error sending the email. Try again later!', 500)
@@ -177,22 +208,22 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
         .createHash('sha256')
         .update(req.params.token)
         .digest('hex')
-    
+
     const user = await User.findOne({
         passwordResetToken: hashedToken,
-        passwordResetExpires: { $gt: Date.now()}
+        passwordResetExpires: { $gt: Date.now() }
     })
 
     if (!user) {
         return next(new AppError('Token is invalid or has expired', 400))
     }
-    
+
     user.password = req.body.password;
     user.passwordConfirm = req.body.passwordConfirm;
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
     await user.save();
-    
+
     createSendToken(user, 200, res)
 })
 
