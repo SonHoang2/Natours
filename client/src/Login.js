@@ -36,6 +36,7 @@ export default function Login() {
                 setError(data.message)
             }
         } catch (err) {
+            setError(err.message);
             console.log(err);
         }
     }

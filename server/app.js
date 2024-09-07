@@ -20,7 +20,7 @@ const app = express();
 // allow client access
 // app.use(cors({ credentials: true, origin: process.env.BASEURL }));
 
-app.use(cors({ credentials: true}));
+app.use(cors({ credentials: true }));
 
 // Set security HTTP headers
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
@@ -35,9 +35,12 @@ if (process.env.NODE_ENV === 'development') {
 const limiter = rateLimit({
     max: 100,
     windowMs: 60 * 60 * 1000,
-    message: 'Too many requests from this IP, please try again in an hour!'
-})
-app.use('/api', limiter);
+    handler: (req, res, next) => {
+        next(new AppError('Too many requests from this IP, please try again in an hour!', 429));
+    }
+});
+
+// app.use('/api', limiter);
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '2MB' }));
