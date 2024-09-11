@@ -57,10 +57,6 @@ function App() {
                 element={<Login />}
             />
             <Route
-                path='/auth/twitter'
-                element={<Login />}
-            />
-            <Route
                 path='/auth/signup'
                 element={<Signup />}
             />
