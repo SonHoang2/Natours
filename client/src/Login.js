@@ -3,7 +3,6 @@ import { USERS_URL, CLIENT_URL } from "./customValue"
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import axios from 'axios';
 import queryString from "query-string";
 
 
@@ -11,7 +10,6 @@ export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-    const [passwordType, setPasswordType] = useState("password");
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -38,6 +36,7 @@ export default function Login() {
                 setError(data.message)
             }
         } catch (err) {
+            setError(err.message);
             console.log(err);
         }
     }
@@ -83,27 +82,6 @@ export default function Login() {
         const url = `https://accounts.google.com/o/oauth2/v2/auth?${queryParams}`;
 
         window.location.href = url;
-    }
-
-    const twitterLogin = async () => {
-        try {
-            const queryParams = queryString.stringify({
-                oauth_consumer_key: "QtPuEuQ4rwTjb41Vjv1MD2xNq",
-                oauth_callback: encodeURIComponent(CLIENT_URL + "/auth/twitter")
-            });
-
-            const URL = `https://api.x.com/oauth/request_token?${queryParams}`;
-            console.log(URL);
-
-            const response = await axios.post(URL, {
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            });
-
-        } catch (error) {
-            console.error('Error fetching auth data:', error);
-        }
     }
 
     useEffect(() => {
@@ -179,10 +157,6 @@ export default function Login() {
                         <div className="btn border shadow-sm  w-100 d-flex align-items-center mb-3" onClick={googleLogin}>
                             <img src="/img/google-icon.png" alt="google" />
                             <span className="ps-2">Sign in with google</span>
-                        </div>
-                        <div className="btn border shadow-sm  w-100 d-flex align-items-center" onClick={twitterLogin}>
-                            <img src="/img/twitter-icon.png" alt="twitter" />
-                            <span className="ps-2">Sign in with twitter</span>
                         </div>
                     </div>
                 </div>

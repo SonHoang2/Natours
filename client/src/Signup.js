@@ -37,6 +37,7 @@ export default function Signup() {
                 setError(data.message)
             }
         } catch (err) {
+            setError(err.message);
             console.log(err);
         }
     }

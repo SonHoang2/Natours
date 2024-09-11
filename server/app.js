@@ -19,7 +19,7 @@ const app = express();
 // allow client access
 // app.use(cors({ credentials: true, origin: process.env.BASEURL }));
 
-app.use(cors({ credentials: true}));
+app.use(cors({ credentials: true }));
 
 // Set security HTTP headers
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
