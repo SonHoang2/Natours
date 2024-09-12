@@ -11,7 +11,7 @@ export default function Card(props) {
             <img
               className="w-100 h-100 object-fit-cover card-img-top"
               src={TOUR_IMAGE_URL + props.imageCover} 
-              alt="tour image"
+              alt="tour"
             />
           </div>
           <div className="position-absolute end-0 bottom-0 w-75 pe-3 pb-2 z-2 d-flex flex-column-reverse">
@@ -26,7 +26,7 @@ export default function Card(props) {
           <div className="row">
             <div className="col d-flex align-items-center pb-2 ">
               <span className="material-symbols-outlined pe-2 text-success">location_on</span>
-              <span>{props.startLocation.description}</span>
+              <span>{props.startLocation.name}</span>
             </div>
             <div className="col d-flex align-items-center pb-2 ">
               <span className="material-symbols-outlined pe-2 text-success">calendar_month</span>
