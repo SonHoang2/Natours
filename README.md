@@ -57,7 +57,8 @@
 - File `.env` located in the client folder
 
 ```
-REACT_APP_BASE_URL=your server link 
+REACT_APP_CLIENT_URL=your client link
+REACT_APP_SERVER_URL=your server link 
 REACT_APP_GOOGLE_CLIENT_ID=your google id
 ```
 
@@ -65,7 +66,7 @@ REACT_APP_GOOGLE_CLIENT_ID=your google id
 
 ```
 BASEURL=your client link
-NODE_ENV=development
+NODE_ENV=development or production
 PORT=5000
 DB=your mongodb link
 
@@ -84,5 +85,7 @@ STRIPE_SECRET_KEY=your stripe secret key
 ```
 
 ## Deployed Version
-
 - Link demo: https://natours-b77p.onrender.com
+
+Note: My website is hosted on a free service, so there may be occasional slow response times.
+
