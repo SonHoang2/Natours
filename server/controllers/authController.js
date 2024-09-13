@@ -28,7 +28,6 @@ const createSendToken = (user, statusCode, res) => {
     user.passwordResetExpires = undefined;
     user.passwordResetToken = undefined;
 
-    console.log(user);
 
 
     res.status(statusCode).json({
@@ -61,7 +60,6 @@ exports.login = catchAsync(async (req, res, next) => {
     }
     // check if user exists && password is correct
     const user = await User.findOne({ email }).select('+password');
-    console.log(user);
 
     if (!user || !(await user.correctPassword(password, user.password))) {
         return next(new AppError('Incorrect email or password', 401));
@@ -93,7 +91,6 @@ exports.GoogleLogin = catchAsync(async (req, res, next) => {
     });
     const data = await response.json();
 
-    console.log({ data });
     const { email, given_name, family_name } = jwt.decode(data.id_token);
 
     // use if i want to get more info about the user
@@ -115,7 +112,6 @@ exports.GoogleLogin = catchAsync(async (req, res, next) => {
         user = await User.create({ name: given_name + " " + family_name, email })
     }
 
-    console.log(user);
 
     createSendToken(user, 201, res)
 })
@@ -127,7 +123,6 @@ exports.protect = catchAsync(async (req, res, next) => {
     // }
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         token = req.headers.authorization.split(' ')[1];
-        console.log(token);
     }
 
     if (!token) {
@@ -196,7 +191,6 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
         user.passwordResetToken = undefined;
         user.passwordResetExpires = undefined;
         await user.save({ validateBeforeSave: false });
-        console.log(err);
         return next(
             new AppError('There was an error sending the email. Try again later!', 500)
         )
