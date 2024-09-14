@@ -60,6 +60,10 @@ router
     );
 
 router
+    .route('/slug/:slug')
+    .get(tourController.getOneBySlug)
+
+router
     .route('/search/:name')
     .get(tourController.searchTour)
 

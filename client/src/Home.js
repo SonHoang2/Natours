@@ -1,6 +1,6 @@
 import Header from "./component/Header"
 import Card from "./component/Card"
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { BOOKINGS_URL, TOUR_IMAGE_URL } from "./customValue"
 import { useEffect, useState, useRef } from "react";
 import { TOURS_URL } from "./customValue";
@@ -24,6 +24,7 @@ export default function Home({ tours, setTours }) {
         limit: "8",
         page: 1,
     });
+    const navigate = useNavigate();
 
     const getTours = async () => {
         try {
@@ -143,13 +144,13 @@ export default function Home({ tours, setTours }) {
             useEffect(() => {
                 // return if search is empty
                 if (cb === "") return;
-    
+
                 const handler = setTimeout(async () => {
                     const tours = await axios.get(TOURS_URL + `/search/${cb}`);
                     setSearchTour(prev => ({ ...prev, tours: tours.data.data.tours }));
-    
+
                 }, delay);
-    
+
                 return () => {
                     clearTimeout(handler);
                 };
@@ -160,7 +161,6 @@ export default function Home({ tours, setTours }) {
             console.log(err);
         }
     }
-    console.log(Boolean(searchTour.tours.length));
     
     useDebounce(searchTour.value, 500);
 
@@ -221,6 +221,7 @@ export default function Home({ tours, setTours }) {
                                             <div
                                                 key={i}
                                                 className="d-flex align-items-center p-3 search-item"
+                                                onClick={() => navigate(tour.slug)}
                                             >
                                                 <div>
                                                     <img

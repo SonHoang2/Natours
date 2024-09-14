@@ -230,3 +230,18 @@ exports.searchTour = catchAsync(async (req, res, next) => {
         }
     });
 })
+
+exports.getOneBySlug = catchAsync(async (req, res, next) => {
+    const tour = await Tour.findOne({ slug: req.params.slug });
+
+    if (!tour) {
+        return next(new AppError('No tour found with that name', 404));
+    }
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            tour
+        }
+    });
+})
