@@ -15,10 +15,12 @@ export default function Tour() {
     const [reviews, setReviews] = useState({
         data: [],
         length: "",
+        currentRatingLength: "",
         groupRating: [],
     });
 
     const [queryParams, setQueryParams] = useState({
+        rating: "all",
         page: 1,
         limit: 3,
     });
@@ -93,7 +95,7 @@ export default function Tour() {
     const navigateAfter = () =>
         setQueryParams(prev => {
             let obj = { ...prev };
-            if (prev.page < Math.ceil(reviews.length / prev.limit)) {
+            if (prev.page < Math.ceil(reviews.currentRatingLength / prev.limit)) {
                 obj = { ...prev, page: prev.page + 1 };
             }
             return obj;
@@ -106,7 +108,6 @@ export default function Tour() {
 
                 setTour(tours.data.data.tour);
             } catch (err) {
-                console.log(err.response.data.message);
                 if (err.response.data.message === "No tour found with that name") {
                     navigate("/not-found")
                 }
@@ -118,15 +119,49 @@ export default function Tour() {
     useEffect(() => {
         const getReviews = async () => {
             try {
-                const url = TOURS_URL + `/${tour._id}/reviews/?page=${queryParams.page}&limit=${queryParams.limit}`;
+                // only run if tour is available
+                if (!tour) return;
 
-                const reviews = await axios.get(url, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+                let reviews;
+
+                if (queryParams.rating === "all") {
+                    reviews = await axios.get(TOURS_URL + `/${tour._id}/reviews/?page=${queryParams.page}&limit=${queryParams.limit}`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                } else {
+                    reviews = await axios.get(TOURS_URL + `/${tour._id}/reviews/ratings/${queryParams.rating}?page=${queryParams.page}&limit=${queryParams.limit}`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                }
+
+                setReviews(prev => ({
+                    ...prev,
+                    data: reviews.data.data.doc,
+                    currentRatingLength: reviews.data.total
+                }))
+
+            } catch (err) {
+                console.log(err);
+                if (err.response?.data.message === "jwt malformed") {
+                    navigate("/auth/login")
+                }
+            }
+        }
+
+        getReviews();
+
+    }, [queryParams.page, tour?._id, queryParams.rating])
+
+    useEffect(() => {
+        const getRating = async () => {
+            try {
+                // only run if tour is available
+                if (!tour) return;
 
                 const groupRating = await axios.get(TOURS_URL + `/${tour._id}/reviews/group`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
+
 
                 const allRatings = [5, 4, 3, 2, 1];
 
@@ -138,26 +173,27 @@ export default function Tour() {
                     }
                 });
 
-                setReviews({
-                    data: reviews.data.data.doc,
+                groupRating.data.data.ratings.sort((a, b) => b.rating - a.rating);
+
+                setReviews(prev => ({
+                    ...prev,
                     length: groupRating.data.total,
+                    currentRatingLength: groupRating.data.total,
                     groupRating: groupRating.data.data.ratings
-                })
+                }))
 
             } catch (err) {
                 console.log(err);
                 if (err.response?.data.message === "jwt malformed") {
                     navigate("/auth/login")
                 }
-
             }
         }
 
-        getReviews();
+        getRating();
+    }, [tour?._id])
 
-    }, [queryParams.page, slug, tour?._id])
-
-    console.log(reviews);
+    console.log(reviews.groupRating);
 
 
     return (
@@ -302,19 +338,33 @@ export default function Tour() {
                                     </div>
                                 </div>
                                 <div className="p-3 ">
-                                    <button className="group-rating fs-6 rounded border py-2 px-4 bg-white me-2 mb-2 "> All ({reviews.length}) </button>
+                                    <button
+                                        className="group-rating fs-6 rounded border py-2 px-4 bg-white me-2 mb-2 "
+                                        onClick={() => setQueryParams(prev => {
+                                            // if the rating is different from current rating, reset the page to 1
+                                            if (prev.rating !== "all") return { ...prev, rating: "all", page: 1 };
+
+                                            return { ...prev, rating: "all" }
+                                        })}
+                                    >
+                                        All ({reviews.length})
+                                    </button>
                                     {
                                         reviews.groupRating.map(rating => (
                                             <button
                                                 className="group-rating fs-6 rounded border py-2 px-4 bg-white me-2 mb-2 "
                                                 key={rating.rating}
-                                                // onClick={() => alert("clicked")}
+                                                onClick={() => setQueryParams(prev => {
+                                                    // if the rating is different from current rating, reset the page to 1
+                                                    if (prev.rating !== rating.rating) return { ...prev, rating: rating.rating, page: 1 };
+
+                                                    return { ...prev, rating: rating.rating }
+                                                })}
                                             >
                                                 {rating.rating} Stars ({rating.count})
                                             </button>
                                         ))
                                     }
-
                                 </div>
                             </div>
                             <div>
@@ -351,6 +401,12 @@ export default function Tour() {
                                             </div>
                                         </div>
                                     ))
+                                }
+                                {
+                                    reviews.currentRatingLength === 0 &&
+                                    <div className="bg-white rounded p-4 shadow border mb-4">
+                                        <p className="text-center">No ratings yet</p>
+                                    </div>
                                 }
                             </div>
                             <div className="d-flex justify-content-center align-items-center">

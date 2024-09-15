@@ -11,6 +11,8 @@ router.get("/me", reviewController.getMyReviews)
 
 router.get("/group", reviewController.getGroupReviews)
 
+router.get("/ratings/:rating", reviewController.getReviewsByRating)
+
 router
     .route('/')
     .get(reviewController.getAllReviews)

@@ -80,10 +80,13 @@ exports.getAll = Model =>
             .paginate();
         const doc = await features.query;
 
+        const total = await Model.countDocuments(filter);
+
         // SEND RESPONSE
         res.status(200).json({
             status: 'success',
             results: doc.length,
+            total: total,
             data: {
                 doc
             }

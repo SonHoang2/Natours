@@ -43,7 +43,7 @@ exports.getGroupReviews = catchAsync(async (req, res, next) => {
                 _id: null,
                 totalReviews: { $sum: "$count" },
                 ratings: {
-                    $push: {               
+                    $push: {
                         rating: "$_id",
                         count: "$count"
                     }
@@ -58,13 +58,33 @@ exports.getGroupReviews = catchAsync(async (req, res, next) => {
             }
         }
     ]);
-    console.log(reviews);
-
+    
     res.status(200).json({
         status: 'success',
         total: reviews[0].totalReviews,
         data: {
             ratings: reviews[0].ratings
+        }
+    })
+});
+
+exports.getReviewsByRating = catchAsync(async (req, res, next) => {
+    const { rating, tourId } = req.params;
+    const limit = parseInt(req.query.limit)
+    const page = parseInt(req.query.page)
+
+    const reviews = await Review
+        .find({ rating: rating, tour: tourId })
+        .skip((page - 1) * limit)
+        .limit(limit)
+
+    const total = await Review.countDocuments({ rating: rating, tour: tourId });
+
+    res.status(200).json({
+        status: 'success',
+        total: total,
+        data: {
+            doc: reviews
         }
     })
 });
