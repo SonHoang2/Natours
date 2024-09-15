@@ -11,6 +11,7 @@ import ResetPassword from './ResetPassword';
 import MyBookings from './MyBookings';
 import MyReviews from './MyReviews';
 import Admin from './Admin';
+import ErrorPage from './ErrorPage';
 
 function App() {
     const [tours, setTours] = useState({
@@ -35,7 +36,7 @@ function App() {
                         setTours={setTours}
                     />}
             />
-            {
+            {/* {
                 tours.data != null && tours.data.map(tour => (
                     <Route
                         path={'/tour/' + tour.slug}
@@ -47,7 +48,13 @@ function App() {
                         }
                     />
                 ))
-            }
+            } */}
+
+            <Route
+                path='/tour/:slug'
+                element={<Tour />}
+            />
+
             <Route
                 path='/auth/login'
                 element={<Login />}
@@ -83,6 +90,14 @@ function App() {
             <Route
                 path='/user/admin'
                 element={<Admin />}
+            />
+            <Route
+                path='/not-found'
+                element={<ErrorPage />}
+            />
+            <Route
+                path='*'
+                element={<ErrorPage />}
             />
         </Routes>
     );

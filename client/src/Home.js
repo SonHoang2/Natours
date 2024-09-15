@@ -1,22 +1,30 @@
 import Header from "./component/Header"
 import Card from "./component/Card"
-import { useSearchParams } from "react-router-dom";
-import { BOOKINGS_URL } from "./customValue"
-import { useEffect, useState } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { BOOKINGS_URL, TOUR_IMAGE_URL } from "./customValue"
+import { useEffect, useState, useRef } from "react";
 import { TOURS_URL } from "./customValue";
 import { motion } from "framer-motion";
+import axios from "axios";
 
 export default function Home({ tours, setTours }) {
     const tokenJSON = localStorage.getItem("token");
     const token = tokenJSON ? JSON.parse(localStorage.getItem("token")) : null;
+    const searchInputRef = useRef(null);
 
+    const [searchTour, setSearchTour] = useState({
+        value: "",
+        tours: []
+    });
+
+    // searchParams: tour after booking
     const [searchParams, setSearchParams] = useSearchParams();
     const [queryParams, setQueryParams] = useState({
         sort: "",
         limit: "8",
         page: 1,
-
     });
+    const navigate = useNavigate();
 
     const getTours = async () => {
         try {
@@ -38,6 +46,26 @@ export default function Home({ tours, setTours }) {
             }
         } catch (err) {
             console.log(err);
+        }
+    }
+
+    // get nearby tours
+    const getNearByTours = async () => {
+        const success = (position) => {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            alert(`Latitude: ${latitude}, Longitude: ${longitude}`);
+
+        }
+
+        const error = () => {
+            alert("Unable to retrieve your location");
+        }
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(success, error);
+        } else {
+            alert("Geolocation not supported");
         }
     }
 
@@ -89,6 +117,53 @@ export default function Home({ tours, setTours }) {
             return obj;
         })
 
+    function useOutsideAlerter(ref) {
+        useEffect(() => {
+            /**
+             * Alert if clicked on outside of element
+             */
+            function handleClickOutside(event) {
+                if (ref.current && !ref.current.contains(event.target)) {
+                    setSearchTour(prev => ({ ...prev, tours: [] }));
+                }
+            }
+            // Bind the event listener
+            document.addEventListener("mousedown", handleClickOutside);
+            return () => {
+                // Unbind the event listener on clean up
+                document.removeEventListener("mousedown", handleClickOutside);
+            };
+        }, [ref]);
+    }
+
+    useOutsideAlerter(searchInputRef);
+
+    // only get tour after 500ms user stop typing
+    function useDebounce(cb, delay) {
+        try {
+            useEffect(() => {
+                // return if search is empty
+                if (cb === "") return;
+
+                const handler = setTimeout(async () => {
+                    const tours = await axios.get(TOURS_URL + `/search/${cb}`);
+                    setSearchTour(prev => ({ ...prev, tours: tours.data.data.tours }));
+
+                }, delay);
+
+                return () => {
+                    clearTimeout(handler);
+                };
+            }, [cb, delay]);
+            return searchTour.tours;
+
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    
+    useDebounce(searchTour.value, 500);
+
     useEffect(() => {
         // booking success
         if (searchParams.size === 3) {
@@ -113,6 +188,61 @@ export default function Home({ tours, setTours }) {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
             >
+                <div className="mb-4 d-flex justify-content-center">
+                    <div className="position-relative w-50">
+                        <div ref={searchInputRef}>
+                            <input
+                                type="text"
+                                className="form-control shadow-none rounded-pill shadow"
+                                placeholder="Search tour..."
+                                value={searchTour.value}
+                                onChange={(e) => setSearchTour(prev => ({ ...prev, value: e.target.value }))}
+                            />
+                            {
+                                Boolean(searchTour.tours.length) &&
+                                <div
+                                    className="position-absolute w-100 mt-1 rounded bg-white border shadow z-3"
+                                >
+                                    {/* <div
+                                        className="d-flex align-items-center p-3 search-item"
+                                        onClick={() => getNearByTours()}
+                                    >
+                                        <div className="p-2 border rounded bg-light">
+                                            <span className="material-symbols-outlined">
+                                                near_me
+                                            </span>
+                                        </div>
+                                        <p className="fw-bold ms-3">
+                                            Nearby
+                                        </p>
+                                    </div> */}
+                                    {
+                                        searchTour.tours?.map((tour, i) => (
+                                            <div
+                                                key={i}
+                                                className="d-flex align-items-center p-3 search-item"
+                                                onClick={() => navigate(tour.slug)}
+                                            >
+                                                <div>
+                                                    <img
+                                                        src={TOUR_IMAGE_URL + tour.imageCover}
+                                                        alt="tour"
+                                                        className="rounded"
+                                                        style={{ width: "50px", height: "50px" }}
+                                                    />
+                                                </div>
+                                                <p className="fw-bold ms-3">
+                                                    {tour.name}
+                                                </p>
+                                            </div>
+                                        ))
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
                 <div className="bg-secondary-subtle shadow p-3 mb-4 rounded d-flex justify-content-between">
                     <div className="d-flex align-items-center">
                         <p className="p-2 pe-4">Sort by</p>
@@ -162,7 +292,7 @@ export default function Home({ tours, setTours }) {
                 <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
                     {cards()}
                 </div>
-            </motion.div>
-        </div>
+            </motion.div >
+        </div >
     )
 }

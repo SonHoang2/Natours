@@ -46,7 +46,7 @@ const tourSchema = new mongoose.Schema(
         priceDiscount: {
             type: Number,
             validate: {
-                validator: function(val) {
+                validator: function (val) {
                     return val < this.price
                 },
                 message: 'Discount price ({VALUE}) should be below regular price'
@@ -56,7 +56,7 @@ const tourSchema = new mongoose.Schema(
             type: String,
             trim: true,
             require: [true, 'A tour must have a description']
-          },
+        },
         description: {
             type: String,
             trim: true
@@ -117,9 +117,9 @@ const tourSchema = new mongoose.Schema(
     }
 )
 
-tourSchema.index({price: 1, ratingsAverage: -1});
-tourSchema.index({slug: 1});
-tourSchema.index({ startLocation: '2dsphere'});
+tourSchema.index({ price: 1, ratingsAverage: -1 });
+tourSchema.index({ slug: 1 });
+tourSchema.index({ startLocation: '2dsphere' });
 
 tourSchema.virtual('durationWeeks').get(function () {
     return this.duration / 7
@@ -134,16 +134,16 @@ tourSchema.virtual('reviews', {
 
 // run before .save() and .create()
 tourSchema.pre('save', function (next) {
-    this.slug = slugify(this.name, { lower: true})
+    this.slug = slugify(this.name, { lower: true })
     next();
 })
 
-tourSchema.pre(/^find/, function(next) {
-    this.find({ secretTour: { $ne: true }});
+tourSchema.pre(/^find/, function (next) {
+    this.find({ secretTour: { $ne: true } });
     next();
 })
 
-tourSchema.pre(/^find/, function(next) {
+tourSchema.pre(/^find/, function (next) {
     this.populate({
         path: "guides",
         select: "-__v -passwordChangedAt"

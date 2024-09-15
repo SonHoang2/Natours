@@ -5,7 +5,6 @@ export default function Header() {
     // check if user is login
     const userJSON = localStorage.getItem("user");
     const user = userJSON ? JSON.parse(userJSON) : null;
-    
     const navigate = useNavigate();
 
     const profileLink = () => {
@@ -41,6 +40,7 @@ export default function Header() {
                             className="btn text-uppercase p-3 me-2 fs-5 text-black"
                             onClick={() => {
                                 localStorage.removeItem("user")
+                                localStorage.removeItem("token")
                                 navigate("/")
                             }}
                         >

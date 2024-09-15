@@ -12,10 +12,10 @@ exports.getCheckoutSession = catchAsync( async (req, res, next) => {
   // create checkout session
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
-    success_url: `${process.env.BASEURL}/?tour=${
+    success_url: `${process.env.CLIENT_URL}/?tour=${
       req.params.tourId
     }&user=${req.user.id}&price=${tour.price}`,
-    cancel_url: `${process.env.BASEURL}/tour/${tour.slug}`,
+    cancel_url: `${process.env.CLIENT_URL}/tour/${tour.slug}`,
     customer_email: req.user.email,
     client_reference_id: req.params.tourId,
     line_items: [
@@ -26,7 +26,7 @@ exports.getCheckoutSession = catchAsync( async (req, res, next) => {
           product_data: {
             name: `${tour.name} Tour`,
             description: tour.summary,
-            images: ["https://scontent.fsgn5-8.fna.fbcdn.net/v/t39.30808-6/398663733_1549813845823451_1387334711463430120_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=efb6e6&_nc_eui2=AeHmd8uVeUuAAn3_JWcqcI6lgznWn4Ehq06DOdafgSGrTpxVMelQfCP_0l-SMcTIJ2JLA9uFa2dZwr1xX_Vn7Z8v&_nc_ohc=DcQK5zoiQD8AX_n9z2e&_nc_ht=scontent.fsgn5-8.fna&oh=00_AfDwx7qa8EsrakxsDf3aHZzywekO-gjgoG_TXjLgrz2wMg&oe=65D537E2"]
+            images: [`${process.env.SERVER_URL}/images/tours/${tour.imageCover}`]
           }
         },
         quantity: 1
