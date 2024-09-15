@@ -83,7 +83,6 @@ exports.getAll = Model =>
         // SEND RESPONSE
         res.status(200).json({
             status: 'success',
-            total: await Model.find(filter).countDocuments(),
             results: doc.length,
             data: {
                 doc

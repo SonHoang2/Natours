@@ -199,7 +199,7 @@ input.form-control::placeholder {
     height: 40px;
 }
 
-.material-symbols-outlined {
+.review-star {
     font-variation-settings:
         'FILL' 0,
         'wght' 300,
@@ -207,7 +207,25 @@ input.form-control::placeholder {
         'opsz' 24
 }
 
-.material-symbols-outlined.fill {
+.review-star.fill {
+    font-variation-settings:
+        'FILL' 1,
+        'wght' 300,
+        'GRAD' 0,
+        'opsz' 24
+}
+
+.ratings-average-star {
+    width: 22px;
+    font-size: 30px;
+    font-variation-settings:
+        'FILL' 0,
+        'wght' 300,
+        'GRAD' 0,
+        'opsz' 24
+}
+
+.ratings-average-star.fill {
     font-variation-settings:
         'FILL' 1,
         'wght' 300,
@@ -244,4 +262,9 @@ input.form-control::placeholder {
     .review-card--body {
         width: 314px;
     }
+}
+
+.group-rating:focus {
+    background-color: #41afac !important;
+    color: white;
 }

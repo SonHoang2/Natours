@@ -15,6 +15,7 @@ export default function Tour() {
     const [reviews, setReviews] = useState({
         data: [],
         length: "",
+        groupRating: [],
     });
 
     const [queryParams, setQueryParams] = useState({
@@ -42,18 +43,39 @@ export default function Tour() {
         }
     }
 
-    const stars = ratingStar => {
+    const reviewStars = ratingStar => {
         const arr = []
         const remainStar = 5 - ratingStar
 
         for (let i = 0; i < ratingStar; i++) {
             arr.push((
-                <span className="material-symbols-outlined fill text-warning">star</span>
+                <span className="material-symbols-outlined review-star fill text-success">star</span>
             ))
         }
         for (let i = 0; i < remainStar; i++) {
             arr.push((
-                <span className="material-symbols-outlined text-warning">star</span>
+                <span className="material-symbols-outlined review-star text-success">star</span>
+            ))
+        }
+        return arr
+    }
+
+    const ratingsAverageStars = ratingStar => {
+        const arr = []
+        const remainStar = 5 - Math.floor(ratingStar)
+
+        for (let i = 0; i < Math.floor(ratingStar); i++) {
+            arr.push((
+                <div>
+                    <span className="material-symbols-outlined ratings-average-star fill text-success">star</span>
+                </div>
+            ))
+        }
+        for (let i = 0; i < remainStar; i++) {
+            arr.push((
+                <div>
+                    <span className="material-symbols-outlined ratings-average-star text-success">star</span>
+                </div>
             ))
         }
         return arr
@@ -85,7 +107,6 @@ export default function Tour() {
                 setTour(tours.data.data.tour);
             } catch (err) {
                 console.log(err.response.data.message);
-
                 if (err.response.data.message === "No tour found with that name") {
                     navigate("/not-found")
                 }
@@ -98,33 +119,45 @@ export default function Tour() {
         const getReviews = async () => {
             try {
                 const url = TOURS_URL + `/${tour._id}/reviews/?page=${queryParams.page}&limit=${queryParams.limit}`;
-                const res = await fetch(url, {
-                    method: "GET",
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                })
-                const data = await res.json();
 
-                if (data.status === "success") {
-                    setReviews({
-                        data: data.data.doc,
-                        length: data.total
-                    })
-                } else if (data.status === "fail") {
-                    window.alert(data.message);
-                    navigate("/auth/login")
-                }
+                const reviews = await axios.get(url, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+
+                const groupRating = await axios.get(TOURS_URL + `/${tour._id}/reviews/group`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+
+                const allRatings = [5, 4, 3, 2, 1];
+
+                allRatings.forEach((rate) => {
+                    // Check if the rating is already in the ratings array
+                    if (!groupRating.data.data.ratings.some(r => r.rating === rate)) {
+                        // If not present, add it with a count of 0
+                        groupRating.data.data.ratings.push({ rating: rate, count: 0 });
+                    }
+                });
+
+                setReviews({
+                    data: reviews.data.data.doc,
+                    length: groupRating.data.total,
+                    groupRating: groupRating.data.data.ratings
+                })
 
             } catch (err) {
                 console.log(err);
+                if (err.response?.data.message === "jwt malformed") {
+                    navigate("/auth/login")
+                }
+
             }
         }
 
         getReviews();
-        console.log(slug, queryParams.page);
 
     }, [queryParams.page, slug, tour?._id])
+
+    console.log(reviews);
 
 
     return (
@@ -141,7 +174,7 @@ export default function Tour() {
                         <img
                             className="w-100 h-100 object-fit-cover"
                             src={TOUR_IMAGE_URL + tour.imageCover}
-                            alt="tour image"
+                            alt="tour"
                         />
                         <div className="position-absolute bg-success-gradient w-100 h-100 opacity-50">
                         </div>
@@ -201,7 +234,7 @@ export default function Tour() {
                                         {
                                             tour.guides.map(guide => (
                                                 <div className="d-flex align-items-center pb-3 fs-5" key={guide._id}>
-                                                    <img className="user-avatar rounded-circle" src={USER_IMAGE_URL + guide.photo} />
+                                                    <img className="user-avatar rounded-circle" src={USER_IMAGE_URL + guide.photo} alt="user avatar" />
                                                     <p className="ps-3 text-uppercase fw-bold">{guide.role}</p>
                                                     <p className="ps-3 text-capitalize">{guide.name}</p>
                                                 </div>
@@ -245,23 +278,43 @@ export default function Tour() {
                                 {
                                     tour.images.map(image => (
                                         <div className="h-500" key={image}>
-                                            <img src={TOUR_IMAGE_URL + image} className="w-100 h-100 object-fit-cover" />
+                                            <img src={TOUR_IMAGE_URL + image} className="w-100 h-100 object-fit-cover" alt="tour" />
                                         </div>
                                     ))
                                 }
                             </div>
                         </div>
 
-                        <div className="p-5 pt-0 bg-success">
+                        <div className="pt-0">
                             <div className="pb-3 pt-5">
-                                <span className="text-uppercase fw-bold fs-4 text-white">Product Ratings</span>
+                                <span className="text-uppercase fw-bold fs-4 text-success">Product Ratings</span>
                             </div>
-                            <div className="pb-4 d-flex bg-white rounded shadow mb-3">
-                                <p className="fs-5 p-2 rounded me-3">
-                                    <span className="fs-4 fw-bold">{tour.ratingsAverage} </span> out of 5
-                                </p>
-                                <div>
-                                    <p className="fs-5 p-2 rounded"> All ({reviews.length}) </p>
+                            <div className="d-flex bg-white rounded shadow border mb-3">
+                                <div className="p-4 me-3">
+                                    <p className="fs-5 text-success ps-2 pb-2 text-nowrap">
+                                        <span className="fs-4 fw-bold">{tour.ratingsAverage} </span> out of 5
+                                    </p>
+                                    <div className="d-flex">
+                                        {
+                                            ratingsAverageStars(tour.ratingsAverage)
+                                        }
+
+                                    </div>
+                                </div>
+                                <div className="p-3 ">
+                                    <button className="group-rating fs-6 rounded border py-2 px-4 bg-white me-2 mb-2 "> All ({reviews.length}) </button>
+                                    {
+                                        reviews.groupRating.map(rating => (
+                                            <button
+                                                className="group-rating fs-6 rounded border py-2 px-4 bg-white me-2 mb-2 "
+                                                key={rating.rating}
+                                                // onClick={() => alert("clicked")}
+                                            >
+                                                {rating.rating} Stars ({rating.count})
+                                            </button>
+                                        ))
+                                    }
+
                                 </div>
                             </div>
                             <div>
@@ -271,7 +324,7 @@ export default function Tour() {
                                             className="bg-white rounded"
                                             key={review._id}
                                         >
-                                            <div className="d-flex mb-4 p-4">
+                                            <div className="d-flex mb-4 p-4 shadow border rounded">
                                                 <img
                                                     className="user-avatar rounded-circle"
                                                     src={USER_IMAGE_URL + review.user.photo}
@@ -280,7 +333,7 @@ export default function Tour() {
                                                 <div className="ps-3">
                                                     <p className="pb-2">{review.user.name}</p>
                                                     <div className="d-flex pb-2">
-                                                        {stars(review.rating)}
+                                                        {reviewStars(review.rating)}
                                                     </div>
                                                     <p className="pb-4">{new Date(review.createAt).toLocaleString('en-US', {
                                                         year: '2-digit',
@@ -303,14 +356,14 @@ export default function Tour() {
                             <div className="d-flex justify-content-center align-items-center">
                                 <span
                                     type="button"
-                                    className="material-symbols-outlined text-white fs-1"
+                                    className="material-symbols-outlined fs-1"
                                     onClick={navigateBefore}
                                 >
                                     navigate_before
                                 </span>
                                 <span type="button" className="bg-white p-2 fs-5">{queryParams.page}</span>
                                 <span type="button"
-                                    className="material-symbols-outlined text-white fs-1"
+                                    className="material-symbols-outlined fs-1"
                                     onClick={navigateAfter}
                                 >
                                     navigate_next
