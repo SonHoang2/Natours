@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import Home from './Home';
 import Tour from './Tour';
@@ -10,21 +10,14 @@ import ForgotPassword from './ForgotPassword'
 import ResetPassword from './ResetPassword';
 import MyBookings from './MyBookings';
 import MyReviews from './MyReviews';
-import Admin from './Admin';
 import ErrorPage from './ErrorPage';
+import Dashboard from './Dashboard';
 
 function App() {
     const [tours, setTours] = useState({
         data: [],
         length: ""
     });
-
-    useEffect(() => {
-        const tourLocalStorage = localStorage.getItem("tour");
-        if (tourLocalStorage) {
-            setTours(JSON.parse(tourLocalStorage))
-        }
-    }, [])
 
     return (
         <Routes>
@@ -36,20 +29,6 @@ function App() {
                         setTours={setTours}
                     />}
             />
-            {/* {
-                tours.data != null && tours.data.map(tour => (
-                    <Route
-                        path={'/tour/' + tour.slug}
-                        key={tour.id}
-                        element={
-                            <Tour
-                                tour={tour}
-                            />
-                        }
-                    />
-                ))
-            } */}
-
             <Route
                 path='/tour/:slug'
                 element={<Tour />}
@@ -88,8 +67,8 @@ function App() {
                 element={<MyReviews />}
             />
             <Route
-                path='/user/admin'
-                element={<Admin />}
+                path='/dashboard'
+                element={<Dashboard />}
             />
             <Route
                 path='/not-found'

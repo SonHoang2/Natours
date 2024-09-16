@@ -40,7 +40,7 @@ export default function Home({ tours, setTours }) {
                         data: data.data.doc,
                         length: data.total
                     };
-                    localStorage.setItem("tour", JSON.stringify(obj));
+                    
                     return obj
                 });
             }

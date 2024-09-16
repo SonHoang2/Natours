@@ -7,13 +7,6 @@ export default function Header() {
     const user = userJSON ? JSON.parse(userJSON) : null;
     const navigate = useNavigate();
 
-    const profileLink = () => {
-        let url = '/user';
-        if (user.role === "admin") url = url + '/admin'
-        else if (user.role === "user") url = url + '/me'
-        return url
-    }
-
     return (
         <div className="bg-white d-flex px-3 py-1 justify-content-between w-100 align-items-center z-3 position-fixed shadow">
             <div>
@@ -47,7 +40,7 @@ export default function Header() {
                             LOG OUT
                         </button>
                         <Link
-                            to={profileLink()}
+                            to="/user/me"
                             className="text-decoration-none text-black"
                         >
                             <div className="d-flex align-items-center h-100">
