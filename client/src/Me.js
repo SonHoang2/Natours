@@ -176,7 +176,12 @@ export default function Me() {
                                 <button
                                     type="submit"
                                     className="btn btn-success h-100 rounded-pill text-uppercase mt-4 text-white"
-                                    disabled={!dataChange}
+                                    onClick={(e) => {
+                                        if (!dataChange) {
+                                            alert("Please change your password before click save settings");
+                                            e.preventDefault();
+                                        }
+                                    }}
                                 >
                                     Save settings
                                 </button>
@@ -218,7 +223,12 @@ export default function Me() {
                                 />
                             </div>
                             <div className="d-flex justify-content-end">
-                                <button type="submit" className="btn btn-success h-100 rounded-pill text-uppercase mt-4 text-white">Save password</button>
+                                <button
+                                    type="submit"
+                                    className="btn btn-success h-100 rounded-pill text-uppercase mt-4 text-white"
+                                >
+                                    Save password
+                                </button>
                             </div>
                         </form>
                     </div>
