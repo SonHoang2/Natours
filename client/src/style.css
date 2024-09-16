@@ -168,6 +168,10 @@ body,
     background-image: linear-gradient(to bottom right, #92f3ff, rgb(13 133 149));
 }
 
+.text-success-light {
+    color: #366361;
+}
+
 .text-shadow {
     text-shadow: 0px 2px 4px #26647d;
 }
@@ -267,4 +271,14 @@ input.form-control::placeholder {
 .group-rating:focus {
     background-color: #41afac !important;
     color: white;
+}
+
+.left-user-setting:hover {
+    background-color: #f2f2f2;
+    color: #41afac;
+}
+
+.left-user-setting:hover .left-user-setting-item {
+    color: #41afac !important;
+    
 }
