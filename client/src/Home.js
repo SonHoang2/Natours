@@ -221,7 +221,7 @@ export default function Home({ tours, setTours }) {
                                             <div
                                                 key={i}
                                                 className="d-flex align-items-center p-3 search-item"
-                                                onClick={() => navigate(tour.slug)}
+                                                onClick={() => navigate("/tour/" + tour.slug)}
                                             >
                                                 <div>
                                                     <img
