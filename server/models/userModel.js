@@ -37,11 +37,10 @@ const userSchema = new mongoose.Schema({
     active: {
         type: Boolean,
         default: true,
-        select: false
     }
 })
 
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async function (next) {
     // only run this function if password was modified
     if (!this.isModified('password')) return next();
 
@@ -49,7 +48,7 @@ userSchema.pre('save', async function(next) {
     next();
 })
 
-userSchema.pre('save', function(next) {
+userSchema.pre('save', function (next) {
     if (!this.isModified('password') || this.isNew) return next();
 
     this.passwordChangedAt = Date.now() - 1000;
@@ -57,15 +56,15 @@ userSchema.pre('save', function(next) {
 })
 
 userSchema.pre(/^find/, function (next) {
-    this.find({active: { $ne: false }});
+    this.find({ active: { $ne: false } });
     next();
 })
 
-userSchema.methods.correctPassword = async function(candidatePassword, userPassword) {
-  return await bcrypt.compare(candidatePassword, userPassword);
+userSchema.methods.correctPassword = async function (candidatePassword, userPassword) {
+    return await bcrypt.compare(candidatePassword, userPassword);
 }
 
-userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
+userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
     if (this.passwordChangedAt) {
         // change date to number
         const changedTimestamp = parseInt(this.passwordChangedAt.getTime() / 1000, 10);
@@ -75,7 +74,7 @@ userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
     return false;
 }
 
-userSchema.methods.createPasswordResetToken = function() {
+userSchema.methods.createPasswordResetToken = function () {
     const resetToken = crypto.randomBytes(32).toString('hex');
 
     this.passwordResetToken = crypto

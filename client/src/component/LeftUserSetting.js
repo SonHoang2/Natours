@@ -23,7 +23,7 @@ export default function LeftUserSetting({ role }) {
             </Link>
             {
                 role === "admin" &&
-                <Link to="/dashboard" className="text-decoration-none">
+                <Link to="/admin/dashboard" className="text-decoration-none">
                     <div className="d-flex align-items-center p-4 left-user-setting">
                         <span className="material-symbols-outlined pe-3 text-white left-user-setting-item">dashboard</span>
                         <p className="text-white left-user-setting-item">DASHBOARD</p>

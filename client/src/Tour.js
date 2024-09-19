@@ -6,11 +6,14 @@ import { motion } from "framer-motion";
 import axios from "axios";
 
 export default function Tour() {
-    const { slug } = useParams();
+    const userJSON = localStorage.getItem("user");
+    const user = userJSON ? JSON.parse(userJSON) : null;
 
+    const tokenJSON = localStorage.getItem("token");
+    const token = tokenJSON ? JSON.parse(tokenJSON) : null;
+
+    const { slug } = useParams();
     const [tour, setTour] = useState(null);
-    const user = JSON.parse(localStorage.getItem("user"));
-    const token = JSON.parse(localStorage.getItem("token"));
 
     const [reviews, setReviews] = useState({
         data: [],

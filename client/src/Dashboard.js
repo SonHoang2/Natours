@@ -1,8 +1,8 @@
 import { useState } from "react"
-import Header from "./component/Header"
 import { Line } from "react-chartjs-2";
 import { CategoryScale } from "chart.js";
 import Chart from "chart.js/auto";
+import LeftDashboard from "./component/LeftDashboard";
 
 Chart.register(CategoryScale);
 
@@ -32,21 +32,13 @@ export default function Dashboard() {
 
     return (
         <div className="h-100">
-            <Header />
             <div className="h-100 d-flex flex-column dashboard">
-                <div className="pb-5"></div>
-                <div className="pb-3"></div>
                 <div className="d-flex h-100">
-                    <div className="bg-success pt-4 shadow border-end">
-                        <div className="d-flex align-items-center px-5 py-3">
-                            <span className="material-symbols-outlined px-3 text-white">dashboard</span>
-                            <h3 className="fs-5 text-white pe-3">Dashboard</h3>
-                        </div>
-                    </div>
+                    <LeftDashboard />
                     <div className="px-4 py-5 bg-light w-100">
-                        <div className="pb-3">
-                            <h5 className="text-uppercase fs-6 text-muted pb-2 page-subtitle">Dashboard</h5>
-                            <h3 className="fs-3 text-success">Blog Overview</h3>
+                        <div className="pb-5">
+                            <h5 className="text-uppercase fs-6 text-muted pb-2 page-subtitle">Admin</h5>
+                            <h3 className="fs-3 text-success">Dashboard</h3>
                         </div>
                         <div className="mt-4 mb-5">
                             <div className="row">

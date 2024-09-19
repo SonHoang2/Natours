@@ -8,7 +8,7 @@ export default function Header() {
     const navigate = useNavigate();
 
     return (
-        <div className="bg-white d-flex px-3 py-1 justify-content-between w-100 align-items-center z-3 position-fixed shadow">
+        <div className="bg-white d-flex px-3 py-1 justify-content-between w-100 align-items-center z-3 position-fixed border-bottom">
             <div>
                 <Link to="/" className="text-decoration-none text-success">
                     <p className="text-uppercase fw-bold fs-4">Natours</p>

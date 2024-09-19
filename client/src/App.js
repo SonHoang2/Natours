@@ -12,6 +12,8 @@ import MyBookings from './MyBookings';
 import MyReviews from './MyReviews';
 import ErrorPage from './ErrorPage';
 import Dashboard from './Dashboard';
+import AdminUserPage from './AdminUserPage';
+import AdminTourPage from './AdminTourPage';
 
 function App() {
     const [tours, setTours] = useState({
@@ -67,8 +69,20 @@ function App() {
                 element={<MyReviews />}
             />
             <Route
-                path='/dashboard'
+                path='/admin/dashboard'
                 element={<Dashboard />}
+            />
+            <Route
+                path='/admin/users'
+                element={<AdminUserPage />}
+            />
+            <Route
+                path='/admin/tours'
+                element={<AdminTourPage />}
+            />
+            <Route
+                path='/admin/reviews'
+                element={<AdminTourPage />}
             />
             <Route
                 path='/not-found'
