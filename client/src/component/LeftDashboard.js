@@ -8,7 +8,7 @@ export default function LeftDashboard() {
                     <h3 className="text-uppercase fw-bold fs-4">Natours</h3>
                 </div>
             </Link>
-            <Link to="/admin/dashboard" className="d-flex align-items-center px-5 py-3 left-dashboard mt-4 text-decoration-none">
+            <Link to="/admin/dashboard" className="d-flex align-items-center px-5 py-3 left-dashboard text-decoration-none">
                 <span className="material-symbols-outlined pe-2 text-success">dashboard</span>
                 <h3 className="fs-5 text-success">Dashboard</h3>
             </Link>
@@ -23,6 +23,10 @@ export default function LeftDashboard() {
             <Link to="/admin/reviews" className="d-flex align-items-center px-5 py-3 left-dashboard text-decoration-none">
                 <span className="material-symbols-outlined pe-2 text-success">reviews</span>
                 <h3 className="fs-5 text-success">Reviews</h3>
+            </Link>
+            <Link to="/user/me" className="d-flex align-items-center px-5 py-3 left-dashboard text-decoration-none border-top">
+                <span className="material-symbols-outlined pe-2 text-success">account_circle</span>
+                <h3 className="fs-5 text-success text-nowrap">Profile</h3>
             </Link>
         </div>
     )

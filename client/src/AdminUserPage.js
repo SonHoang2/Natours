@@ -2,6 +2,7 @@ import axios from "axios";
 import LeftDashboard from "./component/LeftDashboard";
 import { useEffect, useState } from "react";
 import { USERS_URL, USER_IMAGE_URL } from "./customValue";
+import { Link } from "react-router-dom";
 
 export default function AdminUserPage() {
     const userJSON = localStorage.getItem("user");
@@ -13,7 +14,7 @@ export default function AdminUserPage() {
     const [users, setUsers] = useState({
         data: [],
         totalLength: 0,
-        currentLength: 0
+        currentLength: 0,
     });
 
     const [userQueryParams, setUserQueryParams] = useState({
@@ -108,12 +109,19 @@ export default function AdminUserPage() {
                                             <td className="p-3 align-middle">{user.role}</td>
                                             <td className="p-3 align-middle">{user.active ? "true" : "false"}</td>
                                             <td className="p-3 align-middle">
-                                                <button className="material-symbols-outlined text-primary p-2 bg-white rounded border-0">
+                                                <Link
+                                                    to={`./edit`}
+                                                    state={user}
+                                                    className="material-symbols-outlined text-primary p-2 bg-white rounded border-0 text-decoration-none"
+                                                >
                                                     edit
-                                                </button>
+                                                </Link>
                                             </td>
                                             <td className="p-3 align-middle">
-                                                <button className="material-symbols-outlined text-danger p-2 bg-white rounded border-0">
+                                                <button
+                                                    className="material-symbols-outlined text-danger p-2 bg-white rounded border-0"
+
+                                                >
                                                     delete
                                                 </button>
                                             </td>
