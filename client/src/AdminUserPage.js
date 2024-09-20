@@ -20,7 +20,7 @@ export default function AdminUserPage() {
     const [userQueryParams, setUserQueryParams] = useState({
         limit: 5,
         page: 1,
-        sort: "name",
+        sort: "-createdAt,name",
     });
 
     const getUser = async () => {
@@ -50,6 +50,25 @@ export default function AdminUserPage() {
         }
     }
 
+    const deleteUser = async (id) => {
+        try {
+            const user = await axios.patch(USERS_URL + `/${id}`, {
+                active: false
+            }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            console.log(user.data);
+            
+            getUser();
+        }
+        catch (error) {
+            alert("Error deleting user");
+            console.error(error);
+        }
+    }
+
+
     const navigateBefore = () =>
         setUserQueryParams(prev => {
             let obj = { ...prev };
@@ -74,7 +93,7 @@ export default function AdminUserPage() {
 
     return (
         <div className="h-100">
-            <div className="h-100 d-flex flex-column dashboard">
+            <div className="h-100 d-flex flex-column">
                 <div className="d-flex h-100">
                     <LeftDashboard />
                     <div className="px-4 py-5 bg-light w-100">
@@ -120,7 +139,7 @@ export default function AdminUserPage() {
                                             <td className="p-3 align-middle">
                                                 <button
                                                     className="material-symbols-outlined text-danger p-2 bg-white rounded border-0"
-
+                                                    onClick={() => deleteUser(user._id)}
                                                 >
                                                     delete
                                                 </button>

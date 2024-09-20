@@ -20,7 +20,9 @@ export default function AdminEditUserPage() {
         email: state.email,
         role: state.role,
         active: state.active,
-        avatar: state.photo,
+        avatar: {
+            data: null,
+        },
     });
 
     const uploadImg = e => {
@@ -34,12 +36,11 @@ export default function AdminEditUserPage() {
     const updateUser = async (e) => {
         e.preventDefault();
         const formData = new FormData();
-        formData.append("name", user.name);
-        formData.append("email", user.email);
-        formData.append("role", user.role);
-        formData.append("active", user.active);
-        formData.append("photo", user.avatar.data);
-        console.log(...formData);
+        if (state.name !== user.name) formData.append("name", user.name);
+        if (state.email !== user.email) formData.append("email", user.email);
+        if (state.role !== user.role) formData.append("role", user.role);
+        if (state.active !== user.active) formData.append("active", user.active);
+        if (user.avatar.data) formData.append("photo", user.avatar.data);
         
         try {
             const user = await axios.patch(`${USERS_URL}/${state._id}`, formData, {
@@ -49,7 +50,6 @@ export default function AdminEditUserPage() {
             });
 
             navigate("/admin/users");
-            
         } catch (error) {
             alert(error.response.data.message);
             console.log(error);

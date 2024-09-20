@@ -119,6 +119,8 @@ export default function Tour() {
         getTour();
     }, [slug])
 
+    console.log({ reviews });
+
     useEffect(() => {
         const getReviews = async () => {
             try {
