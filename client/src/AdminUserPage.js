@@ -5,9 +5,6 @@ import { USERS_URL, USER_IMAGE_URL } from "./customValue";
 import { Link } from "react-router-dom";
 
 export default function AdminUserPage() {
-    const userJSON = localStorage.getItem("user");
-    const user = userJSON ? JSON.parse(userJSON) : null;
-
     const tokenJSON = localStorage.getItem("token");
     const token = tokenJSON ? JSON.parse(tokenJSON) : null;
 

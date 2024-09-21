@@ -15,6 +15,7 @@ import Dashboard from './Dashboard';
 import AdminUserPage from './AdminUserPage';
 import AdminTourPage from './AdminTourPage';
 import AdminEditUserPage from './AdminEditUserPage';
+import AdminEditTourPage from './AdminEditTourPage';
 
 function App() {
     const [tours, setTours] = useState({
@@ -84,6 +85,10 @@ function App() {
             <Route
                 path='/admin/tours'
                 element={<AdminTourPage />}
+            />
+            <Route
+                path='/admin/tours/edit'
+                element={<AdminEditTourPage />}
             />
             <Route
                 path='/admin/reviews'

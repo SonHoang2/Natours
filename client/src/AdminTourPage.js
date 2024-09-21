@@ -1,6 +1,76 @@
+import axios from "axios";
+import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import LeftDashboard from "./component/LeftDashboard";
+import { TOUR_IMAGE_URL, TOURS_URL } from "./customValue";
 
 export default function AdminTourPage() {
+    const tokenJSON = localStorage.getItem("token");
+    const token = tokenJSON ? JSON.parse(tokenJSON) : null;
+
+    const [tours, setTours] = useState(
+        {
+            data: [],
+            totalLength: 0,
+            currentLength: 0
+        }
+    );
+
+    const [tourQueryParams, setTourQueryParams] = useState({
+        limit: 5,
+        page: 1,
+        sort: "-createdAt,name",
+    });
+    
+    const getTours = async () => {
+        try {
+            const tours = await axios.get(TOURS_URL + `/?limit=${tourQueryParams.limit}&sort=${tourQueryParams.sort}&page=${tourQueryParams.page}`,
+                {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+
+            console.log(tours.data);
+
+            let currentLength = tourQueryParams.limit * tourQueryParams.page;
+
+            if (currentLength > tours.data.total) {
+                currentLength = tours.data.total;
+            }
+
+            setTours({
+                data: tours.data.data.doc,
+                totalLength: tours.data.total,
+                currentLength: currentLength
+            });
+
+        } catch (error) {
+            alert("Error getting tours");
+            console.error(error);
+        }
+    }
+
+    const navigateBefore = () =>
+        setTourQueryParams(prev => {
+            let obj = { ...prev };
+            if (prev.page > 1) {
+                obj = { ...prev, page: prev.page - 1 }
+            }
+            return obj;
+        })
+
+    const navigateAfter = () =>
+        setTourQueryParams(prev => {
+            let obj = { ...prev };
+            if (prev.page < Math.ceil(tours.totalLength / prev.limit)) {
+                obj = { ...prev, page: prev.page + 1 };
+            }
+            return obj;
+        })
+
+    useEffect(() => {
+        getTours();
+    }, [tourQueryParams.page]);
+
     return (
         <div className="h-100">
             <div className="h-100 d-flex flex-column">
@@ -14,33 +84,37 @@ export default function AdminTourPage() {
                         <table className="bg-white w-100 shadow border ">
                             <thead className="bg-light border-bottom">
                                 <tr>
-                                    <th className="p-3">Avatar</th>
-                                    <th className="p-3">Name</th>
-                                    <th className="p-3">Email</th>
-                                    <th className="p-3">Role</th>
-                                    <th className="p-3">Active</th>
-                                    <th className="p-3">Edit</th>
-                                    <th className="p-3">Delete</th>
+                                    <th className="p-3 text-capitalize">image cover</th>
+                                    <th className="p-3 text-capitalize">name</th>
+                                    <th className="p-3 text-capitalize">duration</th>
+                                    <th className="p-3 text-capitalize">max Group Size</th>
+                                    <th className="p-3 text-capitalize">price</th>
+                                    <th className="p-3 text-capitalize">create at</th>
+                                    <th className="p-3 text-capitalize">edit</th>
+                                    <th className="p-3 text-capitalize">delete</th>
                                 </tr>
                             </thead>
-                            {/* <tbody >
+                            <tbody >
                                 {
-                                    users.data.map((user) => (
-                                        <tr key={user._id}>
+                                    tours.data.map((tour) => (
+                                        <tr key={tour._id}>
                                             <td className="p-3 align-middle">
                                                 <img
                                                     className="rounded-circle user-avatar"
-                                                    src={USER_IMAGE_URL + user.photo}
-                                                    alt="user" />
+                                                    src={TOUR_IMAGE_URL + tour.imageCover}
+                                                    alt="tour" />
                                             </td>
-                                            <td className="p-3 align-middle">{user.name}</td>
-                                            <td className="p-3 align-middle">{user.email}</td>
-                                            <td className="p-3 align-middle">{user.role}</td>
-                                            <td className="p-3 align-middle">{user.active ? "true" : "false"}</td>
+                                            <td className="p-3 align-middle">{tour.name}</td>
+                                            <td className="p-3 align-middle">{tour.duration}</td>
+                                            <td className="p-3 align-middle">{tour.maxGroupSize}</td>
+                                            <td className="p-3 align-middle">{tour.price}</td>
+                                            <td className="p-3 align-middle">
+                                                {new Date(tour.startDates[0]).toLocaleString('en-US', { month: "2-digit", year: 'numeric', day: "numeric"})}
+                                                </td>
                                             <td className="p-3 align-middle">
                                                 <Link
                                                     to={`./edit`}
-                                                    state={user}
+                                                    state={tour}
                                                     className="material-symbols-outlined text-primary p-2 bg-white rounded border-0 text-decoration-none"
                                                 >
                                                     edit
@@ -57,14 +131,14 @@ export default function AdminTourPage() {
                                         </tr>
                                     ))
                                 }
-                            </tbody> */}
-                            {/* <tfoot>
+                            </tbody>
+                            <tfoot>
                                 <tr>
                                     <td colSpan="7" className="p-3">
                                         <div className="d-flex justify-content-center ">
                                             <div className="position-relative d-flex align-items-center">
                                                 <h1 className="navigate-button text-secondary">
-                                                    {users.currentLength} of {users.totalLength} result
+                                                    {tours.currentLength} of {tours.totalLength} result
                                                 </h1>
                                                 <span
                                                     type="button"
@@ -73,7 +147,7 @@ export default function AdminTourPage() {
                                                 >
                                                     navigate_before
                                                 </span>
-                                                <span type="button" className="bg-white p-2 fs-5">{userQueryParams.page}</span>
+                                                <span type="button" className="bg-white p-2 fs-5">{tours.page}</span>
                                                 <span type="button"
                                                     className="material-symbols-outlined fs-1"
                                                     onClick={navigateAfter}
@@ -84,7 +158,7 @@ export default function AdminTourPage() {
                                         </div>
                                     </td>
                                 </tr>
-                            </tfoot> */}
+                            </tfoot>
                         </table>
                     </div>
                 </div>
