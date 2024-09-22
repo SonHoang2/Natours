@@ -6,11 +6,14 @@ import { motion } from "framer-motion";
 import axios from "axios";
 
 export default function Tour() {
-    const { slug } = useParams();
+    const userJSON = localStorage.getItem("user");
+    const user = userJSON ? JSON.parse(userJSON) : null;
 
+    const tokenJSON = localStorage.getItem("token");
+    const token = tokenJSON ? JSON.parse(tokenJSON) : null;
+
+    const { slug } = useParams();
     const [tour, setTour] = useState(null);
-    const user = JSON.parse(localStorage.getItem("user"));
-    const token = JSON.parse(localStorage.getItem("token"));
 
     const [reviews, setReviews] = useState({
         data: [],
@@ -108,13 +111,20 @@ export default function Tour() {
 
                 setTour(tours.data.data.tour);
             } catch (err) {
-                if (err.response.data.message === "No tour found with that name") {
+                if (err.response.data.message === "Tour was deleted") {
+                    alert("Tour was deleted");
+                }
+                else if (err.response.data.message === "No tour found with that name") {
                     navigate("/not-found")
+                } else {
+                    alert("Error getting tour");
                 }
             }
         }
         getTour();
     }, [slug])
+
+    console.log({ reviews });
 
     useEffect(() => {
         const getReviews = async () => {
@@ -192,9 +202,6 @@ export default function Tour() {
 
         getRating();
     }, [tour?._id])
-
-    console.log(reviews.groupRating);
-
 
     return (
         <div className="tour">

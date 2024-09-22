@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import Home from './Home';
 import Tour from './Tour';
@@ -10,21 +10,20 @@ import ForgotPassword from './ForgotPassword'
 import ResetPassword from './ResetPassword';
 import MyBookings from './MyBookings';
 import MyReviews from './MyReviews';
-import Admin from './Admin';
 import ErrorPage from './ErrorPage';
+import Dashboard from './Dashboard';
+import AdminUserPage from './AdminUserPage';
+import AdminTourPage from './AdminTourPage';
+import AdminEditUserPage from './AdminEditUserPage';
+import AdminEditTourPage from './AdminEditTourPage';
+import AdminReviewPage from './AdminReviewPage';
+import AdminEditReviewPage from './AdminEditReviewPage';
 
 function App() {
     const [tours, setTours] = useState({
         data: [],
         length: ""
     });
-
-    useEffect(() => {
-        const tourLocalStorage = localStorage.getItem("tour");
-        if (tourLocalStorage) {
-            setTours(JSON.parse(tourLocalStorage))
-        }
-    }, [])
 
     return (
         <Routes>
@@ -36,20 +35,6 @@ function App() {
                         setTours={setTours}
                     />}
             />
-            {/* {
-                tours.data != null && tours.data.map(tour => (
-                    <Route
-                        path={'/tour/' + tour.slug}
-                        key={tour.id}
-                        element={
-                            <Tour
-                                tour={tour}
-                            />
-                        }
-                    />
-                ))
-            } */}
-
             <Route
                 path='/tour/:slug'
                 element={<Tour />}
@@ -88,8 +73,32 @@ function App() {
                 element={<MyReviews />}
             />
             <Route
-                path='/user/admin'
-                element={<Admin />}
+                path='/admin/dashboard'
+                element={<Dashboard />}
+            />
+            <Route
+                path='/admin/users'
+                element={<AdminUserPage />}
+            />
+            <Route
+                path='/admin/users/edit'
+                element={<AdminEditUserPage />}
+            />
+            <Route
+                path='/admin/tours'
+                element={<AdminTourPage />}
+            />
+            <Route
+                path='/admin/tours/edit'
+                element={<AdminEditTourPage />}
+            />
+            <Route
+                path='/admin/reviews'
+                element={<AdminReviewPage />}
+            />
+            <Route
+                path='/admin/reviews/edit'
+                element={<AdminEditReviewPage />}
             />
             <Route
                 path='/not-found'

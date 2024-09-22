@@ -164,10 +164,6 @@ body,
     width: 500px;
 }
 
-.bg-success-gradient {
-    background-image: linear-gradient(to bottom right, #92f3ff, rgb(13 133 149));
-}
-
 .text-shadow {
     text-shadow: 0px 2px 4px #26647d;
 }
@@ -267,4 +263,80 @@ input.form-control::placeholder {
 .group-rating:focus {
     background-color: #41afac !important;
     color: white;
+}
+
+.left-user-setting:hover {
+    background-color: #f2f2f2;
+    color: #41afac;
+}
+
+.left-user-setting:hover .left-user-setting-item {
+    color: #41afac !important;
+}
+
+.dashboard {
+    .page-subtitle {
+        letter-spacing: .125rem;
+        color: #435150;
+    }
+
+    .card {
+        border: 0px;
+    }
+
+    .card-icon {
+        top: -25px;
+        left: 25px;
+    }
+
+    input:focus {
+        border: 1px solid #dee2e6;
+        outline: none;
+    }
+
+    .line-chart {
+        width: 100%;
+        height: 400px;
+    }
+
+    .navigate-button {
+        position: absolute;
+        top: 13px;
+        left: -111px;
+    }
+}
+
+.left-dashboard:hover {
+    background-color: #41afac;
+    cursor: pointer;
+}
+
+.left-dashboard:hover h3,
+.left-dashboard:hover span {
+    color: white !important;
+}
+
+/* color */
+.bg-success-gradient {
+    background-image: linear-gradient(to bottom right, #92f3ff, rgb(13 133 149));
+}
+
+.bg-gradient-blue {
+    background: radial-gradient(circle at 12.3% 19.3%, rgb(85, 88, 218) 0%, rgb(95, 209, 249) 100.2%);
+}
+
+.bg-gradient-green {
+    background: linear-gradient(to top, #0ba360 0%, #3cba92 100%);
+}
+
+.bg-gradient-pink {
+    background: radial-gradient(circle at 10% 20%, rgb(246, 98, 128) 0%, rgb(248, 129, 135) 98.3%);
+}
+
+.bg-gradient-purple {
+    background: linear-gradient(to right, #434343 0%, black 100%);
+}
+
+.text-green {
+    color: #0ba360;
 }

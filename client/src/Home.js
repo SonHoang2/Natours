@@ -28,7 +28,7 @@ export default function Home({ tours, setTours }) {
 
     const getTours = async () => {
         try {
-            const url = TOURS_URL + `/?sort=${queryParams.sort}&limit=${queryParams.limit}&page=${queryParams.page}`;
+            const url = TOURS_URL + `/active?sort=${queryParams.sort}&limit=${queryParams.limit}&page=${queryParams.page}`;
             const res = await fetch(url, {
                 method: "GET",
             })
@@ -40,7 +40,7 @@ export default function Home({ tours, setTours }) {
                         data: data.data.doc,
                         length: data.total
                     };
-                    localStorage.setItem("tour", JSON.stringify(obj));
+                    
                     return obj
                 });
             }
@@ -221,7 +221,7 @@ export default function Home({ tours, setTours }) {
                                             <div
                                                 key={i}
                                                 className="d-flex align-items-center p-3 search-item"
-                                                onClick={() => navigate(tour.slug)}
+                                                onClick={() => navigate("/tour/" + tour.slug)}
                                             >
                                                 <div>
                                                     <img
