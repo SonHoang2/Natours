@@ -4,6 +4,7 @@ const AppError = require('../utils/AppError');
 const Tour = require('../models/tourModel');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
+const APIFeatures = require('../utils/apiFeatures');
 
 const multerStorage = multer.memoryStorage();
 
@@ -27,6 +28,7 @@ exports.uploadTourImages = upload.fields([
 ]);
 
 exports.resizeTourImages = catchAsync(async (req, res, next) => {
+    if (!req.files) return next();
     if (!req.files.imageCover || !req.files.images) return next();
     // Cover image
     req.body.imageCover = `tour-${req.params.id}-${Date.now()}-cover.jpeg`;
@@ -238,10 +240,35 @@ exports.getOneBySlug = catchAsync(async (req, res, next) => {
         return next(new AppError('No tour found with that name', 404));
     }
 
+    if (!tour.active) {
+        return next(new AppError('Tour was deleted', 404));
+    }
+
     res.status(200).json({
         status: 'success',
         data: {
             tour
+        }
+    });
+})
+
+exports.getAllActiveTours = catchAsync(async (req, res, next) => {
+    const tours = new APIFeatures(Tour.find({ active: true }), req.query)
+        .filter()
+        .sort()
+        .limitFields()
+        .paginate();
+
+    const doc = await tours.query;
+
+    const total = await Tour.countDocuments({ active: true });
+
+    res.status(200).json({
+        status: 'success',
+        results: doc.length,
+        total: total,
+        data: {
+            doc
         }
     });
 })

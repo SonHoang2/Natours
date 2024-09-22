@@ -34,9 +34,15 @@ router
     .route('/distances/:latlng/unit/:unit')
     .get(tourController.getDistances)
 
+router.get('/active', tourController.getAllActiveTours)
+
 router
     .route('/')
-    .get(tourController.getAllTours)
+    .get(
+        authController.protect,
+        authController.restrictTo('admin'),
+        tourController.getAllTours
+    )
     .post(
         authController.protect,
         authController.restrictTo('admin', 'lead-guide'),

@@ -108,7 +108,11 @@ const tourSchema = new mongoose.Schema(
                 type: mongoose.Schema.ObjectId,
                 ref: 'User'
             }
-        ]
+        ],
+        active: {
+            type: Boolean,
+            default: true,
+        }
     },
     {
         toJSON: { virtuals: true },
@@ -131,8 +135,21 @@ tourSchema.virtual('reviews', {
     localField: '_id'
 })
 
+// if name tour is updated, slug will be updated too
+tourSchema.pre('findOneAndUpdate', function (next) {
+    const update = this.getUpdate();
+
+    if (update.name) {
+        update.slug = slugify(update.name, { lower: true });
+        this.setUpdate(update); 
+    }
+    next();
+})
+
 // run before .save() and .create()
 tourSchema.pre('save', function (next) {
+    console.log("hello from middleware");
+
     this.slug = slugify(this.name, { lower: true })
     next();
 })

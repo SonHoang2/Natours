@@ -19,9 +19,9 @@ export default function AdminTourPage() {
     const [tourQueryParams, setTourQueryParams] = useState({
         limit: 5,
         page: 1,
-        sort: "-createdAt,name",
+        sort: "-createAt",
     });
-    
+
     const getTours = async () => {
         try {
             const tours = await axios.get(TOURS_URL + `/?limit=${tourQueryParams.limit}&sort=${tourQueryParams.sort}&page=${tourQueryParams.page}`,
@@ -45,6 +45,21 @@ export default function AdminTourPage() {
 
         } catch (error) {
             alert("Error getting tours");
+            console.error(error);
+        }
+    }
+
+    const deleteTour = async (id) => {
+        try {
+            const tour = await axios.patch(TOURS_URL + `/${id}`, { active: false }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            console.log(tour.data);
+            
+            getTours();
+        } catch (error) {
+            alert("Error deleting tour");
             console.error(error);
         }
     }
@@ -86,10 +101,10 @@ export default function AdminTourPage() {
                                 <tr>
                                     <th className="p-3 text-capitalize">image cover</th>
                                     <th className="p-3 text-capitalize">name</th>
-                                    <th className="p-3 text-capitalize">duration</th>
                                     <th className="p-3 text-capitalize">max Group Size</th>
                                     <th className="p-3 text-capitalize">price</th>
                                     <th className="p-3 text-capitalize">create at</th>
+                                    <th className="p-3 text-capitalize">active</th>
                                     <th className="p-3 text-capitalize">edit</th>
                                     <th className="p-3 text-capitalize">delete</th>
                                 </tr>
@@ -105,12 +120,12 @@ export default function AdminTourPage() {
                                                     alt="tour" />
                                             </td>
                                             <td className="p-3 align-middle">{tour.name}</td>
-                                            <td className="p-3 align-middle">{tour.duration}</td>
                                             <td className="p-3 align-middle">{tour.maxGroupSize}</td>
                                             <td className="p-3 align-middle">{tour.price}</td>
                                             <td className="p-3 align-middle">
-                                                {new Date(tour.startDates[0]).toLocaleString('en-US', { month: "2-digit", year: 'numeric', day: "numeric"})}
-                                                </td>
+                                                {new Date(tour.startDates[0]).toLocaleString('en-GB', { day: "numeric", month: "2-digit", year: 'numeric' })}
+                                            </td>
+                                            <td className="p-3 align-middle">{tour.active ? "true" : "false"}</td>
                                             <td className="p-3 align-middle">
                                                 <Link
                                                     to={`./edit`}
@@ -123,7 +138,7 @@ export default function AdminTourPage() {
                                             <td className="p-3 align-middle">
                                                 <button
                                                     className="material-symbols-outlined text-danger p-2 bg-white rounded border-0"
-
+                                                    onClick={() => deleteTour(tour._id)}
                                                 >
                                                     delete
                                                 </button>

@@ -106,6 +106,7 @@
             }
         ],
         "slug": "the-sea-explorer",
+        "active": true,
         "__v": 0
     },
     {
@@ -205,6 +206,7 @@
             }
         ],
         "slug": "the-forest-hiker",
+        "active": true,
         "__v": 0
     },
     {
@@ -291,6 +293,7 @@
             }
         ],
         "slug": "the-snow-adventurer",
+        "active": true,
         "__v": 0
     },
     {
@@ -416,6 +419,7 @@
             }
         ],
         "slug": "the-sports-lover",
+        "active": true,
         "__v": 0
     },
     {
@@ -512,6 +516,7 @@
             }
         ],
         "slug": "the-star-gazer",
+        "active": true,
         "__v": 0
     },
     {
@@ -585,6 +590,7 @@
             }
         ],
         "slug": "the-northern-lights",
+        "active": true,
         "__v": 0
     },
     {
@@ -681,6 +687,7 @@
             }
         ],
         "slug": "the-wine-taster",
+        "active": true,
         "__v": 0
     },
     {
@@ -793,6 +800,7 @@
             }
         ],
         "slug": "the-park-camper",
+        "active": true,
         "__v": 0
     },
     {
@@ -889,6 +897,7 @@
             }
         ],
         "slug": "the-city-wanderer",
+        "active": true,
         "__v": 0
     }
 ]

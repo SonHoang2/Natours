@@ -81,6 +81,7 @@ exports.getAll = Model =>
             .sort()
             .limitFields()
             .paginate();
+
         const doc = await features.query;
 
         const total = await Model.countDocuments(filter);

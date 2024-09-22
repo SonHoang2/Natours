@@ -111,8 +111,13 @@ export default function Tour() {
 
                 setTour(tours.data.data.tour);
             } catch (err) {
-                if (err.response.data.message === "No tour found with that name") {
+                if (err.response.data.message === "Tour was deleted") {
+                    alert("Tour was deleted");
+                }
+                else if (err.response.data.message === "No tour found with that name") {
                     navigate("/not-found")
+                } else {
+                    alert("Error getting tour");
                 }
             }
         }
@@ -197,9 +202,6 @@ export default function Tour() {
 
         getRating();
     }, [tour?._id])
-
-    console.log(reviews.groupRating);
-
 
     return (
         <div className="tour">

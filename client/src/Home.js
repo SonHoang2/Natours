@@ -28,7 +28,7 @@ export default function Home({ tours, setTours }) {
 
     const getTours = async () => {
         try {
-            const url = TOURS_URL + `/?sort=${queryParams.sort}&limit=${queryParams.limit}&page=${queryParams.page}`;
+            const url = TOURS_URL + `/active?sort=${queryParams.sort}&limit=${queryParams.limit}&page=${queryParams.page}`;
             const res = await fetch(url, {
                 method: "GET",
             })
