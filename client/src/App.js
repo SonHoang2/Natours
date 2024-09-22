@@ -16,6 +16,8 @@ import AdminUserPage from './AdminUserPage';
 import AdminTourPage from './AdminTourPage';
 import AdminEditUserPage from './AdminEditUserPage';
 import AdminEditTourPage from './AdminEditTourPage';
+import AdminReviewPage from './AdminReviewPage';
+import AdminEditReviewPage from './AdminEditReviewPage';
 
 function App() {
     const [tours, setTours] = useState({
@@ -92,7 +94,11 @@ function App() {
             />
             <Route
                 path='/admin/reviews'
-                element={<AdminTourPage />}
+                element={<AdminReviewPage />}
+            />
+            <Route
+                path='/admin/reviews/edit'
+                element={<AdminEditReviewPage />}
             />
             <Route
                 path='/not-found'

@@ -101,13 +101,13 @@ export default function AdminUserPage() {
                         <table className="bg-white w-100 shadow border ">
                             <thead className="bg-light border-bottom">
                                 <tr>
-                                    <th className="p-3">Avatar</th>
-                                    <th className="p-3">Name</th>
-                                    <th className="p-3">Email</th>
-                                    <th className="p-3">Role</th>
-                                    <th className="p-3">Active</th>
-                                    <th className="p-3">Edit</th>
-                                    <th className="p-3">Delete</th>
+                                    <th className="p-3 text-capitalize">Avatar</th>
+                                    <th className="p-3 text-capitalize">Name</th>
+                                    <th className="p-3 text-capitalize">Email</th>
+                                    <th className="p-3 text-capitalize">Role</th>
+                                    <th className="p-3 text-capitalize">Active</th>
+                                    <th className="p-3 text-capitalize">Edit</th>
+                                    <th className="p-3 text-capitalize">Delete</th>
                                 </tr>
                             </thead>
                             <tbody >
