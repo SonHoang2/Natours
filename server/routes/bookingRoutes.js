@@ -26,4 +26,8 @@ router
     .route('/comparison/last-current-month')
     .get(bookingController.getCompareMonthly)
 
+router
+    .route('/comparison/first-month/:firstMonth/second-month/:secondMonth')
+    .get(bookingController.getCompareMonthlyDetail)
+
 module.exports = router;

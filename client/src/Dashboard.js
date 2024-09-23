@@ -8,17 +8,34 @@ import { BOOKINGS_URL, REVIEWS_URL, TOURS_URL } from "./customValue";
 
 Chart.register(CategoryScale);
 
-
 export default function Dashboard() {
     const tokenJSON = localStorage.getItem("token");
     const token = tokenJSON ? JSON.parse(tokenJSON) : null;
+
+    const [tourComparison, setTourComparison] = useState({})
+    const [userComparison, setUserComparison] = useState({})
+    const [reviewComparison, setReviewComparison] = useState({})
+    const [bookingComparison, setBookingComparison] = useState({})
+
+    // set current month and last month for default comparison
+    const monthNames = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
+
+    const currentDate = new Date();
+    const CurrentMonth = monthNames[currentDate.getMonth() + 1];
+    const LastMonth = monthNames[currentDate.getMonth()];
+
+    const [firstMonth, setFirstMonth] = useState(CurrentMonth)
+    const [secondMonth, setSecondMonth] = useState(LastMonth)
 
     const [bookingLineData, setBookingLineData] = useState(
         {
             labels: ["1", "7", "14", "21", "28", "30"],
             datasets: [
                 {
-                    label: "Current month",
+                    label: firstMonth,
                     data: [33, 53, 85, 41, 44, 65],
                     fill: true,
                     backgroundColor: "rgba(75,192,192,0.2)",
@@ -26,7 +43,7 @@ export default function Dashboard() {
                     lineTension: 0.5
                 },
                 {
-                    label: "Past month",
+                    label: secondMonth,
                     data: [33, 25, 35, 51, 54, 76],
                     fill: false,
                     borderColor: "#742774",
@@ -35,18 +52,27 @@ export default function Dashboard() {
             ]
         })
 
-    const [tourComparison, setTourComparison] = useState({})
-    const [userComparison, setUserComparison] = useState({})
-    const [reviewComparison, setReviewComparison] = useState({})
-    const [bookingComparison, setBookingComparison] = useState({})
+
+    const getBookingLineData = async () => {
+        try {
+            const firstMonth = 1;
+            const secondMonth = 2;
+            const bookingLine = await axios.get(BOOKINGS_URL + `/comparison/first-month/${firstMonth}/second-month/${secondMonth}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            console.log(bookingLine);
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     const getTourComparison = async () => {
         try {
             const tour = await axios.get(TOURS_URL + '/comparison/last-current-month', {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            console.log(tour.data.data);
-
             setTourComparison(tour.data.data)
         } catch (error) {
             console.log(error)
@@ -56,10 +82,9 @@ export default function Dashboard() {
 
     const getUserComparison = async () => {
         try {
-            const user = await axios.get(TOURS_URL + '/comparison/last-current-month', 
+            const user = await axios.get(TOURS_URL + '/comparison/last-current-month',
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-            console.log(user.data.data);
             setUserComparison(user.data.data)
         } catch (error) {
             console.log(error)
@@ -68,10 +93,9 @@ export default function Dashboard() {
 
     const getReviewComparison = async () => {
         try {
-            const review = await axios.get(REVIEWS_URL + '/comparison/last-current-month', 
+            const review = await axios.get(REVIEWS_URL + '/comparison/last-current-month',
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-            console.log(review.data.data);
             setReviewComparison(review.data.data)
         } catch (error) {
             console.log(error)
@@ -80,10 +104,9 @@ export default function Dashboard() {
 
     const getBookingComparison = async () => {
         try {
-            const booking = await axios.get(BOOKINGS_URL + '/comparison/last-current-month', 
+            const booking = await axios.get(BOOKINGS_URL + '/comparison/last-current-month',
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-            console.log(booking.data.data);
             setBookingComparison(booking.data.data)
         } catch (error) {
             console.log(error)
@@ -121,7 +144,7 @@ export default function Dashboard() {
             <div className="h-100 d-flex flex-column dashboard">
                 <div className="d-flex h-100">
                     <LeftDashboard />
-                    <div className="px-4 py-5 bg-light w-100">
+                    <div className="px-4 py-5 bg-light w-100 overflow-auto">
                         <div className="pb-5">
                             <h5 className="text-uppercase fs-6 text-muted pb-2 page-subtitle">Admin</h5>
                             <h3 className="fs-3 text-success">Dashboard</h3>
@@ -210,13 +233,16 @@ export default function Dashboard() {
                                 <div className="d-flex">
                                     <div className="pe-3">
                                         <label htmlFor="start-date" className="pe-3 text-secondary fs-5">Start Date</label>
-                                        <input type="date" id="start-date" className="fs-5 p-3 rounded border-0 shadow-sm" />
+                                        <input type="month" id="start-date" className="fs-5 p-3 rounded border-0 shadow-sm" />
                                     </div>
                                     <div className="pe-5">
                                         <label htmlFor="end-date" className="pe-3 text-secondary fs-5">End Date</label>
-                                        <input type="date" id="end-date" className="fs-5 p-3 rounded border-0  shadow-sm" />
+                                        <input type="month" id="end-date" className="fs-5 p-3 rounded border-0  shadow-sm" />
                                     </div>
-                                    <button className="btn btn-success text-light px-4 fs-5">Search</button>
+                                    <button
+                                        className="btn btn-success text-light px-4 fs-5"
+                                        onClick={getBookingLineData}
+                                    >Search</button>
                                 </div>
                             </div>
                             <div className="line-chart p-3">
@@ -228,13 +254,23 @@ export default function Dashboard() {
                                                 x: {
                                                     grid: {
                                                         display: false
+                                                    },
+                                                    ticks: {
+                                                        callback: function(value, index, values) {
+                                                            // Check if it's the last label (index of the label array)
+                                                            console.log(values); 
+                                                            if (index === values.length - 1) {
+                                                                return ''; // Hide the last label (e.g., "30")
+                                                            }
+                                                            return this.getLabelForValue(value); // Return other labels
+                                                        }
                                                     }
                                                 },
                                                 y: {
                                                     grid: {
                                                         display: true
                                                     }
-                                                }
+                                                },
                                             },
                                             devicePixelRatio: 3,
                                             responsive: true,
