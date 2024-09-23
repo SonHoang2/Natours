@@ -96,3 +96,36 @@ exports.getAll = Model =>
             }
         });
     });
+
+exports.getCompareMonthly = Model =>
+    catchAsync(async (req, res, next) => {
+        const thisMonth = new Date().getMonth() + 1;
+        const lastMonth = thisMonth - 1;
+        const thisYear = new Date().getFullYear();
+
+        const thisMonthTotal = await Model
+            .find({
+                createAt: {
+                    $gte: new Date(`${thisYear}-${thisMonth}-01`),
+                    $lte: new Date(`${thisYear}-${thisMonth}-31`)
+                }
+            })
+            .countDocuments();
+
+        const lastMonthTotal = await Model
+            .find({
+                createAt: {
+                    $gte: new Date(`${thisYear}-${lastMonth}-01`),
+                    $lte: new Date(`${thisYear}-${lastMonth}-31`)
+                }
+            })
+            .countDocuments();
+
+        res.status(200).json({
+            status: 'success',
+            data: {
+                thisMonthTotal,
+                lastMonthTotal
+            }
+        });
+    });

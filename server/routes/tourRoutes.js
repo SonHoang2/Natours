@@ -73,4 +73,12 @@ router
     .route('/search/:name')
     .get(tourController.searchTour)
 
+router
+    .route('/comparison/last-current-month')
+    .get(
+        authController.protect,
+        authController.restrictTo('admin'),
+        tourController.getCompareMonthly
+    )
+
 module.exports = router;

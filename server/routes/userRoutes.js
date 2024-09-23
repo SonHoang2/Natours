@@ -39,4 +39,9 @@ router
     )
     .delete(userController.deleteUser);
 
+
+router
+    .route('/comparison/last-current-month')
+    .get(userController.getCompareMonthly)
+
 module.exports = router;

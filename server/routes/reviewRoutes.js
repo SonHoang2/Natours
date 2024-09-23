@@ -33,4 +33,12 @@ router.route('/:id')
         reviewController.deleteReview
     )
 
+router
+    .route('/comparison/last-current-month')
+    .get(
+        authController.protect,
+        authController.restrictTo('admin'),
+        reviewController.getCompareMonthly
+    )
+
 module.exports = router;
