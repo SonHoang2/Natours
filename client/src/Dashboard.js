@@ -16,53 +16,46 @@ export default function Dashboard() {
     const [userComparison, setUserComparison] = useState({})
     const [reviewComparison, setReviewComparison] = useState({})
     const [bookingComparison, setBookingComparison] = useState({})
+    const [bookingSale, setBookingSale] = useState({
+        currentMonth: [],
+        lastMonth: []
+    })
 
-    // set current month and last month for default comparison
-    const monthNames = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-    ];
+    const bookingLineData = {
+        labels: ["7", "14", "21", "28", "last day"],
+        datasets: [
+            {
+                label: "Current Month",
+                data: bookingSale.currentMonth.map(item => item.totalMoney),
+                fill: true,
+                backgroundColor: "rgba(75,192,192,0.2)",
+                borderColor: "#3399ff",
+                lineTension: 0.5
+            },
+            {
+                label: "Last Month",
+                data: bookingSale.lastMonth.map(item => item.totalMoney),
+                fill: false,
+                borderColor: "#34a853",
+                lineTension: 0.5
+            }
+        ]
+    }
 
-    const currentDate = new Date();
-    const CurrentMonth = monthNames[currentDate.getMonth() + 1];
-    const LastMonth = monthNames[currentDate.getMonth()];
+    console.log(bookingSale);
 
-    const [firstMonth, setFirstMonth] = useState(CurrentMonth)
-    const [secondMonth, setSecondMonth] = useState(LastMonth)
-
-    const [bookingLineData, setBookingLineData] = useState(
-        {
-            labels: ["1", "7", "14", "21", "28", "30"],
-            datasets: [
-                {
-                    label: firstMonth,
-                    data: [33, 53, 85, 41, 44, 65],
-                    fill: true,
-                    backgroundColor: "rgba(75,192,192,0.2)",
-                    borderColor: "rgba(75,192,192,1)",
-                    lineTension: 0.5
-                },
-                {
-                    label: secondMonth,
-                    data: [33, 25, 35, 51, 54, 76],
-                    fill: false,
-                    borderColor: "#742774",
-                    lineTension: 0.5
-                }
-            ]
-        })
 
 
     const getBookingLineData = async () => {
         try {
-            const firstMonth = 1;
-            const secondMonth = 2;
-            const bookingLine = await axios.get(BOOKINGS_URL + `/comparison/first-month/${firstMonth}/second-month/${secondMonth}`, {
+            const bookingLine = await axios.get(BOOKINGS_URL + `/comparison/last-current-month/detail`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
-            console.log(bookingLine);
-
+            setBookingSale({
+                currentMonth: bookingLine.data.data.currentMonth,
+                lastMonth: bookingLine.data.data.lastMonth
+            })
         } catch (error) {
             console.log(error)
         }
@@ -137,6 +130,7 @@ export default function Dashboard() {
         getUserComparison();
         getReviewComparison();
         getBookingComparison();
+        getBookingLineData();
     }, [])
 
     return (
@@ -229,22 +223,13 @@ export default function Dashboard() {
                             <div className="p-3">
                                 <h1 className="text-success fs-4">Bookings</h1>
                             </div>
-                            <div className="p-3 border-bottom border-top bg-light">
-                                <div className="d-flex">
-                                    <div className="pe-3">
-                                        <label htmlFor="start-date" className="pe-3 text-secondary fs-5">Start Date</label>
-                                        <input type="month" id="start-date" className="fs-5 p-3 rounded border-0 shadow-sm" />
-                                    </div>
-                                    <div className="pe-5">
-                                        <label htmlFor="end-date" className="pe-3 text-secondary fs-5">End Date</label>
-                                        <input type="month" id="end-date" className="fs-5 p-3 rounded border-0  shadow-sm" />
-                                    </div>
-                                    <button
-                                        className="btn btn-success text-light px-4 fs-5"
-                                        onClick={getBookingLineData}
-                                    >Search</button>
+                            {/* <div className="p-3 border-bottom border-top bg-light">
+                                <div className="d-flex justify-content-end">
+                                    <button className="pe-3 btn btn-success text-white">
+                                        month
+                                    </button>
                                 </div>
-                            </div>
+                            </div> */}
                             <div className="line-chart p-3">
                                 <Line
                                     data={bookingLineData}
@@ -256,9 +241,8 @@ export default function Dashboard() {
                                                         display: false
                                                     },
                                                     ticks: {
-                                                        callback: function(value, index, values) {
+                                                        callback: function (value, index, values) {
                                                             // Check if it's the last label (index of the label array)
-                                                            console.log(values); 
                                                             if (index === values.length - 1) {
                                                                 return ''; // Hide the last label (e.g., "30")
                                                             }
@@ -269,6 +253,11 @@ export default function Dashboard() {
                                                 y: {
                                                     grid: {
                                                         display: true
+                                                    },
+                                                    ticks: {
+                                                        callback: function (value) {
+                                                            return value.toLocaleString("en-US", { style: "currency", currency: "USD" });
+                                                        }
                                                     }
                                                 },
                                             },
