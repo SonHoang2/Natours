@@ -94,3 +94,4 @@ exports.getUser = factory.getOne(User);
 exports.createUser = factory.createOne(User);
 exports.updateUser = factory.updateOne(User);
 exports.deleteUser = factory.deleteOne(User);
+exports.getCompareMonthly = factory.getCompareMonthly(User);

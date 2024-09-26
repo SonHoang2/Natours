@@ -12,14 +12,22 @@ router.get("/my-tours", bookingController.getMyTours)
 router.use(authController.restrictTo('admin', 'lead-guide'));
 
 router
-  .route("/")
-  .get(bookingController.getAllBookings)
-  .post(bookingController.createBooking);
+    .route("/")
+    .get(bookingController.getAllBookings)
+    .post(bookingController.createBooking);
 
 router
-  .route('/:id')
-  .get(bookingController.getBooking)
-  .patch(bookingController.updateBooking)
-  .delete(bookingController.deleleBooking);
+    .route('/:id')
+    .get(bookingController.getBooking)
+    .patch(bookingController.updateBooking)
+    .delete(bookingController.deleleBooking);
+
+router
+    .route('/comparison/last-current-month')
+    .get(bookingController.getCompareMonthly)
+
+router
+    .route('/comparison/last-current-month/detail')
+    .get(bookingController.getCompareMonthlyDetail)
 
 module.exports = router;

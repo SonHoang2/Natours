@@ -12,9 +12,15 @@ export default function AdminEditTourPage() {
     const tokenJSON = localStorage.getItem("token");
     const token = tokenJSON ? JSON.parse(tokenJSON) : null;
 
-    const { state } = useLocation()
-
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!account || account.role !== "admin") {
+            navigate("/not-found");
+        }
+    }, []);
+
+    const { state } = useLocation()
 
     const [tour, setTour] = useState({
         imageCover: {

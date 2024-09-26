@@ -12,7 +12,7 @@ const reviewSchema = new mongoose.Schema(
             min: [1, 'Rating must be above 1.0'],
             max: [5, 'Rating must be below 5.0']
         },
-        createAt: {
+        createdAt: {
             type: Date,
             default: Date.now()
         },

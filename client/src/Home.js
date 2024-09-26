@@ -169,7 +169,7 @@ export default function Home({ tours, setTours }) {
         if (searchParams.size === 3) {
             booking();
             setSearchParams("");
-            alert("thank you for booking");
+            navigate("/thank-for-booking");
         };
     }, [searchParams.size])
 
@@ -253,7 +253,7 @@ export default function Home({ tours, setTours }) {
                             Popular</button>
                         <button
                             className="btn btn-light me-3"
-                            onClick={() => setQueryParams(prev => ({ ...prev, sort: "-createAt" }))}
+                            onClick={() => setQueryParams(prev => ({ ...prev, sort: "-createdAt" }))}
                         >
                             Latest
                         </button>
