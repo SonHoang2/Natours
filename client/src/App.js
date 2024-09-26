@@ -18,6 +18,7 @@ import AdminEditUserPage from './AdminEditUserPage';
 import AdminEditTourPage from './AdminEditTourPage';
 import AdminReviewPage from './AdminReviewPage';
 import AdminEditReviewPage from './AdminEditReviewPage';
+import ThankForBooking from './ThankForBooking';
 
 function App() {
     const [tours, setTours] = useState({
@@ -99,6 +100,10 @@ function App() {
             <Route
                 path='/admin/reviews/edit'
                 element={<AdminEditReviewPage />}
+            />
+            <Route
+                path='/thank-for-booking'
+                element={<ThankForBooking />}
             />
             <Route
                 path='/not-found'

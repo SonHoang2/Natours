@@ -1,12 +1,25 @@
 import axios from "axios";
 import LeftDashboard from "./component/LeftDashboard";
 import { useEffect, useState } from "react";
-import { REVIEWS_URL, USERS_URL, USER_IMAGE_URL } from "./customValue";
+import { REVIEWS_URL, USER_IMAGE_URL } from "./customValue";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminReviewPage() {
+    const userJSON = localStorage.getItem("user");
+    const account = userJSON ? JSON.parse(userJSON) : null;
+
     const tokenJSON = localStorage.getItem("token");
     const token = tokenJSON ? JSON.parse(tokenJSON) : null;
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!account || account.role !== "admin") {
+            navigate("/not-found");
+        }
+    }, []);
+
 
     const [reviews, setReviews] = useState({
         data: [],
@@ -104,7 +117,7 @@ export default function AdminReviewPage() {
                                     <th className="p-3 text-capitalize">tour</th>
                                     <th className="p-3 text-capitalize">review</th>
                                     <th className="p-3 text-capitalize">rating</th>
-                                    <th className="p-3 text-capitalize">createAt</th>
+                                    <th className="p-3 text-capitalize">createdAt</th>
                                     <th className="p-3 text-capitalize">Edit</th>
                                     <th className="p-3 text-capitalize">Delete</th>
                                 </tr>
@@ -125,7 +138,7 @@ export default function AdminReviewPage() {
                                             <td className="p-3 align-middle">{review.review}</td>
                                             <td className="p-3 align-middle">{review.rating}</td>
                                             <td className="p-3 align-middle">
-                                                {new Date(review.createAt).toLocaleString('en-GB', { day: "numeric", month: "2-digit", year: 'numeric' })}
+                                                {new Date(review.createdAt).toLocaleString('en-GB', { day: "numeric", month: "2-digit", year: 'numeric' })}
                                             </td>
                                             <td className="p-3 align-middle">
                                                 <Link

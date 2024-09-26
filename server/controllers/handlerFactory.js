@@ -105,7 +105,7 @@ exports.getCompareMonthly = Model =>
 
         const thisMonthTotal = await Model
             .find({
-                createAt: {
+                createdAt: {
                     $gte: new Date(`${thisYear}-${thisMonth}-01`),
                     $lte: new Date(`${thisYear}-${thisMonth}-31`)
                 }

@@ -71,7 +71,7 @@ const tourSchema = new mongoose.Schema(
         //   type: Array,
         //   default: ["tour-1-1.jpg", "tour-1-2.jpg", "tour-1-3.jpg"]
         // },
-        createAt: {
+        createdAt: {
             type: Date,
             default: Date.now()
         },

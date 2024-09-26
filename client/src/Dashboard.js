@@ -5,12 +5,25 @@ import { CategoryScale } from "chart.js";
 import Chart from "chart.js/auto";
 import LeftDashboard from "./component/LeftDashboard";
 import { BOOKINGS_URL, REVIEWS_URL, TOURS_URL } from "./customValue";
+import { useNavigate } from "react-router-dom";
 
 Chart.register(CategoryScale);
 
 export default function Dashboard() {
+    const userJSON = localStorage.getItem("user");
+    const account = userJSON ? JSON.parse(userJSON) : null;
+
     const tokenJSON = localStorage.getItem("token");
     const token = tokenJSON ? JSON.parse(tokenJSON) : null;
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!account || account.role !== "admin") {
+            navigate("/not-found");
+        }
+    }, []);
+
 
     const [tourComparison, setTourComparison] = useState({})
     const [userComparison, setUserComparison] = useState({})
@@ -41,10 +54,6 @@ export default function Dashboard() {
             }
         ]
     }
-
-    console.log(bookingSale);
-
-
 
     const getBookingLineData = async () => {
         try {
@@ -124,6 +133,15 @@ export default function Dashboard() {
             </span>
         )
     }
+
+    useEffect(() => {
+        const userJSON = localStorage.getItem("user");
+        const user = userJSON ? JSON.parse(userJSON) : null;
+
+        if (user === null) {
+            window.location.href = "/auth/login"
+        }
+    }, [])
 
     useEffect(() => {
         getTourComparison();

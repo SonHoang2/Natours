@@ -392,7 +392,7 @@ export default function Tour() {
                                                     <div className="d-flex pb-2">
                                                         {reviewStars(review.rating)}
                                                     </div>
-                                                    <p className="pb-4">{new Date(review.createAt).toLocaleString('en-US', {
+                                                    <p className="pb-4">{new Date(review.createdAt).toLocaleString('en-US', {
                                                         year: '2-digit',
                                                         month: '2-digit',
                                                         day: '2-digit',

@@ -3,10 +3,23 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import LeftDashboard from "./component/LeftDashboard";
 import { TOUR_IMAGE_URL, TOURS_URL } from "./customValue";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminTourPage() {
+    const userJSON = localStorage.getItem("user");
+    const account = userJSON ? JSON.parse(userJSON) : null;
+
     const tokenJSON = localStorage.getItem("token");
     const token = tokenJSON ? JSON.parse(tokenJSON) : null;
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!account || account.role !== "admin") {
+            navigate("/not-found");
+        }
+    }, []);
+
 
     const [tours, setTours] = useState(
         {
@@ -19,7 +32,7 @@ export default function AdminTourPage() {
     const [tourQueryParams, setTourQueryParams] = useState({
         limit: 5,
         page: 1,
-        sort: "-createAt",
+        sort: "-createdAt",
     });
 
     const getTours = async () => {
@@ -103,7 +116,7 @@ export default function AdminTourPage() {
                                     <th className="p-3 text-capitalize">name</th>
                                     <th className="p-3 text-capitalize">max Group Size</th>
                                     <th className="p-3 text-capitalize">price</th>
-                                    <th className="p-3 text-capitalize">create at</th>
+                                    <th className="p-3 text-capitalize">created at</th>
                                     <th className="p-3 text-capitalize">active</th>
                                     <th className="p-3 text-capitalize">edit</th>
                                     <th className="p-3 text-capitalize">delete</th>
