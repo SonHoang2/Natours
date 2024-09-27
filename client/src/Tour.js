@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Header from "./component/Header"
 import { TOUR_IMAGE_URL, USER_IMAGE_URL, TOURS_URL, BOOKINGS_URL } from "./customValue"
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "axios";
 
@@ -124,8 +124,6 @@ export default function Tour() {
         getTour();
     }, [slug])
 
-    console.log({ reviews });
-
     useEffect(() => {
         const getReviews = async () => {
             try {
@@ -237,6 +235,16 @@ export default function Tour() {
                             </div>
                         </div>
                     </div>
+                    <div className="position-fixed bottom-0 end-0 me-5 mb-5">
+                        <a href="#booking" className="text-decoration-none">
+                            <button className="btn text-warning shadow border-1 text-uppercase bg-white d-flex align-items-center">
+                                book now
+                                <span className="material-symbols-outlined ps-2">
+                                    shopping_cart
+                                </span>
+                            </button>
+                        </a>
+                    </div>
                     <div className="shadow px-5">
                         <div className="row m-0 pb-5">
                             <div className="col-lg-6 ps-0 pt-5">
@@ -327,7 +335,6 @@ export default function Tour() {
                                 }
                             </div>
                         </div>
-
                         <div className="pt-0">
                             <div className="pb-3 pt-5">
                                 <span className="text-uppercase fw-bold fs-4 text-success">Product Ratings</span>
@@ -433,7 +440,7 @@ export default function Tour() {
                                 </span>
                             </div>
                         </div>
-                        <div className="mt-4 d-flex justify-content-center pb-3">
+                        <div className="mt-4 d-flex justify-content-center pb-3" id="booking">
                             <div className="shadow d-flex justify-content-between rounded p-5 flex-md-row flex-column">
                                 <div className="pb-3 pe-md-3">
                                     <p className="text-success pb-2 fw-bold text-uppercase fs-5">What are you waiting for?</p>
@@ -447,7 +454,7 @@ export default function Tour() {
                                                 className="btn btn-warning py-2 px-4 rounded-pill text-white"
                                                 onClick={getCheckout}
                                             >
-                                                BOOK TOUR
+                                                BOOK NOW
                                             </button>
                                         </div> :
                                         <div className="d-flex align-items-start justify-content-center">
