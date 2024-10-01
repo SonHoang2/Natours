@@ -7,8 +7,10 @@ const factory = require('./handlerFactory');
 
 exports.getCheckoutSession = catchAsync(async (req, res, next) => {
     // get the current booking tour
+    console.log(process.env.CLIENT_URL);
     const tour = await Tour.findById(req.params.tourId);
 
+    
     // create checkout session
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
@@ -73,7 +75,7 @@ exports.getCompareMonthlyDetail = catchAsync(async (req, res, next) => {
         {
             $match: {
                 createdAt: {
-                    $gte: firstDayLastMonth,
+                    $gte: firstDayCurrentMonth,
                     $lt: today
                 }
             }
