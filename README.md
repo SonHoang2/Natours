@@ -65,7 +65,8 @@ REACT_APP_GOOGLE_CLIENT_ID=your google id
 - File `config.env` located in the server folder
 
 ```
-BASEURL=your client link
+CLIENT_URL=your client link
+SERVER_URL=your server link
 NODE_ENV=development or production
 PORT=5000
 DB=your mongodb link
