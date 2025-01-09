@@ -1,0 +1,342 @@
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+    display: block;
+}
+
+body {
+    line-height: 1;
+}
+
+ol,
+ul {
+    list-style: none;
+}
+
+blockquote,
+q {
+    quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+    content: '';
+    content: none;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+html {
+    font-family: 'Lato', sans-serif;
+}
+
+html,
+body,
+#root {
+    width: 100%;
+    height: 100%;
+}
+
+.btn {
+    white-space: nowrap;
+}
+
+.h-300 {
+    height: 300px;
+}
+
+.h-500 {
+    height: 500px;
+}
+
+.h-900 {
+    height: 900px;
+}
+
+.w-400 {
+    width: 400px;
+}
+
+.w-500 {
+    width: 500px;
+}
+
+.text-shadow {
+    text-shadow: 0px 2px 4px #26647d;
+}
+
+.box-decoration-break {
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+}
+
+.form-control:focus {
+    border: 1px solid #dee2e6;
+}
+
+input.form-control::placeholder {
+    opacity: 50%
+}
+
+.search-item:hover {
+    cursor: pointer;
+    background-color: #f2f2f2;
+}
+
+.search-item:active {
+    background-color: #e0e0e0;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+}
+
+.review-star {
+    font-variation-settings:
+        'FILL' 0,
+        'wght' 300,
+        'GRAD' 0,
+        'opsz' 24
+}
+
+.review-star.fill {
+    font-variation-settings:
+        'FILL' 1,
+        'wght' 300,
+        'GRAD' 0,
+        'opsz' 24
+}
+
+.ratings-average-star {
+    width: 22px;
+    font-size: 30px;
+    font-variation-settings:
+        'FILL' 0,
+        'wght' 300,
+        'GRAD' 0,
+        'opsz' 24
+}
+
+.ratings-average-star.fill {
+    font-variation-settings:
+        'FILL' 1,
+        'wght' 300,
+        'GRAD' 0,
+        'opsz' 24
+}
+
+.timeline {
+    .outer {
+        border-left: 2px solid #333;
+    }
+
+    .title {
+        position: relative;
+    }
+
+    .title::before {
+        content: "";
+        position: absolute;
+        width: 15px;
+        height: 15px;
+        border-radius: 100%;
+        left: -33px;
+        background-color: black;
+    }
+}
+
+.tour-image--sm {
+    width: 100px;
+    height: 100px;
+}
+
+.review-card {
+    .review-card--body {
+        width: 314px;
+    }
+}
+
+.group-rating:focus {
+    background-color: #41afac !important;
+    color: white;
+}
+
+.left-user-setting:hover {
+    background-color: #f2f2f2;
+    color: #41afac;
+}
+
+.left-user-setting:hover .left-user-setting-item {
+    color: #41afac !important;
+}
+
+.dashboard {
+    .page-subtitle {
+        letter-spacing: .125rem;
+        color: #435150;
+    }
+
+    .card {
+        border: 0px;
+    }
+
+    .card-icon {
+        top: -25px;
+        left: 25px;
+    }
+
+    input:focus {
+        border: 1px solid #dee2e6;
+        outline: none;
+    }
+
+    .line-chart {
+        width: 100%;
+        height: 400px;
+    }
+
+    .navigate-button {
+        position: absolute;
+        top: 13px;
+        left: -111px;
+    }
+}
+
+.left-dashboard:hover {
+    background-color: #41afac;
+    cursor: pointer;
+}
+
+.left-dashboard:hover h3,
+.left-dashboard:hover span {
+    color: white !important;
+}
+
+/* color */
+.bg-success-gradient {
+    background-image: linear-gradient(to bottom right, #92f3ff, rgb(13 133 149));
+}
+
+.bg-gradient-blue {
+    background: radial-gradient(circle at 12.3% 19.3%, rgb(85, 88, 218) 0%, rgb(95, 209, 249) 100.2%);
+}
+
+.bg-gradient-green {
+    background: linear-gradient(to top, #0ba360 0%, #3cba92 100%);
+}
+
+.bg-gradient-pink {
+    background: radial-gradient(circle at 10% 20%, rgb(246, 98, 128) 0%, rgb(248, 129, 135) 98.3%);
+}
+
+.bg-gradient-purple {
+    background: linear-gradient(to right, #434343 0%, black 100%);
+}
+
+.text-green {
+    color: #0ba360;
+}
