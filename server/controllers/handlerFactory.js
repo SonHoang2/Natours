@@ -1,8 +1,8 @@
-const catchAsync = require('../utils/catchAsync');
-const AppError = require('../utils/AppError');
-const APIFeatures = require('../utils/apiFeatures');
+import catchAsync from '../utils/catchAsync.js';
+import AppError from '../utils/AppError.js';
+import APIFeatures from '../utils/apiFeatures.js';
 
-exports.deleteOne = Model =>
+export const deleteOne = Model =>
     catchAsync(async (req, res, next) => {
         const doc = await Model.findByIdAndDelete(req.params.id);
 
@@ -14,10 +14,9 @@ exports.deleteOne = Model =>
             status: 'success',
             data: null
         });
-    })
+    });
 
-
-exports.updateOne = Model =>
+export const updateOne = Model =>
     catchAsync(async (req, res, next) => {
         // if avatar is uploaded
         if (req.file) req.body.photo = req.file.filename;
@@ -39,7 +38,7 @@ exports.updateOne = Model =>
         });
     });
 
-exports.createOne = Model =>
+export const createOne = Model =>
     catchAsync(async (req, res, next) => {
         const doc = await Model.create(req.body);
 
@@ -51,9 +50,9 @@ exports.createOne = Model =>
         });
     });
 
-exports.getOne = (Model, popOptions) =>
+export const getOne = (Model, popOptions) =>
     catchAsync(async (req, res, next) => {
-        let query = Model.findById(req.params.id)
+        let query = Model.findById(req.params.id);
         if (popOptions) query = query.populate(popOptions);
         const doc = await query;
 
@@ -69,7 +68,7 @@ exports.getOne = (Model, popOptions) =>
         });
     });
 
-exports.getAll = Model =>
+export const getAll = Model =>
     catchAsync(async (req, res, next) => {
         // To allow for nested GET reviews on tour
         const { tourId } = req.params;
@@ -97,7 +96,7 @@ exports.getAll = Model =>
         });
     });
 
-exports.getCompareMonthly = Model =>
+export const getCompareMonthly = Model =>
     catchAsync(async (req, res, next) => {
         const thisMonth = new Date().getMonth() + 1;
         const lastMonth = thisMonth - 1;

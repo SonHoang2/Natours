@@ -1,17 +1,18 @@
-const Review = require('../models/reviewModel');
-const catchAsync = require("../utils/catchAsync");
-const factory = require('./handlerFactory');
-const mongoose = require("mongoose");
+import Review from '../models/reviewModel.js';
+import catchAsync from "../utils/catchAsync.js";
+import * as factory from './handlerFactory.js';
+import mongoose from "mongoose";
+
 const ObjectId = mongoose.Types.ObjectId;
 
-exports.setTourUserIds = (req, res, next) => {
-    if (!req.body.tour) req.body.tour = req.params.tourId;
+export const setTourUserIds = (req, res, next) => {
+    if (!req.body.ttour) req.body.tour = req.params.tourId;
     if (!req.body.user) req.body.user = req.user.id;
 
     next();
 }
 
-exports.getMyReviews = catchAsync(async (req, res, next) => {
+export const getMyReviews = catchAsync(async (req, res, next) => {
     const reviews = await Review.find({ user: req.user.id });
     console.log(reviews);
     res.status(200).json({
@@ -20,11 +21,10 @@ exports.getMyReviews = catchAsync(async (req, res, next) => {
     })
 })
 
-exports.getGroupReviews = catchAsync(async (req, res, next) => {
+export const getGroupReviews = catchAsync(async (req, res, next) => {
     const { tourId } = req.params;
 
     console.log(tourId);
-
 
     const reviews = await Review.aggregate([
         {
@@ -68,7 +68,7 @@ exports.getGroupReviews = catchAsync(async (req, res, next) => {
     })
 });
 
-exports.getReviewsByRating = catchAsync(async (req, res, next) => {
+export const getReviewsByRating = catchAsync(async (req, res, next) => {
     const { rating, tourId } = req.params;
     const limit = parseInt(req.query.limit)
     const page = parseInt(req.query.page)
@@ -89,9 +89,9 @@ exports.getReviewsByRating = catchAsync(async (req, res, next) => {
     })
 });
 
-exports.getAllReviews = factory.getAll(Review);
-exports.getReview = factory.getOne(Review);
-exports.createReview = factory.createOne(Review);
-exports.deleteReview = factory.deleteOne(Review);
-exports.updateReview = factory.updateOne(Review);
-exports.getCompareMonthly = factory.getCompareMonthly(Review);
+export const getAllReviews = factory.getAll(Review);
+export const getReview = factory.getOne(Review);
+export const createReview = factory.createOne(Review);
+export const deleteReview = factory.deleteOne(Review);
+export const updateReview = factory.updateOne(Review);
+export const getCompareMonthly = factory.getCompareMonthly(Review);

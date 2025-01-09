@@ -1,16 +1,17 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const AppError = require('../utils/AppError');
-const Tour = require('../models/tourModel');
-const Booking = require('../models/bookingModel');
-const catchAsync = require('../utils/catchAsync');
-const factory = require('./handlerFactory');
+import stripePackage from 'stripe';
+import AppError from '../utils/AppError.js';
+import Tour from '../models/tourModel.js';
+import Booking from '../models/bookingModel.js';
+import catchAsync from '../utils/catchAsync.js';
+import * as factory from './handlerFactory.js';
 
-exports.getCheckoutSession = catchAsync(async (req, res, next) => {
+const stripe = stripePackage(process.env.STRIPE_SECRET_KEY);
+
+export const getCheckoutSession = catchAsync(async (req, res, next) => {
     // get the current booking tour
     console.log(process.env.CLIENT_URL);
     const tour = await Tour.findById(req.params.tourId);
 
-    
     // create checkout session
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
@@ -34,38 +35,38 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
             }
         ],
         mode: 'payment',
-    })
+    });
 
     res.status(200).json({
         status: 'success',
         session
-    })
-})
+    });
+});
 
-exports.createBookingCheckout = catchAsync(async (req, res, next) => {
+export const createBookingCheckout = catchAsync(async (req, res, next) => {
     const { tour, user, price } = req.body;
     console.log(tour, user, price);
     if (!tour && !user && !price)
         return next(
             new AppError('Booking Error', 400)
-        )
+        );
 
     await Booking.create({ tour, user, price });
     res.status(200).json({
         status: 'success'
-    })
-})
+    });
+});
 
-exports.getMyTours = catchAsync(async (req, res, next) => {
+export const getMyTours = catchAsync(async (req, res, next) => {
     const bookings = await Booking.find({ user: req.user.id });
 
     res.status(200).json({
         status: 'success',
         bookings
-    })
-})
+    });
+});
 
-exports.getCompareMonthlyDetail = catchAsync(async (req, res, next) => {
+export const getCompareMonthlyDetail = catchAsync(async (req, res, next) => {
     const today = new Date();
     const firstDayCurrentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
     const firstDayLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
@@ -179,12 +180,12 @@ exports.getCompareMonthlyDetail = catchAsync(async (req, res, next) => {
             currentMonth,
             lastMonth
         }
-    })
-})
+    });
+});
 
-exports.getAllBookings = factory.getAll(Booking);
-exports.getBooking = factory.getOne(Booking);
-exports.createBooking = factory.createOne(Booking);
-exports.updateBooking = factory.updateOne(Booking);
-exports.deleleBooking = factory.deleteOne(Booking);
-exports.getCompareMonthly = factory.getCompareMonthly(Booking);
+export const getAllBookings = factory.getAll(Booking);
+export const getBooking = factory.getOne(Booking);
+export const createBooking = factory.createOne(Booking);
+export const updateBooking = factory.updateOne(Booking);
+export const deleteBooking = factory.deleteOne(Booking);
+export const getCompareMonthly = factory.getCompareMonthly(Booking);

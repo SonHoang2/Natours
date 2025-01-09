@@ -1,33 +1,33 @@
-const express = require('express');
-const authController = require('../controllers/authController');
-const bookingController = require('../controllers/bookingController');
-const router = express.Router();
+import { Router } from 'express';
+import { protect, restrictTo } from '../controllers/authController.js';
+import { getCheckoutSession, createBookingCheckout, getMyTours, getAllBookings, createBooking, getBooking, updateBooking, deleleBooking, getCompareMonthly, getCompareMonthlyDetail } from '../controllers/bookingController.js';
+const router = Router();
 
-router.use(authController.protect);
+router.use(protect);
 
-router.get("/checkout-session/:tourId", bookingController.getCheckoutSession)
-router.post("/checkout-session/", bookingController.createBookingCheckout)
-router.get("/my-tours", bookingController.getMyTours)
+router.get("/checkout-session/:tourId", getCheckoutSession)
+router.post("/checkout-session/", createBookingCheckout)
+router.get("/my-tours", getMyTours)
 
-router.use(authController.restrictTo('admin', 'lead-guide'));
+router.use(restrictTo('admin', 'lead-guide'));
 
 router
     .route("/")
-    .get(bookingController.getAllBookings)
-    .post(bookingController.createBooking);
+    .get(getAllBookings)
+    .post(createBooking);
 
 router
     .route('/:id')
-    .get(bookingController.getBooking)
-    .patch(bookingController.updateBooking)
-    .delete(bookingController.deleleBooking);
+    .get(getBooking)
+    .patch(updateBooking)
+    .delete(deleleBooking);
 
 router
     .route('/comparison/last-current-month')
-    .get(bookingController.getCompareMonthly)
+    .get(getCompareMonthly)
 
 router
     .route('/comparison/last-current-month/detail')
-    .get(bookingController.getCompareMonthlyDetail)
+    .get(getCompareMonthlyDetail)
 
-module.exports = router;
+export default router;

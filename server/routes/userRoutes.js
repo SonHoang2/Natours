@@ -1,47 +1,47 @@
-const express = require('express');
-const userController = require('../controllers/userController');
-const authController = require('../controllers/authController')
+import { Router } from 'express';
+import { getMe, getUser, uploadUserPhoto, resizeUserPhoto, updateMe, deleteMe, getAllUsers, createUser, updateUser, deleteUser, getCompareMonthly } from '../controllers/userController.js';
+import { signup, login, GoogleLogin, forgotPassword, resetPassword, protect, updatePassword, restrictTo } from '../controllers/authController.js';
 
-const router = express.Router();
+const router = Router();
 
-router.post('/signup', authController.signup);
-router.post('/login', authController.login);
-router.post('/login/google', authController.GoogleLogin);
+router.post('/signup', signup);
+router.post('/login', login);
+router.post('/login/google', GoogleLogin);
 
-router.post('/forgotPassword', authController.forgotPassword);
-router.patch('/resetPassword/:token', authController.resetPassword);
+router.post('/forgotPassword', forgotPassword);
+router.patch('/resetPassword/:token', resetPassword);
 
-router.use(authController.protect);
+router.use(protect);
 
-router.patch('/updateMyPassword', authController.updatePassword);
-router.get('/me', userController.getMe, userController.getUser)
+router.patch('/updateMyPassword', updatePassword);
+router.get('/me', getMe, getUser)
 router.patch('/updateMe',
-    userController.uploadUserPhoto,
-    userController.resizeUserPhoto,
-    userController.updateMe
+    uploadUserPhoto,
+    resizeUserPhoto,
+    updateMe
 );
-router.delete('/deleteMe', userController.deleteMe);
+router.delete('/deleteMe', deleteMe);
 
-router.use(authController.restrictTo('admin'));
+router.use(restrictTo('admin'));
 
 router
     .route('/')
-    .get(userController.getAllUsers)
-    .post(userController.createUser);
+    .get(getAllUsers)
+    .post(createUser);
 
 router
     .route('/:id')
-    .get(userController.getUser)
+    .get(getUser)
     .patch(
-        userController.uploadUserPhoto,
-        userController.resizeUserPhoto,
-        userController.updateUser
+        uploadUserPhoto,
+        resizeUserPhoto,
+        updateUser
     )
-    .delete(userController.deleteUser);
+    .delete(deleteUser);
 
 
 router
     .route('/comparison/last-current-month')
-    .get(userController.getCompareMonthly)
+    .get(getCompareMonthly)
 
-module.exports = router;
+export default router;

@@ -1,9 +1,9 @@
-const multer = require('multer');
-const sharp = require('sharp');
-const AppError = require("../utils/AppError");
-const catchAsync = require("../utils/catchAsync");
-const User = require('../models/userModel');
-const factory = require('./handlerFactory');
+import multer from 'multer';
+import sharp from 'sharp';
+import AppError from '../utils/AppError.js';
+import catchAsync from '../utils/catchAsync.js';
+import User from '../models/userModel.js';
+import * as factory from './handlerFactory.js';
 
 // const multerStorage = multer.diskStorage({
 //   destination: (req, file, cb) => {
@@ -30,9 +30,9 @@ const upload = multer({
     fileFilter: multerFilter,
 });
 
-exports.uploadUserPhoto = upload.single('photo');
+export const uploadUserPhoto = upload.single('photo');
 
-exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
+export const resizeUserPhoto = catchAsync(async (req, res, next) => {
     if (!req.file) return next();
 
     req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
@@ -54,13 +54,13 @@ const filterObj = (obj, ...allowedFields) => {
     return newObj;
 }
 
-exports.getMe = (req, res, next) => {
+export const getMe = (req, res, next) => {
     req.params.id = req.user.id;
     console.log(req.params);
     next();
 }
 
-exports.updateMe = catchAsync(async (req, res, next) => {
+export const updateMe = catchAsync(async (req, res, next) => {
     if (req.body.password || req.body.passwordConfirm) {
         return next(
             new AppError('This route is not for password updates. Please use /updateMyPassword.', 400)
@@ -81,7 +81,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     })
 })
 
-exports.deleteMe = catchAsync(async (req, res, next) => {
+export const deleteMe = catchAsync(async (req, res, next) => {
     await User.findByIdAndUpdate(req.user.id, { active: false });
     res.status(204).json({
         status: 'success',
@@ -89,9 +89,9 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
     })
 })
 
-exports.getAllUsers = factory.getAll(User);
-exports.getUser = factory.getOne(User);
-exports.createUser = factory.createOne(User);
-exports.updateUser = factory.updateOne(User);
-exports.deleteUser = factory.deleteOne(User);
-exports.getCompareMonthly = factory.getCompareMonthly(User);
+export const getAllUsers = factory.getAll(User);
+export const getUser = factory.getOne(User);
+export const createUser = factory.createOne(User);
+export const updateUser = factory.updateOne(User);
+export const deleteUser = factory.deleteOne(User);
+export const getCompareMonthly = factory.getCompareMonthly(User);

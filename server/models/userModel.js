@@ -1,10 +1,9 @@
-const mongoose = require('mongoose');
-const validator = require('validator');
-const bcrypt = require('bcrypt');
-const crypto = require('crypto');
-const { type } = require('os');
+import { Schema, model } from 'mongoose';
+import isEmail from 'validator/lib/isEmail.js';
+import { hash, compare } from 'bcrypt';
+import { randomBytes, createHash } from 'crypto';
 
-const userSchema = new mongoose.Schema({
+const userSchema = new Schema({
     name: {
         type: String,
         minLength: [5, 'A user name must have more or equal to 6 characters'],
@@ -15,7 +14,7 @@ const userSchema = new mongoose.Schema({
         require: [true, 'Please provide your email'],
         unique: true,
         lowercase: true,
-        validate: [validator.isEmail, 'Please provide a valid email']
+        validate: [isEmail, 'Please provide a valid email']
     },
     photo: {
         type: String,
@@ -49,7 +48,7 @@ userSchema.pre('save', async function (next) {
     // only run this function if password was modified
     if (!this.isModified('password')) return next();
 
-    this.password = await bcrypt.hash(this.password, 12);
+    this.password = await hash(this.password, 12);
     next();
 })
 
@@ -61,7 +60,7 @@ userSchema.pre('save', function (next) {
 })
 
 userSchema.methods.correctPassword = async function (candidatePassword, userPassword) {
-    return await bcrypt.compare(candidatePassword, userPassword);
+    return await compare(candidatePassword, userPassword);
 }
 
 userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
@@ -75,10 +74,9 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
 }
 
 userSchema.methods.createPasswordResetToken = function () {
-    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetToken = randomBytes(32).toString('hex');
 
-    this.passwordResetToken = crypto
-        .createHash('sha256')
+    this.passwordResetToken = createHash('sha256')
         .update(resetToken) // data to be hash
         .digest('hex');
 
@@ -87,6 +85,6 @@ userSchema.methods.createPasswordResetToken = function () {
     return resetToken;
 }
 
-const User = mongoose.model('User', userSchema);
+const User = model('User', userSchema);
 
-module.exports = User;
+export default User;

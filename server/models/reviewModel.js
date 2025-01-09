@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
-const Tour = require('./tourModel');
+import { Schema, model } from "mongoose";
+import { findByIdAndUpdate } from './tourModel.js';
 
-const reviewSchema = new mongoose.Schema(
+const reviewSchema = new Schema(
     {
         review: {
             type: String,
@@ -17,15 +17,15 @@ const reviewSchema = new mongoose.Schema(
             default: Date.now()
         },
         tour: {
-            type: mongoose.Schema.ObjectId,
+            type: Schema.ObjectId,
             ref: 'Tour',
             require: [true, 'Review must belong to a tour.']
         },
         user: {
-            type: mongoose.Schema.ObjectId,
+            type: Schema.ObjectId,
             ref: 'User',
             require: [true, 'Review must belong to a user.']
-    }
+        }
     },
     {
         toJSON: { virtuals: true },
@@ -33,64 +33,64 @@ const reviewSchema = new mongoose.Schema(
     }
 )
 
-reviewSchema.index({tour: 1, user: 1}, {unique: true});
+reviewSchema.index({ tour: 1, user: 1 }, { unique: true });
 
-reviewSchema.pre(/^find/, function(next) {
+reviewSchema.pre(/^find/, function (next) {
     this.populate({
         path: "user",
         select: "name photo"
     }).populate({
-      path: "tour",
-      select: "name slug imageCover"
+        path: "tour",
+        select: "name slug imageCover"
     })
     next();
 })
 
-reviewSchema.statics.calcAverageRatings = async function(tourId) {
-  const stats = await this.aggregate([
-    {
-      $match: { tour: tourId}
-    },
-    {
-      $group: {
-        _id: '$tour',
-        nRating: { $sum: 1},
-        avgRating: { $avg: '$rating' }
-      }
+reviewSchema.statics.calcAverageRatings = async function (tourId) {
+    const stats = await this.aggregate([
+        {
+            $match: { tour: tourId }
+        },
+        {
+            $group: {
+                _id: '$tour',
+                nRating: { $sum: 1 },
+                avgRating: { $avg: '$rating' }
+            }
+        }
+    ])
+
+    console.log(stats);
+
+    if (stats.length > 0) {
+        await findByIdAndUpdate(tourId, {
+            ratingsAverage: stats[0].avgRating,
+            ratingsQuantity: stats[0].nRating
+        })
+    } else {
+        await findByIdAndUpdate(tourId, {
+            ratingsAverage: 4.5,
+            ratingsQuantity: 0
+        })
     }
-  ])
-
-  console.log(stats);
-
-  if (stats.length > 0) {
-    await Tour.findByIdAndUpdate(tourId, {
-      ratingsAverage: stats[0].avgRating,
-      ratingsQuantity: stats[0].nRating
-    })
-  } else {
-    await Tour.findByIdAndUpdate(tourId, {
-      ratingsAverage: 4.5,
-      ratingsQuantity: 0
-    })
-  }
 }
 
-reviewSchema.post('save', function(doc, next) {
-  //this point to current review
-  this.constructor.calcAverageRatings(this.tour);
-  next();
+reviewSchema.post('save', function (doc, next) {
+    //this point to current review
+    this.constructor.calcAverageRatings(this.tour);
+    next();
 })
 
-reviewSchema.pre(/^findOneAnd/, async function(next) {
-  this.r = await this.clone().findOne();
-  next();
+reviewSchema.pre(/^findOneAnd/, async function (next) {
+    this.r = await this.clone().findOne();
+    next();
 })
 
-reviewSchema.post(/^findOneAnd/, async function(doc, next) {
-  await this.r.constructor.calcAverageRatings(this.r.tour);
-  next();
+reviewSchema.post(/^findOneAnd/, async function (doc, next) {
+    await this.r.constructor.calcAverageRatings(this.r.tour);
+    next();
 })
 
 
-const Review = mongoose.model('Review', reviewSchema);
-module.exports = Review;
+const Review = model('Review', reviewSchema);
+export default Review;

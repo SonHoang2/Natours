@@ -1,44 +1,44 @@
-const express = require('express');
-const authController = require('../controllers/authController');
-const reviewController = require('../controllers/reviewController');
+import { Router } from 'express';
+import { protect, restrictTo } from '../controllers/authController.js';
+import { getMyReviews, getGroupReviews, getReviewsByRating, getAllReviews, setTourUserIds, createReview, getReview, updateReview, deleteReview, getCompareMonthly } from '../controllers/reviewController.js';
 
 // allow access params from other router
-const router = express.Router({ mergeParams: true });
+const router = Router({ mergeParams: true });
 
-router.use(authController.protect);
+router.use(protect);
 
-router.get("/me", reviewController.getMyReviews)
+router.get("/me", getMyReviews)
 
-router.get("/group", reviewController.getGroupReviews)
+router.get("/group", getGroupReviews)
 
-router.get("/ratings/:rating", reviewController.getReviewsByRating)
+router.get("/ratings/:rating", getReviewsByRating)
 
 router
     .route('/')
-    .get(reviewController.getAllReviews)
+    .get(getAllReviews)
     .post(
-        authController.restrictTo('user'),
-        reviewController.setTourUserIds,
-        reviewController.createReview
+        restrictTo('user'),
+        setTourUserIds,
+        createReview
     )
 
 router.route('/:id')
-    .get(reviewController.getReview)
+    .get(getReview)
     .patch(
-        authController.restrictTo('user', 'admin'),
-        reviewController.updateReview
+        restrictTo('user', 'admin'),
+        updateReview
     )
     .delete(
-        authController.restrictTo('user', 'admin'),
-        reviewController.deleteReview
+        restrictTo('user', 'admin'),
+        deleteReview
     )
 
 router
     .route('/comparison/last-current-month')
     .get(
-        authController.protect,
-        authController.restrictTo('admin'),
-        reviewController.getCompareMonthly
+        protect,
+        restrictTo('admin'),
+        getCompareMonthly
     )
 
-module.exports = router;
+export default router;
