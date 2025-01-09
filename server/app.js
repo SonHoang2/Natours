@@ -34,7 +34,7 @@ if (process.env.NODE_ENV === 'development') {
 app.use(express.json({ limit: '2MB' }));
 
 // Serving static files
-app.use(express.static((`${__dirname}/public`)));
+// app.use(express.static((`${__dirname}/public`)));
 
 // Data sanitization against NoSQL query injection
 app.use(mongoSanitize());
@@ -64,8 +64,8 @@ app.use(
 
 
 // allow client use images store in backend
-app.use('/images/tours', express.static(join(__dirname + '/images/tours/')));
-app.use('/images/users', express.static(join(__dirname + '/images/users/')));
+// app.use('/images/tours', express.static(join(__dirname + '/images/tours/')));
+// app.use('/images/users', express.static(join(__dirname + '/images/users/')));
 
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);

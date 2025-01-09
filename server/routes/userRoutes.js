@@ -1,47 +1,46 @@
 import { Router } from 'express';
-import { getMe, getUser, uploadUserPhoto, resizeUserPhoto, updateMe, deleteMe, getAllUsers, createUser, updateUser, deleteUser, getCompareMonthly } from '../controllers/userController.js';
-import { signup, login, GoogleLogin, forgotPassword, resetPassword, protect, updatePassword, restrictTo } from '../controllers/authController.js';
+import * as userController from '../controllers/userController.js';
+import * as authController from '../controllers/authController.js';
 
 const router = Router();
 
-router.post('/signup', signup);
-router.post('/login', login);
-router.post('/login/google', GoogleLogin);
+router.post('/signup', authController.signup);
+router.post('/login', authController.login);
+router.post('/login/google', authController.GoogleLogin);
 
-router.post('/forgotPassword', forgotPassword);
-router.patch('/resetPassword/:token', resetPassword);
+router.post('/forgotPassword', authController.forgotPassword);
+router.patch('/resetPassword/:token', authController.resetPassword);
 
-router.use(protect);
+router.use(authController.protect);
 
-router.patch('/updateMyPassword', updatePassword);
-router.get('/me', getMe, getUser)
+router.patch('/updateMyPassword', authController.updatePassword);
+router.get('/me', userController.getMe, userController.getUser);
 router.patch('/updateMe',
-    uploadUserPhoto,
-    resizeUserPhoto,
-    updateMe
+    userController.uploadUserPhoto,
+    userController.resizeUserPhoto,
+    userController.updateMe
 );
-router.delete('/deleteMe', deleteMe);
+router.delete('/deleteMe', userController.deleteMe);
 
-router.use(restrictTo('admin'));
+router.use(authController.restrictTo('admin'));
 
 router
     .route('/')
-    .get(getAllUsers)
-    .post(createUser);
+    .get(userController.getAllUsers)
+    .post(userController.createUser);
 
 router
     .route('/:id')
-    .get(getUser)
+    .get(userController.getUser)
     .patch(
-        uploadUserPhoto,
-        resizeUserPhoto,
-        updateUser
+        userController.uploadUserPhoto,
+        userController.resizeUserPhoto,
+        userController.updateUser
     )
-    .delete(deleteUser);
-
+    .delete(userController.deleteUser);
 
 router
     .route('/comparison/last-current-month')
-    .get(getCompareMonthly)
+    .get(userController.getCompareMonthly);
 
 export default router;

@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { findByIdAndUpdate } from './tourModel.js';
+import Tour from './tourModel.js';
 
 const reviewSchema = new Schema(
     {
@@ -63,12 +63,12 @@ reviewSchema.statics.calcAverageRatings = async function (tourId) {
     console.log(stats);
 
     if (stats.length > 0) {
-        await findByIdAndUpdate(tourId, {
+        await Tour.findByIdAndUpdate(tourId, {
             ratingsAverage: stats[0].avgRating,
             ratingsQuantity: stats[0].nRating
         })
     } else {
-        await findByIdAndUpdate(tourId, {
+        await Tour.findByIdAndUpdate(tourId, {
             ratingsAverage: 4.5,
             ratingsQuantity: 0
         })

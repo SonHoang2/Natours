@@ -1,84 +1,84 @@
 import { Router } from 'express';
-import { aliasTopTours, getAllTours, getTourStats, getMonthlyPlan, getToursWithin, getDistances, getAllActiveTours, createTour, getTour, uploadTourImages, resizeTourImages, updateTour, deleteTour, getOneBySlug, searchTour, getCompareMonthly } from '../controllers/tourController.js';
-import { protect, restrictTo } from '../controllers/authController.js';
+import * as tourController from '../controllers/tourController.js';
+import * as authController from '../controllers/authController.js';
 import reviewRouter from './reviewRoutes.js';
 
 const router = Router();
 
-router.use('/:tourId/reviews', reviewRouter)
+router.use('/:tourId/reviews', reviewRouter);
 
 router
     .route('/top-5-cheap')
     .get(
-        aliasTopTours,
-        getAllTours
+        tourController.aliasTopTours,
+        tourController.getAllTours
     );
 
 router
     .route('/tour-stats')
-    .get(getTourStats);
+    .get(tourController.getTourStats);
 
 router
     .route('/monthly-plan/:year')
     .get(
-        protect,
-        restrictTo('admin', 'lead-guide', 'guide'),
-        getMonthlyPlan
+        authController.protect,
+        authController.restrictTo('admin', 'lead-guide', 'guide'),
+        tourController.getMonthlyPlan
     );
 
 router
     .route('/tours-within/:distance/center/:latlng/unit/:unit')
-    .get(getToursWithin)
+    .get(tourController.getToursWithin);
 
 router
     .route('/distances/:latlng/unit/:unit')
-    .get(getDistances)
+    .get(tourController.getDistances);
 
-router.get('/active', getAllActiveTours)
+router.get('/active', tourController.getAllActiveTours);
 
 router
     .route('/')
     .get(
-        protect,
-        restrictTo('admin'),
-        getAllTours
+        authController.protect,
+        authController.restrictTo('admin'),
+        tourController.getAllTours
     )
     .post(
-        protect,
-        restrictTo('admin', 'lead-guide'),
-        createTour
+        authController.protect,
+        authController.restrictTo('admin', 'lead-guide'),
+        tourController.createTour
     );
 
 router
     .route('/:id')
-    .get(getTour)
+    .get(tourController.getTour)
     .patch(
-        protect,
-        restrictTo('admin', 'lead-guide'),
-        uploadTourImages,
-        resizeTourImages,
-        updateTour
+        authController.protect,
+        authController.restrictTo('admin', 'lead-guide'),
+        tourController.uploadTourImages,
+        tourController.resizeTourImages,
+        tourController.updateTour
     )
     .delete(
-        protect,
-        restrictTo('admin', 'lead-guide'),
-        deleteTour,
+        authController.protect,
+        authController.restrictTo('admin', 'lead-guide'),
+        tourController.deleteTour
     );
 
 router
     .route('/slug/:slug')
-    .get(getOneBySlug)
+    .get(tourController.getOneBySlug);
 
 router
     .route('/search/:name')
-    .get(searchTour)
+    .get(tourController.searchTour);
 
 router
     .route('/comparison/last-current-month')
     .get(
-        protect,
-        restrictTo('admin'),
-        getCompareMonthly
-    )
+        authController.protect,
+        authController.restrictTo('admin'),
+        tourController.getCompareMonthly
+    );
 
 export default router;
