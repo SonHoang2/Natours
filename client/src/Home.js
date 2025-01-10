@@ -8,8 +8,8 @@ import { motion } from "framer-motion";
 import axios from "axios";
 
 export default function Home({ tours, setTours }) {
-    const tokenJSON = localStorage.getItem("token");
-    const token = tokenJSON ? JSON.parse(localStorage.getItem("token")) : null;
+    // const tokenJSON = localStorage.getItem("token");
+    // const token = tokenJSON ? JSON.parse(localStorage.getItem("token")) : null;
     const searchInputRef = useRef(null);
 
     const [searchTour, setSearchTour] = useState({
@@ -78,26 +78,26 @@ export default function Home({ tours, setTours }) {
         ))
     }
 
-    const booking = async () => {
-        try {
-            const tour = searchParams.get("tour");
-            const user = searchParams.get("user");
-            const price = searchParams.get("price");
+    // const booking = async () => {
+    //     try {
+    //         const tour = searchParams.get("tour");
+    //         const user = searchParams.get("user");
+    //         const price = searchParams.get("price");
 
-            const url = BOOKINGS_URL + "/checkout-session/";
-            const res = await fetch(url, {
-                method: "POST",
-                body: JSON.stringify({ tour, user, price }),
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`
-                },
-            })
-            const data = await res.json();
-        } catch (err) {
-            console.log(err);
-        }
-    }
+    //         const url = BOOKINGS_URL + "/checkout-session/";
+    //         const res = await fetch(url, {
+    //             method: "POST",
+    //             body: JSON.stringify({ tour, user, price }),
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 Authorization: `Bearer ${token}`
+    //             },
+    //         })
+    //         const data = await res.json();
+    //     } catch (err) {
+    //         console.log(err);
+    //     }
+    // }
 
     const navigateBefore = () =>
         setQueryParams(prev => {
@@ -164,14 +164,14 @@ export default function Home({ tours, setTours }) {
     
     useDebounce(searchTour.value, 500);
 
-    useEffect(() => {
-        // booking success
-        if (searchParams.size === 3) {
-            booking();
-            setSearchParams("");
-            navigate("/thank-for-booking");
-        };
-    }, [searchParams.size])
+    // useEffect(() => {
+    //     // booking success
+    //     if (searchParams.size === 3) {
+    //         booking();
+    //         setSearchParams("");
+    //         navigate("/thank-for-booking");
+    //     };
+    // }, [searchParams.size])
 
     useEffect(() => {
         getTours();

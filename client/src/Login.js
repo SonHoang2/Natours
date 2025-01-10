@@ -1,10 +1,10 @@
 import Header from "./component/Header"
-import { USERS_URL, CLIENT_URL } from "./customValue"
+import { AUTH_URL, CLIENT_URL } from "./customValue"
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import queryString from "query-string";
-
+import axios from "axios";
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -13,28 +13,17 @@ export default function Login() {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const handleSubmit = async e => {
+    const handleSubmit = async event => {
         try {
-            e.preventDefault();
-            const res = await fetch(
-                USERS_URL + "/login", {
-                method: "POST",
-                body: JSON.stringify({ email, password }),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            }
-            )
-            const data = await res.json();
-            console.log(data);
+            event.preventDefault();
 
-            if (data.status == "success") {
-                localStorage.setItem("user", JSON.stringify(data.data.user));
-                localStorage.setItem("token", JSON.stringify(data.token));
-                navigate("/");
-            } else {
-                setError(data.message)
-            }
+            await axios.post(
+                AUTH_URL + "/login",
+                { email, password },
+                { withCredentials: true }
+            );
+
+            navigate("/");
         } catch (err) {
             setError(err.message);
             console.log(err);
@@ -48,7 +37,7 @@ export default function Login() {
             const { code } = queryString.parse(location.search);
 
             if (location.pathname === "/auth/google") {
-                const URL = USERS_URL + `/login/google`;
+                const URL = AUTH_URL + `/login/google`;
                 const response = await fetch(URL, {
                     method: 'POST',
                     headers: {
@@ -58,8 +47,8 @@ export default function Login() {
                 });
                 const data = await response.json();
                 console.log(data);
-                localStorage.setItem("user", JSON.stringify(data.data.user));
-                localStorage.setItem("token", JSON.stringify(data.token));
+                // localStorage.setItem("user", JSON.stringify(data.data.user));
+                // localStorage.setItem("token", JSON.stringify(data.token));
                 navigate("/");
             }
 

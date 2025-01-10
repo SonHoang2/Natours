@@ -8,17 +8,17 @@ import Signup from './Signup';
 import Me from './Me';
 import ForgotPassword from './ForgotPassword'
 import ResetPassword from './ResetPassword';
-import MyBookings from './MyBookings';
-import MyReviews from './MyReviews';
 import ErrorPage from './ErrorPage';
-import Dashboard from './Dashboard';
-import AdminUserPage from './AdminUserPage';
-import AdminTourPage from './AdminTourPage';
-import AdminEditUserPage from './AdminEditUserPage';
-import AdminEditTourPage from './AdminEditTourPage';
-import AdminReviewPage from './AdminReviewPage';
-import AdminEditReviewPage from './AdminEditReviewPage';
-import ThankForBooking from './ThankForBooking';
+// import MyBookings from './MyBookings';
+// import MyReviews from './MyReviews';
+// import Dashboard from './Dashboard';
+// import AdminUserPage from './AdminUserPage';
+// import AdminTourPage from './AdminTourPage';
+// import AdminEditUserPage from './AdminEditUserPage';
+// import AdminEditTourPage from './AdminEditTourPage';
+// import AdminReviewPage from './AdminReviewPage';
+// import AdminEditReviewPage from './AdminEditReviewPage';
+// import ThankForBooking from './ThankForBooking';
 
 function App() {
     const [tours, setTours] = useState({
@@ -65,7 +65,7 @@ function App() {
                 path='/user/resetPassword/:token'
                 element={<ResetPassword />}
             />
-            <Route
+            {/* <Route
                 path='/user/my-bookings'
                 element={<MyBookings />}
             />
@@ -104,7 +104,7 @@ function App() {
             <Route
                 path='/thank-for-booking'
                 element={<ThankForBooking />}
-            />
+            /> */}
             <Route
                 path='/not-found'
                 element={<ErrorPage />}
