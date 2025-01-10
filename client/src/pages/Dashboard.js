@@ -3,8 +3,8 @@ import { useState, useEffect } from "react"
 import { Line } from "react-chartjs-2";
 import { CategoryScale } from "chart.js";
 import Chart from "chart.js/auto";
-import LeftDashboard from "./component/LeftDashboard";
-import { BOOKINGS_URL, REVIEWS_URL, TOURS_URL } from "./customValue";
+import LeftDashboard from "../component/LeftDashboard";
+import { BOOKINGS_URL, REVIEWS_URL, TOURS_URL } from "../customValue";
 import { useNavigate } from "react-router-dom";
 
 Chart.register(CategoryScale);

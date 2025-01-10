@@ -4,7 +4,7 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import queryString from "query-string";
-import axios from "axios";
+import { useAuth } from "../hooks/useAuth";
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -12,18 +12,14 @@ export default function Login() {
     const [error, setError] = useState("");
     const location = useLocation();
     const navigate = useNavigate();
+    const { login } = useAuth();
 
     const handleSubmit = async event => {
         try {
             event.preventDefault();
 
-            await axios.post(
-                AUTH_URL + "/login",
-                { email, password },
-                { withCredentials: true }
-            );
+            await login({ email, password });
 
-            navigate("/");
         } catch (err) {
             setError(err.message);
             console.log(err);

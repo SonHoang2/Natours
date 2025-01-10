@@ -1,11 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import { USER_IMAGE_URL } from "../customValue";
+import { useAuth } from "../hooks/useAuth";
 
 export default function Header() {
-    // check if user is login
-    // const userJSON = localStorage.getItem("user");
-    // const user = userJSON ? JSON.parse(userJSON) : null;
-    const user = null;
+    const { user } = useAuth();
+    console.log(user);
+    
     const navigate = useNavigate();
 
     return (
@@ -48,10 +48,10 @@ export default function Header() {
                                 <div className="d-flex align-items-center h-100">
                                     <img
                                         className="rounded-circle user-avatar"
-                                        src={USER_IMAGE_URL + user.photo}
+                                        src={USER_IMAGE_URL + user?.photo}
                                     />
                                 </div>
-                                <p className="ps-2 fs-5 text-uppercase">{user.name.split(' ')[0]}</p>
+                                <p className="ps-2 fs-5 text-uppercase">{user.name?.split(' ')[0]}</p>
                             </div>
                         </Link>
                     </div>

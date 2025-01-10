@@ -1,8 +1,8 @@
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import LeftDashboard from "./component/LeftDashboard";
-import { TOUR_IMAGE_URL, TOURS_URL } from "./customValue";
+import LeftDashboard from "../component/LeftDashboard";
+import { TOUR_IMAGE_URL, TOURS_URL } from "../customValue";
 import { useNavigate } from "react-router-dom";
 
 export default function AdminTourPage() {

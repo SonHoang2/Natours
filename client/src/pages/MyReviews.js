@@ -3,8 +3,8 @@ import { REVIEWS_URL } from "../customValue"
 import { Link } from 'react-router-dom';
 import { motion } from "framer-motion";
 import Header from "../component/Header";
-import ReviewCard from "./component/ReviewCard";
-import LeftUserSetting from "./component/LeftUserSetting";
+import ReviewCard from "../component/ReviewCard";
+import LeftUserSetting from "../component/LeftUserSetting";
 
 
 export default function MyReviews() {

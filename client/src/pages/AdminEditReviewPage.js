@@ -1,9 +1,8 @@
 import axios from "axios";
-import LeftDashboard from "../pages/LeftDashboard";
+import LeftDashboard from "../component/LeftDashboard";
 import { useEffect, useState } from "react";
 import { REVIEWS_URL  } from "../customValue";
 import { useNavigate, useLocation } from "react-router-dom";
-
 
 export default function AdminEditReviewPage() {
     const userJSON = localStorage.getItem("user");
