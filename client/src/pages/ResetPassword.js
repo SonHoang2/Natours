@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import { useParams, useNavigate } from "react-router-dom";
 import { useState } from 'react';
-import Header from "./component/Header"
-import { USERS_URL } from "./customValue"
+import Header from "../component/Header";
+import { USERS_URL } from "../customValue"
 
 export default function ResetPassword () {
   const [password, setPassword] = useState("");

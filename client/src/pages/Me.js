@@ -1,9 +1,9 @@
-import Header from "./component/Header"
+import Header from "../component/Header";
 import { useState, useEffect } from "react"
-import { USER_IMAGE_URL, USERS_URL } from "./customValue"
+import { USER_IMAGE_URL, USERS_URL } from "../customValue"
 import { useNavigate } from 'react-router-dom';
 import { motion } from "framer-motion";
-import LeftUserSetting from "./component/LeftUserSetting";
+import LeftUserSetting from "../component/LeftUserSetting";
 
 
 export default function Me() {

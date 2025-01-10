@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion"
-import Header from "./component/Header"
-import { BOOKINGS_URL } from "./customValue"
+import Header from "../component/Header";
+import { BOOKINGS_URL } from "../customValue"
 import BookingCard from "./component/BookingCard";
 import LeftUserSetting from "./component/LeftUserSetting";
 

@@ -1,7 +1,7 @@
 import axios from "axios";
 import LeftDashboard from "./component/LeftDashboard";
 import { useEffect, useState } from "react";
-import { USERS_URL, USER_IMAGE_URL } from "./customValue";
+import { USERS_URL, USER_IMAGE_URL } from "../customValue";
 import { useNavigate, useLocation } from "react-router-dom";
 
 export default function AdminEditUserPage() {

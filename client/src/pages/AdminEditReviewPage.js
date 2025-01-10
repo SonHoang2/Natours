@@ -1,7 +1,7 @@
 import axios from "axios";
-import LeftDashboard from "./component/LeftDashboard";
+import LeftDashboard from "../pages/LeftDashboard";
 import { useEffect, useState } from "react";
-import { REVIEWS_URL  } from "./customValue";
+import { REVIEWS_URL  } from "../customValue";
 import { useNavigate, useLocation } from "react-router-dom";
 
 

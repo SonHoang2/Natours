@@ -1,14 +1,14 @@
 import { Routes, Route } from 'react-router-dom';
 import { useState } from 'react';
 
-import Home from './Home';
-import Tour from './Tour';
-import Login from './Login';
-import Signup from './Signup';
-import Me from './Me';
-import ForgotPassword from './ForgotPassword'
-import ResetPassword from './ResetPassword';
-import ErrorPage from './ErrorPage';
+import Home from './pages/Home';
+import Tour from './pages/Tour';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Me from './pages/Me';
+import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword from './pages/ResetPassword';
+import ErrorPage from './pages/ErrorPage';
 // import MyBookings from './MyBookings';
 // import MyReviews from './MyReviews';
 // import Dashboard from './Dashboard';

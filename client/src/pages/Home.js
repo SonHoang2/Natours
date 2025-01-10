@@ -1,9 +1,8 @@
-import Header from "./component/Header"
-import Card from "./component/Card"
+import Header from "../component/Header";
+import Card from "../component/Card"
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { BOOKINGS_URL, TOUR_IMAGE_URL } from "./customValue"
+import { BOOKINGS_URL, TOUR_IMAGE_URL, TOURS_URL } from "../customValue"
 import { useEffect, useState, useRef } from "react";
-import { TOURS_URL } from "./customValue";
 import { motion } from "framer-motion";
 import axios from "axios";
 

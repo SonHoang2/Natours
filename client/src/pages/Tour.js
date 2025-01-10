@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import Header from "./component/Header"
-import { TOUR_IMAGE_URL, USER_IMAGE_URL, TOURS_URL, BOOKINGS_URL } from "./customValue"
+import Header from "../component/Header";
+import { TOUR_IMAGE_URL, USER_IMAGE_URL, TOURS_URL, BOOKINGS_URL } from "../customValue"
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "axios";

@@ -1,5 +1,5 @@
-import Header from "./component/Header"
-import { AUTH_URL, CLIENT_URL } from "./customValue"
+import Header from "../component/Header";
+import { AUTH_URL, CLIENT_URL } from "../customValue"
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
