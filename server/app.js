@@ -5,14 +5,17 @@ import mongoSanitize from 'express-mongo-sanitize';
 import xss from 'xss-clean';
 import hpp from 'hpp';
 import cors from 'cors';
-import { join } from 'path';
-
 import AppError from './utils/AppError.js';
 import globalErrorHandler from './controllers/errorController.js';
 import tourRouter from './routes/tourRoutes.js';
 import userRouter from './routes/userRoutes.js';
 import reviewRouter from './routes/reviewRoutes.js';
 import bookingRouter from './routes/bookingRoutes.js';
+import { fileURLToPath } from 'url';
+import path, { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+export const __dirname = dirname(__filename);
 
 const app = express();
 
@@ -34,7 +37,7 @@ if (process.env.NODE_ENV === 'development') {
 app.use(express.json({ limit: '2MB' }));
 
 // Serving static files
-// app.use(express.static((`${__dirname}/public`)));
+app.use(express.static(path.join(__dirname, '/public')));
 
 // Data sanitization against NoSQL query injection
 app.use(mongoSanitize());
@@ -64,8 +67,8 @@ app.use(
 
 
 // allow client use images store in backend
-// app.use('/images/tours', express.static(join(__dirname + '/images/tours/')));
-// app.use('/images/users', express.static(join(__dirname + '/images/users/')));
+app.use('/images/tours', express.static(path.join(__dirname + '/images/tours/')));
+app.use('/images/users', express.static(path.join(__dirname + '/images/users/')));
 
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
