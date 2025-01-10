@@ -4,20 +4,68 @@ import jwt from 'jsonwebtoken';
 import AppError from '../utils/AppError.js';
 import sendEmail from '../utils/email.js';
 import crypto from 'crypto';
+import { client } from "../redisClient.js";
 
-const signToken = id => {
+const signToken = (id, time) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_IN
+        expiresIn: time
     });
 };
 
+export const protect = catchAsync(async (req, res, next) => {
+    let token;
+    const { access_token: accessToken } = req.cookies;
+
+    if (accessToken) {
+        token = accessToken;
+    }
+    if (!token) {
+        return next(
+            new AppError('You are not logged in! Please log in to get access', 401)
+        );
+    }
+    // verification token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    // check if user still exists
+    const currentUser = await User.findOne({
+        _id: decoded.id,
+        active: true
+    });
+    if (!currentUser) {
+        return next(
+            new AppError(
+                'The user belonging to this token does no longer exits.',
+                401
+            ));
+    }
+    // check if user changed password after the token was issued
+    if (currentUser.changedPasswordAfter(decoded.iat)) {
+        return next(new AppError('User recently changed password! Please log in again.', 401));
+    }
+
+    req.user = currentUser;
+    next();
+});
+
+export const restrictTo = (...roles) => {
+    return (req, res, next) => {
+        // roles ['admin, 'lead-guide]  .role = 'user'
+        if (!roles.includes(req.user.role)) {
+            return next(
+                new AppError("You do not have permission to perform this action", 403)
+            );
+        }
+        next();
+    };
+};
+
 const createSendToken = async (user, statusCode, res) => {
-    const accessToken = signToken(user.id, config.jwt.ATExpiresIn);
-    const refreshToken = signToken(user.id, config.jwt.RTExpiresIn);
+    const accessToken = signToken(user.id, process.env.JWT_AT_EXPIRES_IN);
+    const refreshToken = signToken(user.id, process.env.JWT_RT_EXPIRES_IN);
 
     const ATOptions = {
         expires: new Date(
-            Date.now() + config.jwt.ATCookieExpiresIn * 60 * 60 * 1000
+            Date.now() + process.env.JWT_AT_COOKIE_EXPIRES_IN * 60 * 60 * 1000
         ),
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production' ? true : false
@@ -25,7 +73,7 @@ const createSendToken = async (user, statusCode, res) => {
 
     const RTOptions = {
         expires: new Date(
-            Date.now() + config.jwt.RTCookieExpiresIn * 24 * 60 * 60 * 1000
+            Date.now() + process.env.JWT_RT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
         ),
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production' ? true : false,
@@ -37,8 +85,8 @@ const createSendToken = async (user, statusCode, res) => {
 
     const value = String(user.id);
 
-    // await client.set(refreshToken, value, 'EX', 7 * 24 * 60 * 60); // auto delete after 1 days
-
+    await client.set(refreshToken, value, 'EX', 7 * 24 * 60 * 60); // auto delete after 7 days
+    
     // remove password from output
     user.password = undefined;
 
@@ -140,53 +188,6 @@ export const GoogleLogin = catchAsync(async (req, res, next) => {
 
     createSendToken(user, 201, res);
 });
-
-export const protect = catchAsync(async (req, res, next) => {
-    let token;
-    // if (req.headers.cookie) {
-    //     token = req.headers.cookie.slice(4);
-    // }
-    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-        token = req.headers.authorization.split(' ')[1];
-    }
-
-    if (!token) {
-        return next(
-            new AppError('You are not logged in! Please log in to get access', 401)
-        );
-    }
-    // verification token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    // check if user still exists
-    const currentUser = await User.findById(decoded.id);
-    if (!currentUser) {
-        return next(
-            new AppError(
-                'The user belonging to this token does no longer exits.',
-                401
-            ));
-    }
-    // check if user changed password after the token was issued
-    if (currentUser.changedPasswordAfter(decoded.iat)) {
-        return next(new AppError('User recently changed password! Please log in again.', 401));
-    }
-
-    req.user = currentUser;
-    next();
-});
-
-export const restrictTo = (...roles) => {
-    return (req, res, next) => {
-        // roles ['admin, 'lead-guide]  .role = 'user'
-        if (!roles.includes(req.user.role)) {
-            return next(
-                new AppError("You do not have permission to perform this action", 403)
-            );
-        }
-        next();
-    };
-};
 
 export const forgotPassword = catchAsync(async (req, res, next) => {
     const { email } = req.body;

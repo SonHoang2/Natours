@@ -5,12 +5,14 @@ import mongoSanitize from 'express-mongo-sanitize';
 import xss from 'xss-clean';
 import hpp from 'hpp';
 import cors from 'cors';
+import cookieParser from 'cookie-parser'
 import AppError from './utils/AppError.js';
 import globalErrorHandler from './controllers/errorController.js';
 import tourRouter from './routes/tourRoutes.js';
 import userRouter from './routes/userRoutes.js';
 import reviewRouter from './routes/reviewRoutes.js';
 import bookingRouter from './routes/bookingRoutes.js';
+import authRoutes from './routes/authRoutes.js';
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
 
@@ -45,6 +47,9 @@ app.use(mongoSanitize());
 // Data sanitization against XSS
 app.use(xss());
 
+// Cookie parser (parse cookie from request)
+app.use(cookieParser())
+
 // Prevent parameter pollution
 app.use(
     hpp({
@@ -70,6 +75,7 @@ app.use(
 app.use('/images/tours', express.static(path.join(__dirname + '/images/tours/')));
 app.use('/images/users', express.static(path.join(__dirname + '/images/users/')));
 
+app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);

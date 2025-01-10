@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import app from './app.js';
+import { connectRedis } from './redisClient.js';
 
 process.on('uncaughtException', err => {
     console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...');
@@ -8,11 +9,13 @@ process.on('uncaughtException', err => {
     process.exit(1);
 });
 
-dotenv.config({ path: './config.env' });
+dotenv.config();
 
 mongoose
     .connect(process.env.DB)
     .then(() => console.log('DB connection successfull'));
+
+await connectRedis();
 
 const port = process.env.PORT || 5000;
 const server = app.listen(port, () => {
