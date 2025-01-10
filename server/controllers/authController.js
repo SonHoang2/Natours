@@ -5,9 +5,10 @@ import AppError from '../utils/AppError.js';
 import sendEmail from '../utils/email.js';
 import crypto from 'crypto';
 import { client } from "../redisClient.js";
+import config from '../config/config.js';
 
 const signToken = (id, time) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET, {
+    return jwt.sign({ id }, config.jwt.secret, {
         expiresIn: time
     });
 };
@@ -25,7 +26,7 @@ export const protect = catchAsync(async (req, res, next) => {
         );
     }
     // verification token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, config.jwt.secret);
     // check if user still exists
     const currentUser = await User.findOne({
         _id: decoded.id,
@@ -60,23 +61,23 @@ export const restrictTo = (...roles) => {
 };
 
 const createSendToken = async (user, statusCode, res) => {
-    const accessToken = signToken(user.id, process.env.JWT_AT_EXPIRES_IN);
-    const refreshToken = signToken(user.id, process.env.JWT_RT_EXPIRES_IN);
+    const accessToken = signToken(user.id, config.jwt.ATExpiresIn);
+    const refreshToken = signToken(user.id, config.jwt.RTExpiresIn);
 
     const ATOptions = {
         expires: new Date(
-            Date.now() + process.env.JWT_AT_COOKIE_EXPIRES_IN * 60 * 60 * 1000
+            Date.now() + config.jwt.ATCookieExpiresIn * 60 * 60 * 1000
         ),
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production' ? true : false
+        secure: config.env === 'production' ? true : false
     };
 
     const RTOptions = {
         expires: new Date(
-            Date.now() + process.env.JWT_RT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+            Date.now() + config.jwt.RTCookieExpiresIn * 24 * 60 * 60 * 1000
         ),
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production' ? true : false,
+        secure: config.env === 'production' ? true : false,
         path: '/api/v1/auth/'
     };
 
@@ -144,8 +145,8 @@ export const login = catchAsync(async (req, res, next) => {
 export const GoogleLogin = catchAsync(async (req, res, next) => {
     let { code, redirectUri } = req.body; // code from service provider which is appended to the frontend's URL
 
-    const clientId = process.env.GOOGLE_CLIENT_ID; // CLIENT_ID_FROM_APP_CREATED
-    const clientSecret = process.env.GOOGLE_CLIENT_SECRET; // CLIENT_SECRET_FROM_APP_CREATED
+    const clientId = config.googleClientId; // CLIENT_ID_FROM_APP_CREATED
+    const clientSecret = config.googleClientSecret; // CLIENT_SECRET_FROM_APP_CREATED
     const grantType = 'authorization_code'; // this tells the service provider to return a code which will be used to get a token for making requests to the service provider
     const url = 'https://oauth2.googleapis.com/token'; // link to api to exchange code for token.
 
@@ -199,7 +200,7 @@ export const forgotPassword = catchAsync(async (req, res, next) => {
     const resetToken = user.createPasswordResetToken();
     await user.save({ validateBeforeSave: false });
 
-    const resetURL = `${process.env.CLIENT_URL}/user/resetPassword/${resetToken}`;
+    const resetURL = `${config.clientUrl}/user/resetPassword/${resetToken}`;
 
     const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.\nIf you didn't forget your password, please ignore this email!`;
     try {

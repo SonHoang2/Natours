@@ -15,6 +15,7 @@ import bookingRouter from './routes/bookingRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
+import config from './config/config.js';
 
 const __filename = fileURLToPath(import.meta.url);
 export const __dirname = dirname(__filename);
@@ -22,16 +23,14 @@ export const __dirname = dirname(__filename);
 const app = express();
 
 // allow client access
-// app.use(cors({ credentials: true, origin: process.env.CLIENT_URL }));
-
-app.use(cors({ credentials: true }));
+app.use(cors({ credentials: true, origin: config.clientUrl }));
 
 // Set security HTTP headers
 app.use(crossOriginResourcePolicy({ policy: "cross-origin" }));
 
 
 // Development logging
-if (process.env.NODE_ENV === 'development') {
+if (config.env === 'development') {
     app.use(morgan('dev'));
 }
 

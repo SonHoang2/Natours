@@ -4,20 +4,21 @@ import Tour from '../models/tourModel.js';
 import Booking from '../models/bookingModel.js';
 import catchAsync from '../utils/catchAsync.js';
 import * as factory from './handlerFactory.js';
+import config from '../config/config.js';
 
-const stripe = stripePackage(process.env.STRIPE_SECRET_KEY);
+const stripe = stripePackage(config.stripeSecretKey);
 
 export const getCheckoutSession = catchAsync(async (req, res, next) => {
     // get the current booking tour
-    console.log(process.env.CLIENT_URL);
+    console.log(config.clientUrl);
     const tour = await Tour.findById(req.params.tourId);
 
     // create checkout session
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
-        success_url: `${process.env.CLIENT_URL}/?tour=${req.params.tourId
+        success_url: `${config.clientUrl}/?tour=${req.params.tourId
             }&user=${req.user.id}&price=${tour.price}`,
-        cancel_url: `${process.env.CLIENT_URL}/tour/${tour.slug}`,
+        cancel_url: `${config.clientUrl}/tour/${tour.slug}`,
         customer_email: req.user.email,
         client_reference_id: req.params.tourId,
         line_items: [
