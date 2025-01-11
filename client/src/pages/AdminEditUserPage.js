@@ -5,22 +5,8 @@ import { USERS_URL, USER_IMAGE_URL } from "../customValue";
 import { useNavigate, useLocation } from "react-router-dom";
 
 export default function AdminEditUserPage() {
-    const userJSON = localStorage.getItem("user");
-    const account = userJSON ? JSON.parse(userJSON) : null;
-
-    const tokenJSON = localStorage.getItem("token");
-    const token = tokenJSON ? JSON.parse(tokenJSON) : null;
-
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        if (!account || account.role !== "admin") {
-            navigate("/not-found");
-        }
-    }, []);
-
-
     const { state } = useLocation()
+    const navigate = useNavigate();
 
     const [user, setUser] = useState({
         name: state.name,
@@ -50,10 +36,8 @@ export default function AdminEditUserPage() {
         if (user.avatar.data) formData.append("photo", user.avatar.data);
         
         try {
-            const user = await axios.patch(`${USERS_URL}/${state._id}`, formData, {
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
+            await axios.patch(`${USERS_URL}/${state._id}`, formData, {
+                withCredentials: true,
             });
 
             navigate("/admin/users");

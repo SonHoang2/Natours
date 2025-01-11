@@ -5,30 +5,19 @@ import { motion } from "framer-motion";
 import Header from "../component/Header";
 import ReviewCard from "../component/ReviewCard";
 import LeftUserSetting from "../component/LeftUserSetting";
+import axios from "axios";
 
 
 export default function MyReviews() {
-    const userJSON = localStorage.getItem("user");
-    const user = userJSON ? JSON.parse(userJSON) : null;
-
-    const tokenJSON = localStorage.getItem("token");
-    const token = tokenJSON ? JSON.parse(tokenJSON) : null;
-
     const [reviews, setReviews] = useState([]);
 
     const getReviews = async () => {
         try {
             const url = REVIEWS_URL + `/me`;
-            const res = await fetch(url, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
-            const data = await res.json();
-            if (data.status === "success") {
-                setReviews(data.reviews)
-            }
+
+            const data = await axios.get(url, { withCredentials: true })
+
+            setReviews(data.reviews)
         } catch (err) {
             console.log(err);
         }
@@ -59,7 +48,7 @@ export default function MyReviews() {
                 <div className="pb-5"></div>
                 <div className="pb-5"></div>
                 <div className="d-flex justify-content-center bg-body-secondary pb-5">
-                    <LeftUserSetting role={user.role} />
+                    <LeftUserSetting/>
                     <div className="bg-white w-500 rounded-end">
                         <div className="p-5 pb-3">
                             <p className="text-success fw-bold pb-4">MY REVIEWS</p>

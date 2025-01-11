@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { USERS_URL } from "../customValue"
 import Header from "../component/Header";
 

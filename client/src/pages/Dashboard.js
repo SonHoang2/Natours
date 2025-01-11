@@ -5,26 +5,10 @@ import { CategoryScale } from "chart.js";
 import Chart from "chart.js/auto";
 import LeftDashboard from "../component/LeftDashboard";
 import { BOOKINGS_URL, REVIEWS_URL, TOURS_URL } from "../customValue";
-import { useNavigate } from "react-router-dom";
 
 Chart.register(CategoryScale);
 
 export default function Dashboard() {
-    const userJSON = localStorage.getItem("user");
-    const account = userJSON ? JSON.parse(userJSON) : null;
-
-    const tokenJSON = localStorage.getItem("token");
-    const token = tokenJSON ? JSON.parse(tokenJSON) : null;
-
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        if (!account || account.role !== "admin") {
-            navigate("/not-found");
-        }
-    }, []);
-
-
     const [tourComparison, setTourComparison] = useState({})
     const [userComparison, setUserComparison] = useState({})
     const [reviewComparison, setReviewComparison] = useState({})
@@ -58,7 +42,7 @@ export default function Dashboard() {
     const getBookingLineData = async () => {
         try {
             const bookingLine = await axios.get(BOOKINGS_URL + `/comparison/last-current-month/detail`, {
-                headers: { Authorization: `Bearer ${token}` },
+                withCredentials: true,
             });
 
             setBookingSale({
@@ -73,7 +57,7 @@ export default function Dashboard() {
     const getTourComparison = async () => {
         try {
             const tour = await axios.get(TOURS_URL + '/comparison/last-current-month', {
-                headers: { Authorization: `Bearer ${token}` }
+                withCredentials: true
             });
             setTourComparison(tour.data.data)
         } catch (error) {
@@ -85,7 +69,7 @@ export default function Dashboard() {
     const getUserComparison = async () => {
         try {
             const user = await axios.get(TOURS_URL + '/comparison/last-current-month',
-                { headers: { Authorization: `Bearer ${token}` } }
+                { withCredentials: true }
             );
             setUserComparison(user.data.data)
         } catch (error) {
@@ -96,7 +80,7 @@ export default function Dashboard() {
     const getReviewComparison = async () => {
         try {
             const review = await axios.get(REVIEWS_URL + '/comparison/last-current-month',
-                { headers: { Authorization: `Bearer ${token}` } }
+                { withCredentials: true }
             );
             setReviewComparison(review.data.data)
         } catch (error) {
@@ -107,7 +91,7 @@ export default function Dashboard() {
     const getBookingComparison = async () => {
         try {
             const booking = await axios.get(BOOKINGS_URL + '/comparison/last-current-month',
-                { headers: { Authorization: `Bearer ${token}` } }
+                { withCredentials: true }
             );
             setBookingComparison(booking.data.data)
         } catch (error) {

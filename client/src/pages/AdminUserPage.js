@@ -3,24 +3,8 @@ import LeftDashboard from "../component/LeftDashboard";
 import { useEffect, useState } from "react";
 import { USERS_URL, USER_IMAGE_URL } from "../customValue";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 
 export default function AdminUserPage() {
-    const userJSON = localStorage.getItem("user");
-    const account = userJSON ? JSON.parse(userJSON) : null;
-
-    const tokenJSON = localStorage.getItem("token");
-    const token = tokenJSON ? JSON.parse(tokenJSON) : null;
-
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        if (!account || account.role !== "admin") {
-            navigate("/not-found");
-        }
-    }, []);
-
-
     const [users, setUsers] = useState({
         data: [],
         totalLength: 0,
@@ -37,7 +21,7 @@ export default function AdminUserPage() {
         try {
             const users = await axios.get(USERS_URL + `/?limit=${userQueryParams.limit}&sort=${userQueryParams.sort}&page=${userQueryParams.page}`,
                 {
-                    headers: { Authorization: `Bearer ${token}` }
+                    withCredentials: true
                 });
 
             console.log(users.data);
@@ -65,7 +49,7 @@ export default function AdminUserPage() {
             const user = await axios.patch(USERS_URL + `/${id}`, {
                 active: false
             }, {
-                headers: { Authorization: `Bearer ${token}` }
+                withCredentials: true
             });
 
             console.log(user.data);

@@ -4,14 +4,11 @@ import { USER_IMAGE_URL, USERS_URL } from "../customValue"
 import { useNavigate } from 'react-router-dom';
 import { motion } from "framer-motion";
 import LeftUserSetting from "../component/LeftUserSetting";
-
+import { useAuth } from "../hooks/useAuth";
+import axios from "axios";
 
 export default function Me() {
-    const userJSON = localStorage.getItem("user");
-    const user = userJSON ? JSON.parse(userJSON) : null;
-
-    const tokenJSON = localStorage.getItem("token");
-    const token = tokenJSON ? JSON.parse(tokenJSON) : null;
+    const { user } = useAuth();
 
     const [dataChange, setDataChange] = useState(false);
     const [image, setImage] = useState({ preview: '', data: '' });
@@ -39,25 +36,12 @@ export default function Me() {
             formData.append('name', name);
             formData.append('email', email);
 
-            const res = await fetch(
-                USERS_URL + "/updateMe", {
-                method: "PATCH",
-                body: formData,
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            }
+            await axios.patch(
+                USERS_URL + "/updateMe",
+                formData,
+                { withCredentials: true }
             )
-            const data = await res.json();
-
-            console.log(data);
-            if (data.status === "error") {
-                alert(data.message);
-            } else if (data.status === "success") {
-                localStorage.setItem("user", JSON.stringify(data.user));
-                navigate("/")
-            }
-
+            
         } catch (err) {
             console.log(err);
         }
@@ -66,25 +50,16 @@ export default function Me() {
     const handleSubmitPassword = async e => {
         try {
             e.preventDefault();
-            const res = await fetch(
-                USERS_URL + "/updateMyPassword", {
-                method: "PATCH",
-                body: JSON.stringify({ passwordCurrent, password, passwordConfirm }),
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`
-                }
-            }
-            )
-            const data = await res.json();
 
-            console.log(data);
-            if (data.status === "error") {
-                alert(data.message);
-            } else if (data.status === "success") {
-                localStorage.removeItem("user")
-                navigate("/auth/login")
-            }
+            await axios.patch(
+                USERS_URL + "/updateMyPassword",
+                {
+                    passwordCurrent,
+                    password,
+                    passwordConfirm
+                },
+                { withCredentials: true }
+            )
         } catch (err) {
             console.log(err);
         }
@@ -96,7 +71,7 @@ export default function Me() {
         if (!user) {
             navigate("/auth/login");
         }
-    }, [])
+    }, [user, navigate])
 
     return (
         <div className="h-100">
@@ -110,7 +85,7 @@ export default function Me() {
                 <div className="pb-5"></div>
                 <div className="pb-5"></div>
                 <div className="d-flex justify-content-center bg-body-secondary pb-5">
-                    <LeftUserSetting role={user?.role} />
+                    <LeftUserSetting />
                     <div className="bg-white w-500 rounded-end">
                         <form onSubmit={handleSubmitInfo} className="p-5 pb-3 border-bottom">
                             <p className="text-success fw-bold pb-4">YOUR ACCOUNT SETTINGS</p>

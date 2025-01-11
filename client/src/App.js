@@ -59,53 +59,63 @@ function App() {
                     />
                 </Route>
                 <Route
-                    path='/user/me'
-                    element={<Me />}
-                />
+                    path='/user'
+                    element={<ProtectedRoute />}
+                >
+                    <Route
+                        path='me'
+                        element={<Me />}
+                    />
+                    <Route
+                        path='forgotPassword'
+                        element={<ForgotPassword />}
+                    />
+                    <Route
+                        path='resetPassword/:token'
+                        element={<ResetPassword />}
+                    />
+                    <Route
+                        path='my-bookings'
+                        element={<MyBookings />}
+                    />
+                    <Route
+                        path='my-reviews'
+                        element={<MyReviews />}
+                    />
+                </Route>
                 <Route
-                    path='/user/forgotPassword'
-                    element={<ForgotPassword />}
-                />
-                <Route
-                    path='/user/resetPassword/:token'
-                    element={<ResetPassword />}
-                />
-                <Route
-                    path='/user/my-bookings'
-                    element={<MyBookings />}
-                />
-                <Route
-                    path='/user/my-reviews'
-                    element={<MyReviews />}
-                />
-                <Route
-                    path='/admin/dashboard'
-                    element={<Dashboard />}
-                />
-                <Route
-                    path='/admin/users'
-                    element={<AdminUserPage />}
-                />
-                <Route
-                    path='/admin/users/edit'
-                    element={<AdminEditUserPage />}
-                />
-                <Route
-                    path='/admin/tours'
-                    element={<AdminTourPage />}
-                />
-                <Route
-                    path='/admin/tours/edit'
-                    element={<AdminEditTourPage />}
-                />
-                <Route
-                    path='/admin/reviews'
-                    element={<AdminReviewPage />}
-                />
-                <Route
-                    path='/admin/reviews/edit'
-                    element={<AdminEditReviewPage />}
-                />
+                    path='/admin'
+                >
+
+                    <Route
+                        path='dashboard'
+                        element={<Dashboard />}
+                    />
+                    <Route
+                        path='users'
+                        element={<AdminUserPage />}
+                    />
+                    <Route
+                        path='users/edit'
+                        element={<AdminEditUserPage />}
+                    />
+                    <Route
+                        path='tours'
+                        element={<AdminTourPage />}
+                    />
+                    <Route
+                        path='tours/edit'
+                        element={<AdminEditTourPage />}
+                    />
+                    <Route
+                        path='reviews'
+                        element={<AdminReviewPage />}
+                    />
+                    <Route
+                        path='reviews/edit'
+                        element={<AdminEditReviewPage />}
+                    />
+                </Route>
                 <Route
                     path='/thank-for-booking'
                     element={<ThankForBooking />}

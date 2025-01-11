@@ -4,21 +4,8 @@ import { useEffect, useState } from "react";
 import { TOURS_URL } from "../customValue";
 import { useNavigate, useLocation } from "react-router-dom";
 
-
 export default function AdminEditTourPage() {
-    const userJSON = localStorage.getItem("user");
-    const account = userJSON ? JSON.parse(userJSON) : null;
-
-    const tokenJSON = localStorage.getItem("token");
-    const token = tokenJSON ? JSON.parse(tokenJSON) : null;
-
     const navigate = useNavigate();
-
-    useEffect(() => {
-        if (!account || account.role !== "admin") {
-            navigate("/not-found");
-        }
-    }, []);
 
     const { state } = useLocation()
 
@@ -60,10 +47,8 @@ export default function AdminEditTourPage() {
         if (tour.active !== state.active) formData.append("active", tour.active);
 
         try {
-            const tour = await axios.patch(`${TOURS_URL}/${state._id}`, formData, {
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
+            await axios.patch(`${TOURS_URL}/${state._id}`, formData, {
+                withCredentials: true
             });
 
             navigate("/admin/tours");

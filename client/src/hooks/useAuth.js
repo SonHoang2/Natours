@@ -10,7 +10,6 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
 
-    // call this function when you want to authenticate the user
     const login = async ({ email, password }) => {
         const res = await axios.post(
             AUTH_URL + "/login",
@@ -25,7 +24,6 @@ export const AuthProvider = ({ children }) => {
         navigate("/");
     };
 
-    // call this function to sign out logged in user
     const logout = async () => {
         await axios.get(AUTH_URL + "/logout", { withCredentials: true });
         setUser(null);

@@ -7,8 +7,6 @@ import { motion } from "framer-motion";
 import axios from "axios";
 
 export default function Home({ tours, setTours }) {
-    // const tokenJSON = localStorage.getItem("token");
-    // const token = tokenJSON ? JSON.parse(localStorage.getItem("token")) : null;
     const searchInputRef = useRef(null);
 
     const [searchTour, setSearchTour] = useState({

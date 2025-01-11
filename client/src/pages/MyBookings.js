@@ -4,30 +4,21 @@ import Header from "../component/Header";
 import { BOOKINGS_URL } from "../customValue"
 import BookingCard from "../component/BookingCard";
 import LeftUserSetting from "../component/LeftUserSetting";
-
+import axios from "axios";
+import { useAuth } from "../hooks/useAuth";
 
 export default function MyBookings() {
-    const userJSON = localStorage.getItem("user");
-    const user = userJSON ? JSON.parse(userJSON) : null;
-
-    const tokenJSON = localStorage.getItem("token");
-    const token = tokenJSON ? JSON.parse(tokenJSON) : null;
-    
+    const { user } = useAuth();
     const [bookings, setBookings] = useState([]);
 
     const getBookings = async () => {
         try {
             const url = BOOKINGS_URL + `/my-tours`;
-            const res = await fetch(url, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
-            const data = await res.json();
-            if (data.status === "success") {
-                setBookings(data.bookings)
-            }
+            const data = await axios.get(url, {
+                withCredentials: true
+            });
+
+            setBookings(data.bookings)
         } catch (err) {
             console.log(err);
         }
@@ -57,11 +48,10 @@ export default function MyBookings() {
                 <div className="pb-5"></div>
                 <div className="pb-5"></div>
                 <div className="d-flex justify-content-center bg-body-secondary pb-5">
-                    <LeftUserSetting role={user.role} />
+                    <LeftUserSetting/>
                     <div className="bg-white w-500 rounded-end">
                         <div className="p-5 pb-3">
                             <p className="text-success fw-bold pb-4">MY BOOKINGS</p>
-
                             {cards()}
                         </div>
                     </div>

@@ -1,26 +1,13 @@
 import axios from "axios";
 import LeftDashboard from "../component/LeftDashboard";
 import { useEffect, useState } from "react";
-import { REVIEWS_URL  } from "../customValue";
+import { REVIEWS_URL } from "../customValue";
 import { useNavigate, useLocation } from "react-router-dom";
 
 export default function AdminEditReviewPage() {
-    const userJSON = localStorage.getItem("user");
-    const account = userJSON ? JSON.parse(userJSON) : null;
-
-    const tokenJSON = localStorage.getItem("token");
-    const token = tokenJSON ? JSON.parse(tokenJSON) : null;
-
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (!account || account.role !== "admin") {
-            navigate("/not-found");
-        }
-    }, []);
-
     const { state } = useLocation()
-
 
     const [review, setReview] = useState({
         review: state.review,
@@ -31,9 +18,13 @@ export default function AdminEditReviewPage() {
         e.preventDefault();
 
         try {
-            const updatedReview = await axios.patch(REVIEWS_URL + `/${state._id}`, review, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const updatedReview = await axios.patch(
+                REVIEWS_URL + `/${state._id}`,
+                review,
+                {
+                    withCredentials: true
+                }
+            );
 
             console.log(updatedReview.data);
 
@@ -66,12 +57,12 @@ export default function AdminEditReviewPage() {
                                     </div>
                                     <div className="mb-3">
                                         <label htmlFor="rating" className="form-label">Rating</label>
-                                        <select 
+                                        <select
                                             className="form-select"
                                             id="rating"
                                             value={review.rating}
                                             onChange={(e) => setReview({ ...review, rating: e.target.value })}
-                                        > 
+                                        >
                                             <option value="1">1</option>
                                             <option value="2">2</option>
                                             <option value="3">3</option>

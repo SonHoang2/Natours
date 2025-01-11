@@ -3,23 +3,8 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import LeftDashboard from "../component/LeftDashboard";
 import { TOUR_IMAGE_URL, TOURS_URL } from "../customValue";
-import { useNavigate } from "react-router-dom";
 
 export default function AdminTourPage() {
-    const userJSON = localStorage.getItem("user");
-    const account = userJSON ? JSON.parse(userJSON) : null;
-
-    const tokenJSON = localStorage.getItem("token");
-    const token = tokenJSON ? JSON.parse(tokenJSON) : null;
-
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        if (!account || account.role !== "admin") {
-            navigate("/not-found");
-        }
-    }, []);
-
 
     const [tours, setTours] = useState(
         {
@@ -39,7 +24,7 @@ export default function AdminTourPage() {
         try {
             const tours = await axios.get(TOURS_URL + `/?limit=${tourQueryParams.limit}&sort=${tourQueryParams.sort}&page=${tourQueryParams.page}`,
                 {
-                    headers: { Authorization: `Bearer ${token}` }
+                    withCredentials: true,
                 });
 
             console.log(tours.data);
@@ -65,7 +50,7 @@ export default function AdminTourPage() {
     const deleteTour = async (id) => {
         try {
             const tour = await axios.patch(TOURS_URL + `/${id}`, { active: false }, {
-                headers: { Authorization: `Bearer ${token}` }
+                withCredentials: true,
             });
 
             console.log(tour.data);

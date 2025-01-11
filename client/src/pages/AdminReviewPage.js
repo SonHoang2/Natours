@@ -3,24 +3,7 @@ import LeftDashboard from "../component/LeftDashboard";
 import { useEffect, useState } from "react";
 import { REVIEWS_URL, USER_IMAGE_URL } from "../customValue";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-
 export default function AdminReviewPage() {
-    const userJSON = localStorage.getItem("user");
-    const account = userJSON ? JSON.parse(userJSON) : null;
-
-    const tokenJSON = localStorage.getItem("token");
-    const token = tokenJSON ? JSON.parse(tokenJSON) : null;
-
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        if (!account || account.role !== "admin") {
-            navigate("/not-found");
-        }
-    }, []);
-
-
     const [reviews, setReviews] = useState({
         data: [],
         totalLength: 0,
@@ -37,7 +20,7 @@ export default function AdminReviewPage() {
         try {
             const reviews = await axios.get(REVIEWS_URL + `/?limit=${userQueryParams.limit}&sort=${userQueryParams.sort}&page=${userQueryParams.page}`,
                 {
-                    headers: { Authorization: `Bearer ${token}` }
+                    withCredentials: true,
                 });
 
             console.log(reviews.data);
@@ -63,7 +46,7 @@ export default function AdminReviewPage() {
     const deleteReview = async (id) => {
         try {
             const user = await axios.delete(REVIEWS_URL + `/${id}`, {
-                headers: { Authorization: `Bearer ${token}` }
+                withCredentials: true,
             });
 
             console.log(user.data);

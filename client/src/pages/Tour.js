@@ -1,18 +1,14 @@
 import { useEffect, useState } from "react";
 import Header from "../component/Header";
 import { TOUR_IMAGE_URL, USER_IMAGE_URL, TOURS_URL, BOOKINGS_URL } from "../customValue"
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "axios";
+import { useAuth } from "../hooks/useAuth";
 
 export default function Tour() {
-    const userJSON = localStorage.getItem("user");
-    const user = userJSON ? JSON.parse(userJSON) : null;
-
-    const tokenJSON = localStorage.getItem("token");
-    const token = tokenJSON ? JSON.parse(tokenJSON) : null;
-
     const { slug } = useParams();
+    const { user } = useAuth();
     const [tour, setTour] = useState(null);
 
     const [reviews, setReviews] = useState({
@@ -33,16 +29,13 @@ export default function Tour() {
     const getCheckout = async () => {
         try {
             const url = BOOKINGS_URL + `/checkout-session/${tour.id}`;
-            const res = await fetch(url, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+
+            const data = await axios.get(url, {
+                withCredentials: true,
             })
-            const data = await res.json();
-            if (data.status === "success") {
-                window.location.href = data.session.url
-            }
+
+            window.location.href = data.session.url
+
         } catch (err) {
             console.log(err);
         }
@@ -134,11 +127,11 @@ export default function Tour() {
 
                 if (queryParams.rating === "all") {
                     reviews = await axios.get(TOURS_URL + `/${tour._id}/reviews/?page=${queryParams.page}&limit=${queryParams.limit}`, {
-                        headers: { Authorization: `Bearer ${token}` }
+                        withCredentials: true
                     });
                 } else {
                     reviews = await axios.get(TOURS_URL + `/${tour._id}/reviews/ratings/${queryParams.rating}?page=${queryParams.page}&limit=${queryParams.limit}`, {
-                        headers: { Authorization: `Bearer ${token}` }
+                        withCredentials: true
                     });
                 }
 
@@ -167,7 +160,7 @@ export default function Tour() {
                 if (!tour) return;
 
                 const groupRating = await axios.get(TOURS_URL + `/${tour._id}/reviews/group`, {
-                    headers: { Authorization: `Bearer ${token}` }
+                    withCredentials: true
                 });
 
 

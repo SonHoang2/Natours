@@ -1,10 +1,9 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { USER_IMAGE_URL } from "../customValue";
 import { useAuth } from "../hooks/useAuth";
 
 export default function Header() {
     const { user, logout } = useAuth();
-    const navigate = useNavigate();
 
     return (
         <div className="bg-white d-flex px-3 py-1 justify-content-between w-100 align-items-center z-3 position-fixed border-bottom">
