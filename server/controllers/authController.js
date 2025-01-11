@@ -14,19 +14,19 @@ const signToken = (id, time) => {
 };
 
 export const protect = catchAsync(async (req, res, next) => {
-    let token;
-    const { access_token: accessToken } = req.cookies;
+    const { access_token: accessToken, refresh_token : refreshToken } = req.cookies;
 
-    if (accessToken) {
-        token = accessToken;
+    if (refreshToken) {
+        return next()
     }
-    if (!token) {
+
+    if (!accessToken) {
         return next(
             new AppError('You are not logged in! Please log in to get access', 401)
         );
     }
     // verification token
-    const decoded = jwt.verify(token, config.jwt.secret);
+    const decoded = jwt.verify(accessToken, config.jwt.secret);
     // check if user still exists
     const currentUser = await User.findOne({
         _id: decoded.id,
