@@ -27,6 +27,13 @@ function App() {
         length: ""
     });
 
+    const roles = {
+        user: "user",
+        guide: "guide",
+        lead_guide: "lead-guide",
+        admin: "admin"
+    }
+
     return (
         <AuthProvider>
             <Routes>
@@ -85,6 +92,7 @@ function App() {
                 </Route>
                 <Route
                     path='/admin'
+                    element={<ProtectedRoute allowedRole={roles.admin} />}
                 >
                     <Route
                         path='dashboard'

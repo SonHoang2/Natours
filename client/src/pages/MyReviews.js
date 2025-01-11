@@ -15,9 +15,9 @@ export default function MyReviews() {
         try {
             const url = REVIEWS_URL + `/me`;
 
-            const data = await axios.get(url, { withCredentials: true })
+            const res = await axios.get(url, { withCredentials: true })
 
-            setReviews(data.reviews)
+            setReviews(res.data.reviews)
         } catch (err) {
             console.log(err);
         }

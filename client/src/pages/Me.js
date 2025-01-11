@@ -8,7 +8,7 @@ import { useAuth } from "../hooks/useAuth";
 import axios from "axios";
 
 export default function Me() {
-    const { user } = useAuth();
+    const { user, logout } = useAuth();
 
     const [dataChange, setDataChange] = useState(false);
     const [image, setImage] = useState({ preview: '', data: '' });
@@ -41,7 +41,8 @@ export default function Me() {
                 formData,
                 { withCredentials: true }
             )
-            
+
+            logout();
         } catch (err) {
             console.log(err);
         }
@@ -60,6 +61,8 @@ export default function Me() {
                 },
                 { withCredentials: true }
             )
+            
+            logout();
         } catch (err) {
             console.log(err);
         }

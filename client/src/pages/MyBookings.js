@@ -14,18 +14,18 @@ export default function MyBookings() {
     const getBookings = async () => {
         try {
             const url = BOOKINGS_URL + `/my-tours`;
-            const data = await axios.get(url, {
+            const res = await axios.get(url, {
                 withCredentials: true
             });
 
-            setBookings(data.bookings)
+            setBookings(res.data.booking)
         } catch (err) {
             console.log(err);
         }
     }
 
     const cards = () => {
-        return bookings.map((booking, i) => (
+        return bookings?.map((booking, i) => (
             <BookingCard
                 booking={booking}
                 key={i}

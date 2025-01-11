@@ -3,6 +3,12 @@ import { useAuth } from "../hooks/useAuth";
 
 export const ProtectedRoute = ({ allowedRole }) => {
     const { user } = useAuth();
-    return user ? <Outlet /> : <Navigate to="/auth/login" />;
+    if (!user) return <Navigate to="/auth/login" />;
+
+    if (allowedRole && allowedRole !== user.role) {
+        return <Navigate to="/" />;
+    }
+
+    return <Outlet />;
 };
 export default ProtectedRoute;
