@@ -143,12 +143,12 @@ export const login = catchAsync(async (req, res, next) => {
 });
 
 export const GoogleLogin = catchAsync(async (req, res, next) => {
-    let { code, redirectUri } = req.body; // code from service provider which is appended to the frontend's URL
+    let { code, redirectUri } = req.body;
 
-    const clientId = config.googleClientId; // CLIENT_ID_FROM_APP_CREATED
-    const clientSecret = config.googleClientSecret; // CLIENT_SECRET_FROM_APP_CREATED
-    const grantType = 'authorization_code'; // this tells the service provider to return a code which will be used to get a token for making requests to the service provider
-    const url = 'https://oauth2.googleapis.com/token'; // link to api to exchange code for token.
+    const clientId = config.googleClientId;
+    const clientSecret = config.googleClientSecret;
+    const grantType = 'authorization_code';
+    const url = 'https://oauth2.googleapis.com/token';
 
     const response = await fetch(url, {
         method: 'POST',
@@ -166,6 +166,7 @@ export const GoogleLogin = catchAsync(async (req, res, next) => {
     const data = await response.json();
 
     const { email, given_name, family_name } = jwt.decode(data.id_token);
+    
 
     // use if i want to get more info about the user
     // const tokenFromGoogle = data.access_token;

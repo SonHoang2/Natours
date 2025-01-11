@@ -1,10 +1,9 @@
 import Header from "../component/Header";
-import { AUTH_URL, CLIENT_URL } from "../customValue"
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import queryString from "query-string";
 import { useAuth } from "../hooks/useAuth";
+import queryString from "query-string";
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -12,7 +11,7 @@ export default function Login() {
     const [error, setError] = useState("");
     const location = useLocation();
     const navigate = useNavigate();
-    const { login } = useAuth();
+    const { login, getGoogleCode, sendGoogleCode } = useAuth();
 
     const handleSubmit = async event => {
         try {
@@ -31,43 +30,13 @@ export default function Login() {
         try {
             console.log(location.pathname);
             const { code } = queryString.parse(location.search);
-
             if (location.pathname === "/auth/google") {
-                const URL = AUTH_URL + `/login/google`;
-                const response = await fetch(URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ code, redirectUri: CLIENT_URL + "/auth/google" }),
-                });
-                const data = await response.json();
-                console.log(data);
-                // localStorage.setItem("user", JSON.stringify(data.data.user));
-                // localStorage.setItem("token", JSON.stringify(data.token));
-                navigate("/");
+                sendGoogleCode(code);
             }
-
-
         } catch (error) {
             console.error('Error fetching auth data:', error);
         }
     };
-
-    const googleLogin = async () => {
-        const queryParams = queryString.stringify({
-            client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID, // It must correspond to what we declared earlier in the backend
-            scope: "email profile", // This is the user data you have access to, in our case its just the mail.
-            redirect_uri: CLIENT_URL + "/auth/google", // This is the uri that will be redirected to if the user signs into his google account successfully
-            // auth_type: "rerequest", // This tells the consent screen to reappear if the user initially entered wrong credentials into the google modal
-            display: "popup", //It pops up the consent screen when the anchor tag is clicked
-            response_type: "code", // This tells Google to append code to the response which will be sent to the backend which exchange the code for a token
-            // prompt: "consent" // This tells google to always show the consent screen
-        });
-        const url = `https://accounts.google.com/o/oauth2/v2/auth?${queryParams}`;
-
-        window.location.href = url;
-    }
 
     useEffect(() => {
         // login with social account
@@ -139,7 +108,7 @@ export default function Login() {
                         <p className="text-center text-secondary">Or login with social accout</p>
                     </div>
                     <div className="d-flex my-3 flex-column">
-                        <div className="btn border shadow-sm  w-100 d-flex align-items-center mb-3" onClick={googleLogin}>
+                        <div className="btn border shadow-sm  w-100 d-flex align-items-center mb-3" onClick={getGoogleCode}>
                             <img src="/img/google-icon.png" alt="google" />
                             <span className="ps-2">Sign in with google</span>
                         </div>

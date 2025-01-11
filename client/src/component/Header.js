@@ -3,9 +3,7 @@ import { USER_IMAGE_URL } from "../customValue";
 import { useAuth } from "../hooks/useAuth";
 
 export default function Header() {
-    const { user } = useAuth();
-    console.log(user);
-    
+    const { user, logout } = useAuth();
     const navigate = useNavigate();
 
     return (
@@ -32,11 +30,7 @@ export default function Header() {
                     <div className="d-flex">
                         <button
                             className="btn text-uppercase p-3 me-2 fs-5 text-black"
-                            onClick={() => {
-                                // localStorage.removeItem("user")
-                                // localStorage.removeItem("token")
-                                navigate("/")
-                            }}
+                            onClick={() => logout()}
                         >
                             LOG OUT
                         </button>

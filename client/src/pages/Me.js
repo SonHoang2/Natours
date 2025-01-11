@@ -110,7 +110,7 @@ export default function Me() {
                 <div className="pb-5"></div>
                 <div className="pb-5"></div>
                 <div className="d-flex justify-content-center bg-body-secondary pb-5">
-                    <LeftUserSetting role={user.role} />
+                    <LeftUserSetting role={user?.role} />
                     <div className="bg-white w-500 rounded-end">
                         <form onSubmit={handleSubmitInfo} className="p-5 pb-3 border-bottom">
                             <p className="text-success fw-bold pb-4">YOUR ACCOUNT SETTINGS</p>
