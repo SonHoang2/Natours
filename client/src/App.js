@@ -86,7 +86,6 @@ function App() {
                 <Route
                     path='/admin'
                 >
-
                     <Route
                         path='dashboard'
                         element={<Dashboard />}

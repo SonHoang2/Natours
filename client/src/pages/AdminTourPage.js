@@ -5,7 +5,6 @@ import LeftDashboard from "../component/LeftDashboard";
 import { TOUR_IMAGE_URL, TOURS_URL } from "../customValue";
 
 export default function AdminTourPage() {
-
     const [tours, setTours] = useState(
         {
             data: [],

@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useContext, useMemo, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AUTH_URL, CLIENT_URL } from "../customValue"
@@ -7,7 +7,12 @@ import queryString from "query-string";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(() => {
+        // Get the user from localStorage on initial render
+        const savedUser = localStorage.getItem("user");
+        return savedUser ? JSON.parse(savedUser) : null;
+    });
+
     const navigate = useNavigate();
 
     const login = async ({ email, password }) => {
@@ -17,8 +22,6 @@ export const AuthProvider = ({ children }) => {
             { withCredentials: true }
         );
 
-        console.log(res.data.data.user);
-        
         setUser(res.data.data.user);
 
         navigate("/");
@@ -49,6 +52,14 @@ export const AuthProvider = ({ children }) => {
         setUser(res.data.data.user);
         navigate("/");
     }
+
+    useEffect(() => {
+        if (user) {
+            localStorage.setItem("user", JSON.stringify(user));
+        } else {
+            localStorage.removeItem("user");
+        }
+    }, [user]);
 
     const value = useMemo(
         () => ({
