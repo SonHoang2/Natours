@@ -4,30 +4,15 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { BOOKINGS_URL, TOUR_IMAGE_URL, TOURS_URL, USERS_URL } from "../customValue"
 import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import axios from "../api/axios";
 
 export default function Home({ tours, setTours }) {
     const searchInputRef = useRef(null);
-
     const [searchTour, setSearchTour] = useState({
         value: "",
         tours: []
     });
 
-    const axiosPrivate = useAxiosPrivate();
-
-    useEffect(() => {
-        const getUsers = async () => {
-            try {
-                const res = await axiosPrivate.get(USERS_URL + '/me');
-                console.log(res);
-            } catch (err) {
-                console.error(err);
-            }
-        }
-        getUsers();
-    })
 
     // searchParams: tour after booking
     const [searchParams, setSearchParams] = useSearchParams();
@@ -48,7 +33,8 @@ export default function Home({ tours, setTours }) {
             // const data = await res.json();
             
             const res = await axios.get(url)
-
+            console.log(res);
+            
             setTours(prev => {
                 const obj = {
                     ...prev,

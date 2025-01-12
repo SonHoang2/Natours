@@ -1,8 +1,8 @@
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { AUTH_URL, CLIENT_URL } from "../customValue"
 import queryString from "query-string";
+import axios, { axiosPrivate } from "../api/axios";
 
 const AuthContext = createContext();
 
@@ -11,26 +11,22 @@ export const AuthProvider = ({ children }) => {
         const savedUser = localStorage.getItem("user");
         return savedUser ? JSON.parse(savedUser) : null;
     });
-    
+
     const navigate = useNavigate();
 
     const refreshTokens = async () => {
         try {
-            const res = await axios.get(AUTH_URL + "/refresh", { withCredentials: true });
-            setUser(res.data.data.user);
-            localStorage.setItem("user", JSON.stringify(res.data.data.user));
+            await axios.get(AUTH_URL + "/refresh", { withCredentials: true });
         } catch (error) {
-            console.error(error);
-            setUser(null);
-            localStorage.removeItem("user");
+            console.log("Token Refresh Failed", error);
+            navigate("/auth/login");
         }
-    };
+    }
 
     const login = async ({ email, password }) => {
-        const res = await axios.post(
+        const res = await axiosPrivate.post(
             AUTH_URL + "/login",
             { email, password },
-            { withCredentials: true }
         );
 
         setUser(res.data.data.user);
@@ -39,7 +35,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     const logout = async () => {
-        await axios.get(AUTH_URL + "/logout", { withCredentials: true });
+        await axiosPrivate.get(AUTH_URL + "/logout");
         setUser(null);
         localStorage.removeItem("user");
         navigate("/");
@@ -76,6 +72,14 @@ export const AuthProvider = ({ children }) => {
         }),
         [user]
     );
+
+    useEffect(() => {
+        refreshTokens();
+        if (!user) {
+            navigate("/auth/login");
+        }
+    }, [user]);
+
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
