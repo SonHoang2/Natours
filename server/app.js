@@ -6,6 +6,7 @@ import xss from 'xss-clean';
 import hpp from 'hpp';
 import cors from 'cors';
 import cookieParser from 'cookie-parser'
+import { rateLimit } from 'express-rate-limit'
 import AppError from './utils/AppError.js';
 import globalErrorHandler from './controllers/errorController.js';
 import tourRouter from './routes/tourRoutes.js';
@@ -69,6 +70,14 @@ app.use(
 //   next();
 // })
 
+const limiter = rateLimit({
+	windowMs: 15 * 60 * 1000,
+	limit: 100, 
+	standardHeaders: 'draft-8',
+	legacyHeaders: false,
+})
+
+app.use(limiter)
 
 // allow client use images store in backend
 app.use('/images/tours', express.static(path.join(__dirname + '/images/tours/')));
