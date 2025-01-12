@@ -13,7 +13,7 @@ export default function Header() {
                 </Link>
             </div>
             {
-                user === null ?
+                user == null ?
                     <div className="d-flex">
                         <Link to="/auth/login" className="text-decoration-none text-black me-2">
                             <button className="btn text-uppercase p-3 me-1 fs-5">

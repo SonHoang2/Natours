@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useState, useEffect } from "react";
+import { createContext, useContext, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AUTH_URL, CLIENT_URL } from "../customValue"
@@ -8,12 +8,23 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(() => {
-        // Get the user from localStorage on initial render
         const savedUser = localStorage.getItem("user");
         return savedUser ? JSON.parse(savedUser) : null;
     });
-
+    
     const navigate = useNavigate();
+
+    const refreshTokens = async () => {
+        try {
+            const res = await axios.get(AUTH_URL + "/refresh", { withCredentials: true });
+            setUser(res.data.data.user);
+            localStorage.setItem("user", JSON.stringify(res.data.data.user));
+        } catch (error) {
+            console.error(error);
+            setUser(null);
+            localStorage.removeItem("user");
+        }
+    };
 
     const login = async ({ email, password }) => {
         const res = await axios.post(
@@ -23,21 +34,22 @@ export const AuthProvider = ({ children }) => {
         );
 
         setUser(res.data.data.user);
-
+        localStorage.setItem("user", JSON.stringify(res.data.data.user));
         navigate("/");
     };
 
     const logout = async () => {
         await axios.get(AUTH_URL + "/logout", { withCredentials: true });
         setUser(null);
+        localStorage.removeItem("user");
         navigate("/");
     };
 
     const getGoogleCode = async () => {
         const queryParams = queryString.stringify({
             client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
-            scope: "email profile", 
-            redirect_uri: CLIENT_URL + "/auth/google", 
+            scope: "email profile",
+            redirect_uri: CLIENT_URL + "/auth/google",
             display: "popup",
             response_type: "code",
         });
@@ -53,21 +65,14 @@ export const AuthProvider = ({ children }) => {
         navigate("/");
     }
 
-    useEffect(() => {
-        if (user) {
-            localStorage.setItem("user", JSON.stringify(user));
-        } else {
-            localStorage.removeItem("user");
-        }
-    }, [user]);
-
     const value = useMemo(
         () => ({
             user,
             login,
             logout,
             getGoogleCode,
-            sendGoogleCode
+            sendGoogleCode,
+            refreshTokens,
         }),
         [user]
     );

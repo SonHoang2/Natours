@@ -1,10 +1,11 @@
 import Header from "../component/Header";
 import Card from "../component/Card"
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { BOOKINGS_URL, TOUR_IMAGE_URL, TOURS_URL } from "../customValue"
+import { BOOKINGS_URL, TOUR_IMAGE_URL, TOURS_URL, USERS_URL } from "../customValue"
 import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
-import axios from "axios";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import axios from "../api/axios";
 
 export default function Home({ tours, setTours }) {
     const searchInputRef = useRef(null);
@@ -13,6 +14,20 @@ export default function Home({ tours, setTours }) {
         value: "",
         tours: []
     });
+
+    const axiosPrivate = useAxiosPrivate();
+
+    useEffect(() => {
+        const getUsers = async () => {
+            try {
+                const res = await axiosPrivate.get(USERS_URL + '/me');
+                console.log(res);
+            } catch (err) {
+                console.error(err);
+            }
+        }
+        getUsers();
+    })
 
     // searchParams: tour after booking
     const [searchParams, setSearchParams] = useSearchParams();
@@ -26,21 +41,23 @@ export default function Home({ tours, setTours }) {
     const getTours = async () => {
         try {
             const url = TOURS_URL + `/active?sort=${queryParams.sort}&limit=${queryParams.limit}&page=${queryParams.page}`;
-            const res = await fetch(url, {
-                method: "GET",
-            })
-            const data = await res.json();
-            if (data.data) {
-                setTours(prev => {
-                    const obj = {
-                        ...prev,
-                        data: data.data.doc,
-                        length: data.total
-                    };
-                    
-                    return obj
-                });
-            }
+            // const res = await fetch(url, {
+            //     method: "GET",
+            // })
+
+            // const data = await res.json();
+            
+            const res = await axios.get(url)
+
+            setTours(prev => {
+                const obj = {
+                    ...prev,
+                    data: res.data.data.doc,
+                    length: res.data.total
+                };
+
+                return obj
+            });
         } catch (err) {
             console.log(err);
         }
@@ -158,7 +175,7 @@ export default function Home({ tours, setTours }) {
             console.log(err);
         }
     }
-    
+
     useDebounce(searchTour.value, 500);
 
     // useEffect(() => {
