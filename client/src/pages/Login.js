@@ -11,7 +11,7 @@ export default function Login() {
     const [error, setError] = useState("");
     const location = useLocation();
     const navigate = useNavigate();
-    const { login, getGoogleCode, sendGoogleCode } = useAuth();
+    const { user, login, getGoogleCode, sendGoogleCode } = useAuth();
 
     const handleSubmit = async event => {
         try {
@@ -42,9 +42,7 @@ export default function Login() {
         // login with social account
         handleAuthRedirect()
 
-        // check if user is login
-        const userJSON = localStorage.getItem("user");
-        if (userJSON) {
+        if (user) {
             navigate("/");
         }
 

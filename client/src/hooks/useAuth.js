@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AUTH_URL, CLIENT_URL } from "../customValue"
+import { AUTH_URL, CLIENT_URL, USERS_URL } from "../customValue"
 import queryString from "query-string";
 import axios, { axiosPrivate } from "../api/axios";
 
@@ -17,9 +17,17 @@ export const AuthProvider = ({ children }) => {
     const refreshTokens = async () => {
         try {
             await axios.get(AUTH_URL + "/refresh", { withCredentials: true });
+            console.log("Token Refreshed");
+            
+            if (!user) {
+                const res = await axiosPrivate.get(USERS_URL + "/me");
+                setUser(res.data.data.doc);
+                localStorage.setItem("user", JSON.stringify(res.data.data.doc));
+            }
         } catch (error) {
             console.log("Token Refresh Failed", error);
-            navigate("/auth/login");
+            setUser(null);
+            localStorage.removeItem("user");
         }
     }
 
@@ -72,12 +80,6 @@ export const AuthProvider = ({ children }) => {
         }),
         [user]
     );
-
-    useEffect(() => {
-        if (!user) {
-            navigate("/auth/login");
-        }
-    }, [user]);
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

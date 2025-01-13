@@ -3,6 +3,8 @@ import { USERS_URL } from "../customValue"
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { useAuth } from "../hooks/useAuth";
+
 
 export default function Signup() {
     const [name, setName] = useState("");
@@ -11,6 +13,7 @@ export default function Signup() {
     const [passwordConfirm, setPasswordConfirm] = useState("");
     const [error, setError] = useState("");
     const navigate = useNavigate();
+    const { user, } = useAuth();
 
     const handleSubmit = async e => {
         try {
@@ -44,8 +47,7 @@ export default function Signup() {
 
     useEffect(() => {
         // check if user is login
-        const userJSON = localStorage.getItem("user");
-        if (userJSON) {
+        if (user) {
             navigate("/");
         }
     }, []);

@@ -33,8 +33,7 @@ export default function Home({ tours, setTours }) {
             // const data = await res.json();
             
             const res = await axios.get(url)
-            console.log(res);
-            
+ 
             setTours(prev => {
                 const obj = {
                     ...prev,
