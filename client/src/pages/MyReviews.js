@@ -5,17 +5,17 @@ import { motion } from "framer-motion";
 import Header from "../component/Header";
 import ReviewCard from "../component/ReviewCard";
 import LeftUserSetting from "../component/LeftUserSetting";
-import axios from "axios";
-
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 export default function MyReviews() {
     const [reviews, setReviews] = useState([]);
+    const axiosPrivate = useAxiosPrivate();
 
     const getReviews = async () => {
         try {
             const url = REVIEWS_URL + `/me`;
 
-            const res = await axios.get(url, { withCredentials: true })
+            const res = await axiosPrivate.get(url)
 
             setReviews(res.data.reviews)
         } catch (err) {

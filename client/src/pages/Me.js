@@ -5,11 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from "framer-motion";
 import LeftUserSetting from "../component/LeftUserSetting";
 import { useAuth } from "../hooks/useAuth";
-import axios from "axios";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 export default function Me() {
     const { user, logout } = useAuth();
-
     const [dataChange, setDataChange] = useState(false);
     const [image, setImage] = useState({ preview: '', data: '' });
     const [name, setName] = useState(user?.name);
@@ -18,6 +17,8 @@ export default function Me() {
     const [password, setPassword] = useState("");
     const [passwordConfirm, setPasswordConfirm] = useState("");
     const navigate = useNavigate();
+    const axiosPrivate = useAxiosPrivate();
+
 
     const uploadImg = e => {
         setDataChange(true);
@@ -36,10 +37,9 @@ export default function Me() {
             formData.append('name', name);
             formData.append('email', email);
 
-            await axios.patch(
+            await axiosPrivate.patch(
                 USERS_URL + "/updateMe",
                 formData,
-                { withCredentials: true }
             )
 
             logout();
@@ -52,14 +52,13 @@ export default function Me() {
         try {
             e.preventDefault();
 
-            await axios.patch(
+            await axiosPrivate.patch(
                 USERS_URL + "/updateMyPassword",
                 {
                     passwordCurrent,
                     password,
                     passwordConfirm
                 },
-                { withCredentials: true }
             )
             
             logout();

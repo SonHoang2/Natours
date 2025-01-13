@@ -1,12 +1,13 @@
-import axios from "axios";
 import LeftDashboard from "../component/LeftDashboard";
 import { useEffect, useState } from "react";
 import { USERS_URL, USER_IMAGE_URL } from "../customValue";
 import { useNavigate, useLocation } from "react-router-dom";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 export default function AdminEditUserPage() {
     const { state } = useLocation()
     const navigate = useNavigate();
+    const axiosPrivate = useAxiosPrivate();
 
     const [user, setUser] = useState({
         name: state.name,
@@ -36,9 +37,7 @@ export default function AdminEditUserPage() {
         if (user.avatar.data) formData.append("photo", user.avatar.data);
         
         try {
-            await axios.patch(`${USERS_URL}/${state._id}`, formData, {
-                withCredentials: true,
-            });
+            await axiosPrivate.patch(`${USERS_URL}/${state._id}`, formData);
 
             navigate("/admin/users");
         } catch (error) {

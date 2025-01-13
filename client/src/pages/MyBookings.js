@@ -4,19 +4,18 @@ import Header from "../component/Header";
 import { BOOKINGS_URL } from "../customValue"
 import BookingCard from "../component/BookingCard";
 import LeftUserSetting from "../component/LeftUserSetting";
-import axios from "axios";
 import { useAuth } from "../hooks/useAuth";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 export default function MyBookings() {
     const { user } = useAuth();
     const [bookings, setBookings] = useState([]);
+    const axiosPrivate = useAxiosPrivate();
 
     const getBookings = async () => {
         try {
             const url = BOOKINGS_URL + `/my-tours`;
-            const res = await axios.get(url, {
-                withCredentials: true
-            });
+            const res = await axiosPrivate.get(url);
 
             setBookings(res.data.booking)
         } catch (err) {

@@ -3,13 +3,15 @@ import Header from "../component/Header";
 import { TOUR_IMAGE_URL, USER_IMAGE_URL, TOURS_URL, BOOKINGS_URL } from "../customValue"
 import { useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import axios from "axios";
+import axios from "../api/axios";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { useAuth } from "../hooks/useAuth";
 
 export default function Tour() {
     const { slug } = useParams();
     const { user } = useAuth();
     const [tour, setTour] = useState(null);
+    const axiosPrivate = useAxiosPrivate();
 
     const [reviews, setReviews] = useState({
         data: [],
@@ -30,9 +32,7 @@ export default function Tour() {
         try {
             const url = BOOKINGS_URL + `/checkout-session/${tour.id}`;
 
-            const data = await axios.get(url, {
-                withCredentials: true,
-            })
+            const data = await axiosPrivate.get(url)
 
             window.location.href = data.session.url
 
@@ -126,13 +126,9 @@ export default function Tour() {
                 let reviews;
 
                 if (queryParams.rating === "all") {
-                    reviews = await axios.get(TOURS_URL + `/${tour._id}/reviews/?page=${queryParams.page}&limit=${queryParams.limit}`, {
-                        withCredentials: true
-                    });
+                    reviews = await axiosPrivate.get(TOURS_URL + `/${tour._id}/reviews/?page=${queryParams.page}&limit=${queryParams.limit}`);
                 } else {
-                    reviews = await axios.get(TOURS_URL + `/${tour._id}/reviews/ratings/${queryParams.rating}?page=${queryParams.page}&limit=${queryParams.limit}`, {
-                        withCredentials: true
-                    });
+                    reviews = await axiosPrivate.get(TOURS_URL + `/${tour._id}/reviews/ratings/${queryParams.rating}?page=${queryParams.page}&limit=${queryParams.limit}`);
                 }
 
                 setReviews(prev => ({
@@ -159,9 +155,7 @@ export default function Tour() {
                 // only run if tour is available
                 if (!tour) return;
 
-                const groupRating = await axios.get(TOURS_URL + `/${tour._id}/reviews/group`, {
-                    withCredentials: true
-                });
+                const groupRating = await axiosPrivate.get(TOURS_URL + `/${tour._id}/reviews/group`);
 
 
                 const allRatings = [5, 4, 3, 2, 1];

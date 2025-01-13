@@ -1,8 +1,8 @@
-import axios from "axios";
 import LeftDashboard from "../component/LeftDashboard";
 import { useEffect, useState } from "react";
 import { USERS_URL, USER_IMAGE_URL } from "../customValue";
 import { Link } from "react-router-dom";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 export default function AdminUserPage() {
     const [users, setUsers] = useState({
@@ -17,12 +17,11 @@ export default function AdminUserPage() {
         sort: "-createdAt,name",
     });
 
+    const axiosPrivate = useAxiosPrivate();
+
     const getUser = async () => {
         try {
-            const users = await axios.get(USERS_URL + `/?limit=${userQueryParams.limit}&sort=${userQueryParams.sort}&page=${userQueryParams.page}`,
-                {
-                    withCredentials: true
-                });
+            const users = await axiosPrivate.get(USERS_URL + `/?limit=${userQueryParams.limit}&sort=${userQueryParams.sort}&page=${userQueryParams.page}`);
 
             console.log(users.data);
 
@@ -46,14 +45,10 @@ export default function AdminUserPage() {
 
     const deleteUser = async (id) => {
         try {
-            const user = await axios.patch(USERS_URL + `/${id}`, {
+            await axiosPrivate.patch(USERS_URL + `/${id}`, {
                 active: false
-            }, {
-                withCredentials: true
             });
 
-            console.log(user.data);
-            
             getUser();
         }
         catch (error) {

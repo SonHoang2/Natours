@@ -3,9 +3,11 @@ import LeftDashboard from "../component/LeftDashboard";
 import { useEffect, useState } from "react";
 import { TOURS_URL } from "../customValue";
 import { useNavigate, useLocation } from "react-router-dom";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 export default function AdminEditTourPage() {
     const navigate = useNavigate();
+    const axiosPrivate = useAxiosPrivate();
 
     const { state } = useLocation()
 
@@ -47,9 +49,7 @@ export default function AdminEditTourPage() {
         if (tour.active !== state.active) formData.append("active", tour.active);
 
         try {
-            await axios.patch(`${TOURS_URL}/${state._id}`, formData, {
-                withCredentials: true
-            });
+            await axiosPrivate.patch(`${TOURS_URL}/${state._id}`, formData);
 
             navigate("/admin/tours");
         } catch (error) {

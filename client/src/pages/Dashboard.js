@@ -1,10 +1,10 @@
-import axios from "axios";
 import { useState, useEffect } from "react"
 import { Line } from "react-chartjs-2";
 import { CategoryScale } from "chart.js";
 import Chart from "chart.js/auto";
 import LeftDashboard from "../component/LeftDashboard";
 import { BOOKINGS_URL, REVIEWS_URL, TOURS_URL } from "../customValue";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 Chart.register(CategoryScale);
 
@@ -17,6 +17,8 @@ export default function Dashboard() {
         currentMonth: [],
         lastMonth: []
     })
+
+    const axiosPrivate = useAxiosPrivate();
 
     const bookingLineData = {
         labels: ["7", "14", "21", "28", "last day"],
@@ -41,9 +43,7 @@ export default function Dashboard() {
 
     const getBookingLineData = async () => {
         try {
-            const bookingLine = await axios.get(BOOKINGS_URL + `/comparison/last-current-month/detail`, {
-                withCredentials: true,
-            });
+            const bookingLine = await axiosPrivate.get(BOOKINGS_URL + `/comparison/last-current-month/detail`);
 
             setBookingSale({
                 currentMonth: bookingLine.data.data.currentMonth,
@@ -56,9 +56,7 @@ export default function Dashboard() {
 
     const getTourComparison = async () => {
         try {
-            const tour = await axios.get(TOURS_URL + '/comparison/last-current-month', {
-                withCredentials: true
-            });
+            const tour = await axiosPrivate.get(TOURS_URL + '/comparison/last-current-month');
             setTourComparison(tour.data.data)
         } catch (error) {
             console.log(error)
@@ -68,9 +66,7 @@ export default function Dashboard() {
 
     const getUserComparison = async () => {
         try {
-            const user = await axios.get(TOURS_URL + '/comparison/last-current-month',
-                { withCredentials: true }
-            );
+            const user = await axiosPrivate.get(TOURS_URL + '/comparison/last-current-month');
             setUserComparison(user.data.data)
         } catch (error) {
             console.log(error)
@@ -79,9 +75,7 @@ export default function Dashboard() {
 
     const getReviewComparison = async () => {
         try {
-            const review = await axios.get(REVIEWS_URL + '/comparison/last-current-month',
-                { withCredentials: true }
-            );
+            const review = await axiosPrivate.get(REVIEWS_URL + '/comparison/last-current-month');
             setReviewComparison(review.data.data)
         } catch (error) {
             console.log(error)
@@ -90,9 +84,7 @@ export default function Dashboard() {
 
     const getBookingComparison = async () => {
         try {
-            const booking = await axios.get(BOOKINGS_URL + '/comparison/last-current-month',
-                { withCredentials: true }
-            );
+            const booking = await axiosPrivate.get(BOOKINGS_URL + '/comparison/last-current-month');
             setBookingComparison(booking.data.data)
         } catch (error) {
             console.log(error)

@@ -74,7 +74,6 @@ export const AuthProvider = ({ children }) => {
     );
 
     useEffect(() => {
-        refreshTokens();
         if (!user) {
             navigate("/auth/login");
         }

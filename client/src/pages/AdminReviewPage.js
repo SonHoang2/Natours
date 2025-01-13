@@ -1,8 +1,9 @@
-import axios from "axios";
 import LeftDashboard from "../component/LeftDashboard";
 import { useEffect, useState } from "react";
 import { REVIEWS_URL, USER_IMAGE_URL } from "../customValue";
 import { Link } from "react-router-dom";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
+
 export default function AdminReviewPage() {
     const [reviews, setReviews] = useState({
         data: [],
@@ -16,12 +17,11 @@ export default function AdminReviewPage() {
         sort: "-createdAt,name",
     });
 
+    const axiosPrivate = useAxiosPrivate();
+
     const getReviews = async () => {
         try {
-            const reviews = await axios.get(REVIEWS_URL + `/?limit=${userQueryParams.limit}&sort=${userQueryParams.sort}&page=${userQueryParams.page}`,
-                {
-                    withCredentials: true,
-                });
+            const reviews = await axiosPrivate.get(REVIEWS_URL + `/?limit=${userQueryParams.limit}&sort=${userQueryParams.sort}&page=${userQueryParams.page}`);
 
             console.log(reviews.data);
 
@@ -45,9 +45,7 @@ export default function AdminReviewPage() {
 
     const deleteReview = async (id) => {
         try {
-            const user = await axios.delete(REVIEWS_URL + `/${id}`, {
-                withCredentials: true,
-            });
+            const user = await axiosPrivate.delete(REVIEWS_URL + `/${id}`);
 
             console.log(user.data);
 

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import LeftDashboard from "../component/LeftDashboard";
 import { TOUR_IMAGE_URL, TOURS_URL } from "../customValue";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 export default function AdminTourPage() {
     const [tours, setTours] = useState(
@@ -18,6 +19,9 @@ export default function AdminTourPage() {
         page: 1,
         sort: "-createdAt",
     });
+
+    const axiosPrivate = useAxiosPrivate();
+
 
     const getTours = async () => {
         try {

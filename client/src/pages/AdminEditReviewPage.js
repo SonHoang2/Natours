@@ -1,11 +1,12 @@
-import axios from "axios";
 import LeftDashboard from "../component/LeftDashboard";
 import { useEffect, useState } from "react";
 import { REVIEWS_URL } from "../customValue";
 import { useNavigate, useLocation } from "react-router-dom";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 export default function AdminEditReviewPage() {
     const navigate = useNavigate();
+    const axiosPrivate = useAxiosPrivate();
 
     const { state } = useLocation()
 
@@ -18,12 +19,9 @@ export default function AdminEditReviewPage() {
         e.preventDefault();
 
         try {
-            const updatedReview = await axios.patch(
+            const updatedReview = await axiosPrivate.patch(
                 REVIEWS_URL + `/${state._id}`,
                 review,
-                {
-                    withCredentials: true
-                }
             );
 
             console.log(updatedReview.data);
