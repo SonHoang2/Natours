@@ -1,4 +1,3 @@
-import axios from "axios";
 import LeftDashboard from "../component/LeftDashboard";
 import { useEffect, useState } from "react";
 import { TOURS_URL } from "../customValue";

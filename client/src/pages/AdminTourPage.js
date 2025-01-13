@@ -1,4 +1,3 @@
-import axios from "axios";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import LeftDashboard from "../component/LeftDashboard";
@@ -25,10 +24,7 @@ export default function AdminTourPage() {
 
     const getTours = async () => {
         try {
-            const tours = await axios.get(TOURS_URL + `/?limit=${tourQueryParams.limit}&sort=${tourQueryParams.sort}&page=${tourQueryParams.page}`,
-                {
-                    withCredentials: true,
-                });
+            const tours = await axiosPrivate.get(TOURS_URL + `/?limit=${tourQueryParams.limit}&sort=${tourQueryParams.sort}&page=${tourQueryParams.page}`);
 
             console.log(tours.data);
 
@@ -52,9 +48,7 @@ export default function AdminTourPage() {
 
     const deleteTour = async (id) => {
         try {
-            const tour = await axios.patch(TOURS_URL + `/${id}`, { active: false }, {
-                withCredentials: true,
-            });
+            const tour = await axiosPrivate.patch(TOURS_URL + `/${id}`, { active: false });
 
             console.log(tour.data);
             
