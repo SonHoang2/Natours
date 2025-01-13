@@ -330,7 +330,7 @@ export const refreshToken = catchAsync(
 
         const RTOptions = {
             expires: new Date(
-                Date.now() + config.jwt.RTCookieExpiresIn * 60 * 60 * 1000
+                Date.now() + config.jwt.RTCookieExpiresIn * 24 * 60 * 60 * 1000
             ),
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production' ? true : false,
