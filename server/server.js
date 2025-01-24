@@ -4,17 +4,12 @@ import app from './app.js';
 import { connectRedis } from './redisClient.js';
 import config from './config/config.js';
 
-process.on('uncaughtException', err => {
-    console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...');
-    console.log(err);
-    process.exit(1);
-});
 
 dotenv.config();
 
 mongoose
-    .connect(config.db)
-    .then(() => console.log('DB connection successfull'));
+.connect(config.db)
+.then(() => console.log('DB connection successfull'));
 
 await connectRedis();
 
@@ -23,10 +18,30 @@ const server = app.listen(port, () => {
     console.log(`App running on port ${port}...`);
 });
 
+process.on('uncaughtException', err => {
+    console.error('UNCAUGHT EXCEPTION! 💥 Shutting down...');
+    console.error(err);
+    process.exit(1);
+});
+
 process.on('unhandledRejection', err => {
-    console.log('UNHANDLED REJECTION! 💥 Shutting down...');
-    console.log(err.name, err.message);
+    console.error('UNHANDLED REJECTION! 💥 Shutting down...');
+    console.error(err.name, err.message);
     server.close(() => {
         process.exit(1);
+    });
+});
+
+process.on('SIGTERM', () => {
+    console.log('👋 SIGTERM RECEIVED. Shutting down gracefully');
+    server.close(() => {
+        console.log('💥 Process terminated!');
+    });
+});
+
+process.on('SIGINT', () => {
+    console.log('👋 SIGINT RECEIVED. Shutting down gracefully');
+    server.close(() => {
+        console.log('💥 Process terminated!');
     });
 });
