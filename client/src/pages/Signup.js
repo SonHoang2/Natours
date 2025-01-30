@@ -1,10 +1,8 @@
 import Header from "../component/Header";
-import { USERS_URL } from "../customValue"
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
-
 
 export default function Signup() {
     const [name, setName] = useState("");
@@ -13,32 +11,13 @@ export default function Signup() {
     const [passwordConfirm, setPasswordConfirm] = useState("");
     const [error, setError] = useState("");
     const navigate = useNavigate();
-    const { user, } = useAuth();
+    const { user, signup} = useAuth();
 
     const handleSubmit = async e => {
         try {
             e.preventDefault();
-
-            if (password !== passwordConfirm) {
-                return setError("Password and confirm password are not the same");
-            }
-
-            const res = await fetch(
-                USERS_URL + "/signup", {
-                method: "POST",
-                body: JSON.stringify({ name, email, password, passwordConfirm }),
-                headers: { 'Content-Type': 'application/json' },
-            }
-            )
-            const data = await res.json();
-
-            if (data.status == "success") {
-                localStorage.setItem("user", JSON.stringify(data.data.user));
-                localStorage.setItem("token", JSON.stringify(data.token));
-                navigate("/");
-            } else {
-                setError(data.message)
-            }
+            await signup({ name, email, password, passwordConfirm });
+            
         } catch (err) {
             setError(err.message);
             console.log(err);

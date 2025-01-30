@@ -42,6 +42,17 @@ export const AuthProvider = ({ children }) => {
         navigate("/");
     };
 
+    const signup = async ({ email, password, passwordConfirm, name }) => {
+        const res = await axiosPrivate.post(
+            AUTH_URL + "/signup",
+            { email, password, name },
+        );
+
+        setUser(res.data.data.user);
+        localStorage.setItem("user", JSON.stringify(res.data.data.user));
+        navigate("/");
+    }
+
     const logout = async () => {
         await axiosPrivate.get(AUTH_URL + "/logout");
         setUser(null);
@@ -73,6 +84,7 @@ export const AuthProvider = ({ children }) => {
         () => ({
             user,
             login,
+            signup,
             logout,
             getGoogleCode,
             sendGoogleCode,
