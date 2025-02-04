@@ -1,6 +1,6 @@
 # Natours
 
-# Overview
+## Overview
 The purpose of this project is to design and develop a functional website that will allow users to book tours to travel.
 
 ## Technologies
